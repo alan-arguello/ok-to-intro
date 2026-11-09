@@ -1,0 +1,117 @@
+/* OK to Intro · styles/ask.css · S2 (/ask compose: ask-, /ask/[id] status: st-).
+   Ported from prototype/a.css (S2 · Compose, S2 · Status) unchanged; colours only through tokens.css variables.
+   Additions for the build are marked “build:”. */
+
+/* =====================================================================
+   S2 · Compose
+   ===================================================================== */
+.ask-head .crumbs { margin-bottom: -4px; }
+.ask-form > * + * { margin-top: var(--s5); }
+.ask-form > [hidden] + * { margin-top: var(--s5); }
+.ask-net { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.ask-net .seg > [aria-disabled=true] { color: var(--ink-2); cursor: not-allowed; }
+.ask-as { color: var(--ink-2); }
+.ask-form > .ask-as { margin-top: var(--s3); }
+.ask-textarea { min-height: 132px; }
+.ask-form > .ask-samples { margin-top: var(--s3); }
+.ask-samples { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+@media (max-width: 760px) { .ask-samples > .meta { flex-basis: 100%; } }
+.ask-samples .chip { min-height: 32px; padding: 0 12px; font-size: var(--fs-meta); }
+@media (max-width: 760px), (pointer: coarse) { .ask-samples .chip { min-height: 44px; } }
+.ask-notes:empty { display: none; }
+
+.ask-part { display: grid; grid-template-columns: 7.5rem 6.75rem minmax(0, 1fr); gap: 4px var(--s3); align-items: baseline; }
+.ask-part__label { font-weight: 500; font-size: var(--fs-sm); }
+.ask-part__tag { line-height: 1; }
+.ask-part__body { min-width: 0; }
+.ask-part__body > * + * { margin-top: 2px; }
+.ask-part__text { font-size: 15px; line-height: 1.45; }
+.ask-part__acts { margin-top: var(--s2); gap: var(--s2); }
+.ask-part__field .label { font-weight: 400; color: var(--ink-2); font-size: var(--fs-meta); }
+.ask-part__sample { margin-top: var(--s1); margin-left: -12px; }
+@media (max-width: 760px) {
+  .ask-part { grid-template-columns: auto minmax(0, 1fr); }
+  .ask-part__tag { justify-self: start; }
+  .ask-part__body { grid-column: 1 / -1; }
+}
+.ask-preview__head { margin-bottom: var(--s2); }
+.ask-actions { padding: var(--s3) 0; }
+.ask-actions .btn-row { gap: var(--s3); }
+.ask-actions__meta { flex: 1 1 14rem; }
+@media (min-width: 761px) {
+  .ask-actions.is-sticky { position: sticky; bottom: 0; z-index: 5; background: var(--page); border-top: 1px solid var(--line); padding: 12px 0; }
+  html:has(.ask-actions.is-sticky) { scroll-padding-bottom: 88px; }
+}
+@media (max-width: 760px) {
+  .ask-actions { padding: 0; }
+  .ask-actions:not(:has(.btn:not(.hide-phone):not([hidden]))) { display: none; }
+}
+.ask-bar-btn { min-height: 44px; }
+.ask-bar-left { min-height: 44px; padding: 0; border: 0; background: none; text-align: left; color: var(--ink); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.ask-parts-acts { gap: var(--s2); }
+.ask-parts.is-stale .ask-part { background: var(--sunken); }
+.ask-bar-full { flex: 1 1 auto; }
+
+/* build: the honesty label under the parts head (hand-written example parts). */
+.ask-parts-src { flex-basis: 100%; margin-top: -4px; }
+
+/* =====================================================================
+   S2 · Status
+   ===================================================================== */
+.st-grid { display: grid; gap: var(--s5) var(--s10); grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "status" "fanout" "side" "ask"; padding-top: var(--s8); }
+.st-head { grid-area: head; }
+.st-status { grid-area: status; display: grid; gap: var(--s3); }
+.st-fanout { grid-area: fanout; }
+.st-side { grid-area: side; }
+.st-ask { grid-area: ask; }
+@media (min-width: 961px) {
+  .st-grid { grid-template-columns: minmax(0, 640px) 300px; justify-content: center; align-items: start; grid-template-areas: "head head" "status side" "fanout side" "ask side"; }
+  .st-side { position: sticky; top: calc(var(--header-h) + 16px); }
+}
+@media (max-width: 760px) { .st-grid { padding-top: var(--s6); } }
+.st-head > * + * { margin-top: var(--s2); }
+.st-head .crumbs .tag { margin-left: 6px; }
+.st-proto .proto-note { display: inline-block; padding: 1px 8px; font-size: 12px; }
+.st-pill { margin-bottom: var(--s2); }
+.st-copy { line-height: 1.5; }
+.st-outcome > * + *, .st-question > * + * { margin-top: var(--s2); }
+.st-outcome .btn-row, .st-question .btn-row { margin-top: var(--s3); }
+.st-help { margin-top: var(--s2); }
+.st-why { color: var(--ink-2); }
+.st-answer-field { margin-top: var(--s3); }
+.st-fanout > * + * { margin-top: var(--s3); }
+.st-fanout__head { align-items: center; }
+.st-count { display: inline-block; min-width: 1ch; border-radius: 2px; }
+.st-bump { animation: oti-flash 260ms var(--ease); }
+.st-waffle-wrap { position: relative; }
+.st-waffle .cell { font-size: 10px; }
+.st-cell { cursor: pointer; }
+.st-pop { width: max-content; max-width: min(280px, 100%); }
+.st-you, .st-qline { line-height: 1.55; }
+.st-qline .btn { margin-left: 2px; vertical-align: baseline; }
+.st-reveal { padding: var(--s2) 0 0; border-top: 1px solid var(--line-soft); }
+.st-reveal .label { font-weight: 400; }
+.st-reveal-note { color: var(--ink-2); }
+.st-trace .trace { margin-top: var(--s2); }
+.st-ask > * + * { margin-top: var(--s3); }
+.st-ask__head { align-items: center; }
+.st-side > * + * { margin-top: var(--s3); }
+.st-side__head { align-items: center; }
+.st-open-row { margin-top: var(--s3); }
+.st-open-row .link { display: inline-flex; align-items: center; min-height: 44px; }
+.st-side-cap { color: var(--ink-2); }
+.st-change > * + * { margin-top: var(--s3); }
+.st-links { display: flex; flex-wrap: wrap; gap: 4px var(--s4); }
+.st-links .link { display: inline-flex; align-items: center; min-height: 32px; }
+.st-crumbs .tag { margin-left: 6px; }
+.st-crumbs a { display: inline-flex; align-items: center; min-height: 24px; }
+.st-waffle .cell--you { font-size: 11px; font-weight: 600; letter-spacing: .02em; }
+.st-bar-btn { flex: 1 1 auto; min-height: 44px; }
+
+/* build: the kit's SwitchRow sits inside .st-reveal (the prototype put the class on the row itself). */
+.st-reveal > .switch-row { padding: 0; }
+/* build: reveal-mode cells are buttons (the kit Waffle): pointer, and the focus ring stays visible on the chips. */
+.st-waffle button.cell { cursor: pointer; }
+/* build: focusable cards (focus moves there after an action) show no ring for programmatic focus. */
+.st-outcome:focus:not(:focus-visible), .st-question:focus:not(:focus-visible) { outline: none; }
+.st-outcome .btn-row .link { display: inline-flex; align-items: center; min-height: 32px; }
