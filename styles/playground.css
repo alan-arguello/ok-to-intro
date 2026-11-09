@@ -1,0 +1,115 @@
+/* OK to Intro · styles/playground.css · S1 playground (/), ported from prototype/a.css (S1 section).
+   Prefixed `pg-` classes only; colours only through tokens (app/tokens.css). `.mark--trap` lives in app/globals.css.
+   One change from the prototype: the phone bar is the kit's <Bar> (no className prop), so `.pg-bar` is `#pg-bar`. */
+
+.pg-head > .pg-proto { margin-top: var(--s1); }
+.pg-proto .proto-note { display: inline-block; padding: 1px 8px; font-size: 12px; line-height: 1.45; }
+.pg-head .pg-lede { max-width: 680px; }
+.pg-cta { justify-content: center; }
+.pg-cta.is-stale #pg-run { order: -1; }
+.pg-real { text-wrap: balance; }
+.pg-real .link { white-space: nowrap; }
+
+.pg-start { justify-content: flex-start; gap: var(--s2); }
+.pg-presets { display: flex; flex-wrap: wrap; gap: var(--s2); }
+@media (max-width: 400px) { .pg-presets .chip { padding: 0 12px; } .pg-presets .chips { gap: 6px; } }
+.pg-confirm { margin-top: var(--s2); padding: 10px 12px; }
+.pg-stale { margin-top: var(--s2); padding: 10px 12px; }
+.pg-cap-used { display: inline-flex; align-items: center; gap: 6px; }
+.pg-confirm .btn-row { gap: var(--s2); }
+.pg-textarea { min-height: 150px; }
+.pg-read .rules { cursor: text; }
+.pg-read .rules:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.pg-nomatch { margin-top: var(--s2); }
+.pg-edit { margin-top: var(--s2); margin-left: -12px; }
+.pg-rail .field + .field { margin-top: var(--s5); }
+
+@media (min-width: 961px) {
+  .pg-rail { max-height: calc(100vh - var(--header-h) - 32px); overflow-y: auto; overscroll-behavior: contain; }
+}
+
+/* List head: statline + SAMPLE tag on the first row; extra lines and the meta line (Run live · Raw trace) span the row */
+.pg-lhead { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 2px var(--s3); }
+.pg-lhead:focus { outline: none; }
+.pg-stat { grid-column: 1; grid-row: 1; }
+.pg-lhead__tag { grid-column: 2; grid-row: 1; margin-top: 1px; }
+.pg-line { grid-column: 1 / -1; }
+.pg-meta { display: flex; flex-wrap: wrap; align-items: center; column-gap: 4px; }
+.pg-meta__text { min-width: 0; }
+.pg-live { min-height: 28px; margin-left: 6px; padding: 0 10px; }   /* outline: the way to a real model call */
+.pg-trace-btn { min-height: 28px; margin-left: auto; margin-right: -8px; padding: 0 8px; }
+.pg-trace-btn[aria-pressed=true] { background: var(--chip); }
+@media (pointer: coarse) { .pg-live, .pg-trace-btn { min-height: 44px; } }
+
+/* Try a change: a white band between the head and the rows */
+.pg-try { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); padding: 10px var(--s4); border: 0; border-bottom: 1px solid var(--line-soft); border-radius: 0; }
+@media (min-width: 761px) { .pg-try { padding: 10px var(--s5); } }
+.pg-try__label { margin: 0; }
+.pg-try__btns { gap: var(--s2); }
+.pg-applied { margin: 0; }
+.pg-applied .btn { vertical-align: middle; margin-left: -6px; }
+.pg-try + .row, .pg-trace + .row { border-top: 0; }
+
+/* Rows: the verdict and its citation carry the weight; the ask is light and clamped until opened */
+.pg-row { padding-top: 12px; padding-bottom: 12px; }
+.pg-row .row__body { display: block; margin-top: 4px; font-weight: 300; line-height: 1.45; }
+.pg-row .row__foot { margin-top: 4px; line-height: 1.4; }
+.pg-row:not(.is-open):not(.is-trap) .row__body { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+@media (max-width: 760px) { .pg-row:not(.is-open):not(.is-trap) .row__body { -webkit-line-clamp: 3; } }
+.pg-more { display: inline-flex; align-items: center; gap: 4px; margin-left: 2px; font: 500 var(--fs-meta)/1.4 var(--font-sans); color: var(--ink-2); white-space: nowrap; }
+.pg-chev { display: inline-block; transition: transform var(--dur) var(--ease); }
+.row__toggle[aria-expanded=true] .pg-chev { transform: rotate(90deg); }
+.row__toggle:hover .pg-more__t { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 760px) {   /* phones: the chevron sits in the row's top-right corner; “Details” stays in the accessible name */
+  .pg-row .row__line1 { padding-right: 24px; }
+  .pg-more { position: absolute; top: 10px; right: 8px; justify-content: center; min-width: 28px; min-height: 28px; font-size: 18px; }
+  .pg-more__t { position: absolute !important; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+.pg-changed { font-size: 12px; line-height: 1.4; color: var(--ink-2); }
+.pg-foot { display: block; color: var(--ink); }
+.pg-list[aria-busy=true] .pg-foot { min-height: 42px; }      /* reserve space only while streaming */
+.pg-row.is-notrun .pg-foot, .pg-row.is-notrun .pg-end { display: none; }
+.pg-end { display: flex; align-items: center; gap: var(--s2); margin-top: 2px; }
+.pg-end .pg-chain { flex: 1 1 auto; min-width: 0; margin: 0; }
+.pg-end:not(:has(> :not([hidden]))) { display: none; }
+.pg-why { flex: 1 1 auto; min-width: 0; }
+.pg-cites { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 6px; align-items: baseline; }
+.pg-cites__l { color: var(--ink-2); }
+.pg-cite { display: block; }
+.pg-cite + .pg-cite { margin-top: 2px; }
+.pg-ok { white-space: nowrap; color: var(--ink-2); }
+.pg-note { display: block; }
+.pg-cites + .pg-note { margin-top: 2px; color: var(--ink-2); }
+.pg-test { margin-top: 2px; color: var(--ink-2); }
+@media (max-width: 760px) { .pg-cites { grid-template-columns: minmax(0, 1fr); } }
+.pg-chain { font: 400 12px/1.45 var(--font-mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.pg-group { margin: 0; padding: 8px var(--s4); border-top: 1px solid var(--line-soft); background: var(--sunken); color: var(--ink-2); font-weight: 500; }
+.pg-group:focus { outline: none; }
+.pg-group:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+@media (min-width: 761px) { .pg-group { padding: 8px var(--s5); } }
+.pg-disagree, .pg-retry { flex: none; margin: -6px 0; }
+.pg-disagree, .pg-retry { margin-left: auto; }
+.pg-retry + .pg-disagree { margin-left: 0; }
+.pg-disagree[aria-pressed=true] { background: var(--card); border-color: var(--line-input); }
+@media (pointer: coarse) { .pg-disagree, .pg-retry { margin: -12px 0; } }
+.pg-detail .facts { row-gap: 4px; }
+.pg-detail .facts > dd { font-size: var(--fs-sm); }
+.pg-gate { margin-top: var(--s2); }
+.pg-gate .trace { margin-top: var(--s1); font-size: 12px; }
+.pg-gate .help { margin-top: var(--s1); }
+.pg-trace { margin: var(--s3); }
+.pg-all-acts { gap: var(--s2); flex-basis: 100%; }
+#pg-next .link { display: inline-flex; align-items: center; min-height: 24px; }
+
+/* Under the list */
+.pg-after { margin-top: var(--s4); }
+.pg-after > * + * { margin-top: var(--s3); }
+.pg-bridge .btn-row { gap: var(--s3); }
+.pg-bridge .help { margin-top: var(--s3); }
+.pg-offer-link { display: inline-flex; align-items: center; min-height: 40px; font-size: var(--fs-sm); }
+.pg-next { line-height: 1.7; }
+.pg-notes:not(:empty) { margin-bottom: var(--s3); }
+
+/* Phone bar (the kit's <Bar id="pg-bar">) */
+#pg-bar .btn { min-height: 44px; }
+.pg-bar-full { flex: 1 1 auto; }
