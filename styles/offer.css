@@ -1,0 +1,120 @@
+/* OK to Intro · styles/offer.css · owner R
+   The recipient pages: the offer (S4, /o/[token]), the check-in (S5, /c/[token]) and the public SAMPLE email viewer
+   (/emails). Ported from prototype/b.css with the same class names (offer- ck- mail-); colours only through tokens.
+   The phone bars are the kit's <Bar> (#offer-bar, #ck-bar); app/globals.css pads the body for them, and the rules
+   below adjust that padding to the bar's current height with :has(), so it also works without JS. */
+
+/* ---------- /o and /c footers follow the recipient (components/offer/recipient-footer.tsx) ----------
+   Those pages render the shared footer's markup with the recipient's own links first; the shared footer is hidden
+   there, so each page has one footer and one contentinfo landmark. */
+body:has(> footer.offer-footer) > footer.site-footer:not(.offer-footer) { display: none; }
+
+/* ---------- SAMPLE pages rebuilt from the visitor's tab: hide the server's guess until the tab is read ---------- */
+@media (scripting: enabled) {
+  [data-await-store] { visibility: hidden; }
+}
+
+/* ---------- S4 · offer (/o/[token]) ---------- */
+.offer-main { padding-top: var(--s8); }
+.offer-aside__cap { display: inline-flex; align-items: center; gap: 6px; }
+.offer-aside__sep { margin: 0 6px; }
+.offer-sample .tag { margin-right: 6px; }
+.offer-top { margin-bottom: var(--s3); }
+.offer-top:empty { display: none; }
+.offer-top > * + * { margin-top: var(--s3); }
+.offer-after { margin-top: var(--s3); }
+.offer-after:empty { display: none; }
+.offer-q { font-size: var(--fs-ui); line-height: 1.4; color: var(--ink); }
+.offer-desk { margin-top: var(--s4); }
+.offer-desk:empty { display: none; }
+.offer-desk .offer-q { margin-bottom: var(--s3); }
+.offer-err { margin-top: var(--s2); }
+.offer-compose { margin-top: var(--s4); }
+.offer-compose .textarea { min-height: 112px; }
+.offer-done { display: grid; gap: var(--s2); }
+.offer-done__head { font-size: var(--fs-h2); font-weight: 500; line-height: 1.35; }
+.offer-done__tag { margin-right: 2px; vertical-align: 2px; }
+.offer-done__body { font-size: var(--fs-ui); line-height: 1.5; }
+.offer-done__cap { display: flex; align-items: center; gap: var(--s2); }
+.offer-done__links { margin-top: var(--s1); }
+.offer-why { display: grid; gap: var(--s3); margin-top: var(--s2); padding-top: var(--s4); border-top: 1px solid var(--line-soft); }
+.offer-why__out { display: grid; gap: var(--s3); }
+.offer-why__out:empty { display: none; }
+.offer-why__out .btn-row .btn { white-space: normal; text-align: center; }
+.offer-why__note { display: grid; gap: var(--s3); }
+.offer-invalid { padding-top: var(--s5); display: grid; gap: var(--s3); }
+.offer-invalid .btn-row { margin-top: var(--s1); }
+.offer-is-done .offer-card__fine { display: none; }
+.offer-is-done .offer-card__title { font-size: 1.25rem; }
+.offer-is-done .offer-card { background: var(--panel); }
+@media (max-width: 760px) {
+  .offer-main { padding-top: var(--s4); }
+  .offer-main .offer-card__title { font-size: 1.375rem; line-height: 1.15; }   /* 22 px: the whole decision fits 375 × 553 */
+  .offer-is-done .offer-card__title { font-size: 1.25rem; }
+  #offer-bar { padding: 8px var(--gutter) calc(8px + env(safe-area-inset-bottom)); }
+  #offer-bar .btn--ok { min-height: 48px; }
+  .offer-bar__btn { min-height: 44px; }
+  #offer-bar .bar__text { flex: none; text-align: center; color: var(--ink); font-size: var(--fs-ui); }
+  #offer-bar .offer-err { margin-top: 0; text-align: center; }
+  html:has(#offer-bar) { scroll-padding-bottom: 176px; }
+  /* The bar's height follows its view: the composer's 2-button row is short; a question or an error makes it tall. */
+  body:has(#offer-bar .offer-bar__answer) { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+  body:has(#offer-bar .offer-bar__q), body:has(#offer-bar .offer-err) { padding-bottom: calc(172px + env(safe-area-inset-bottom)); }
+}
+
+/* ---------- S5 · check-in (/c/[token]) ---------- */
+.ck-main { padding-top: var(--s6); }
+.ck-form { display: grid; gap: var(--s3); margin-top: var(--s5); }
+.ck-group { display: grid; gap: var(--s3); }
+.ck-scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); width: 100%; }
+.ck-scale > [role=radio] { min-height: 52px; font-size: 1.125rem; }
+/* Options are links (a no-JS GET preselects); they look exactly like the kit's radio buttons. */
+.ck-scale > a[role=radio] { display: flex; align-items: center; justify-content: center; color: var(--ink); text-decoration: none; }
+.ck-alt { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.ck-opt[aria-checked=true] { background: var(--chip); border-color: var(--ink); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.ck-choices { display: grid; gap: var(--s2); }
+.ck-choice { display: flex; align-items: center; gap: var(--s3); width: 100%; min-height: 48px; padding: 0 var(--s4); border: 1px solid var(--line-input); border-radius: var(--r-input); background: var(--card); color: var(--ink); font: 500 var(--fs-ui)/1.3 var(--font-sans); text-align: left; text-decoration: none; }
+.ck-choice::before { content: ""; flex: none; width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--line-input); }
+.ck-choice:hover { background: var(--panel); }
+.ck-choice[aria-checked=true] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.ck-choice[aria-checked=true]::before { box-shadow: inset 0 0 0 5px var(--ink); }
+.ck-why { display: grid; gap: var(--s2); }
+.ck-why .chip { text-decoration: none; color: var(--ink); }
+.ck-save { margin-top: var(--s1); }
+.ck-sample .tag { margin-right: 6px; }
+.ck-done { display: grid; gap: var(--s2); margin-top: var(--s5); }
+.ck-done__head { font-size: var(--fs-h2); font-weight: 500; line-height: 1.35; }
+.ck-done__body { font-size: var(--fs-ui); line-height: 1.5; }
+.ck-invalid { display: grid; gap: var(--s3); }
+.ck-invalid .btn-row { margin-top: var(--s1); }
+.ck-done .btn-row { margin-top: var(--s1); }
+.ck-err { margin-top: var(--s1); }
+@media (max-width: 760px) {
+  .ck-main { padding-top: var(--s5); }
+  #ck-bar { flex-direction: column; align-items: stretch; gap: var(--s1); }
+  #ck-bar .error-text { text-align: center; }
+  body:has(#ck-bar .ck-err) { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+}
+
+/* ---------- The public SAMPLE email viewer (/emails, /emails/[kind]) ---------- */
+.mail-main { max-width: calc(560px + 2 * var(--gutter)); padding-top: var(--s4); }
+.mail-head { margin: 0 0 var(--s4); padding: 12px 14px; border: 1px dashed var(--ink-2); border-radius: var(--r-card); background: var(--panel); font-size: var(--fs-meta); line-height: 1.5; }
+.mail-head dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 2px 12px; margin: 0; }
+.mail-head dt { color: var(--ink-2); }
+.mail-head dd { margin: 0; overflow-wrap: anywhere; }
+.mail-head dd a { text-decoration: underline; text-decoration-color: currentColor; }
+.mail-sample { margin: 8px 0 0; font-weight: 500; }
+.mail-sample .tag { margin-right: 6px; }
+.mail-views { display: flex; flex-wrap: wrap; align-items: center; gap: 0 6px; margin: 8px 0 0; padding: 8px 0 0; border-top: 1px solid var(--line-soft); color: var(--ink-2); }
+.mail-views a { display: inline-flex; align-items: center; min-height: 24px; color: var(--link); text-decoration: underline; text-decoration-color: currentColor; }
+.mail-views a[aria-current] { color: var(--ink); font-weight: 500; text-decoration: none; }
+.mail-text { margin: 0; padding: 16px; background: var(--card); border: 1px solid var(--line-soft); border-radius: var(--r-card); font: 13px/1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+/* The email itself keeps an email client's box model and link underlines (it is styled inline, like in a mail app). */
+.mail-email, .mail-email * { box-sizing: content-box; }
+.mail-email a { text-underline-offset: auto; text-decoration-thickness: auto; text-decoration-color: currentColor; }
+.mail-after { margin-top: var(--s5); }
+.mail-index { margin-top: var(--s4); }
+.mail-index .row__body { display: block; margin-top: 2px; font-size: var(--fs-sm); color: var(--ink-2); }
+.mail-index a.row { color: inherit; text-decoration: none; }
+.mail-index a.row:hover .row__name { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 760px) { .mail-main { padding-top: var(--s3); } }
