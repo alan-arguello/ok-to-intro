@@ -10,6 +10,9 @@ import { BROKE_TITLE, OFFER_NOT_FOUND, OFFER_OFF_TITLE } from '@/components/offe
 import { offerFollow, offerReason, offerRespond } from './actions';
 import '@/styles/offer.css';
 
+/** Server actions run follow-up work after the response (next/server after()); the daily cron is the backstop. */
+export const maxDuration = 60;
+
 /**
  * S4 · the offer page, `/o/[token]` (owner R). Reached from the offer email's buttons (`?choice=ok|answer|no`
  * preselects; nothing happens until a button on this page is pressed), from /me (“Review the ask”, an `o_…` id for

@@ -24,7 +24,8 @@ describe('the recipient footer', () => {
     expect(offerFooterLinks('real')[0]?.href).toBe('/me#settings');
     expect(checkinFooterLinks('sample', 'asker', 'sa_k3m9q2')[0]?.href).toBe('/ask/sa_k3m9q2');
     expect(checkinFooterLinks('sample', 'asker', null)[0]?.href).toBe('/ask/sa_health');
-    expect(checkinFooterLinks('real', 'asker', 'sa_eng')[0]?.href).toBe('/me#asks');
+    expect(checkinFooterLinks('real', 'asker', 'a_91xQ2k')[0]?.href).toBe('/ask/a_91xQ2k');
+    expect(checkinFooterLinks('real', 'asker', null)[0]?.href).toBe('/me#asks');
     expect(checkinFooterLinks('example', 'member', null).map((l) => l.href)).toEqual(['/me#settings', '/me#settings', '/me#delete']);
   });
 

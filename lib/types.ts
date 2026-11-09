@@ -104,6 +104,11 @@ export interface TryRequest {
   rules: string;
   /** Subset of the 12 SAMPLE asks to run (retry of missing rows). Default: all 12, in arrival order. */
   ask_ids?: SampleAskKey[];
+  /**
+   * absent or `live`: live only (400/429/503 before streaming). `recorded`: an unedited preset's recorded run.
+   * `auto`: live when possible; an unedited preset falls back to its recorded run (MCP try_rules).
+   */
+  mode?: 'live' | 'recorded' | 'auto';
 }
 
 export interface TryPlanEvent {
@@ -444,6 +449,8 @@ export interface AskerAskView {
   /** Fixed shuffled positions; length = network size at send time. */
   cells: AskerCellState[];
   people_interrupted: number;
+  /** Gates that failed on the send (no verdict, or never answered): the count alone, never how many ran (§d.2). */
+  gates_failed: number;
   /**
    * While someone holds the offer: their reply deadline and the line position (“2 of 3”). For position 1 the
    * deadline is exact (offered at send + 72 h; the asker knows the send time). For position 2 and later it is
@@ -551,6 +558,8 @@ export type CheckinAnswer =
 
 export interface CheckinView {
   checkin_id: string;
+  /** The asker's own ask (for “Your ask”); null on the member's check-in. */
+  ask_id: string | null;
   kind: CheckinKind;
   role: CheckinRole;
   sample: boolean;

@@ -538,7 +538,7 @@ export function RealStatus({ initial, from, example }: RealStatusProps) {
               </ButtonLink>
             }
           >
-            {failedClosedCopy(send.done?.gates_failed ?? null, null)}
+            {failedClosedCopy(send.done?.gates_failed ?? view.gates_failed ?? null, null)}
           </OutcomeNotice>
         );
         break;
@@ -589,7 +589,8 @@ export function RealStatus({ initial, from, example }: RealStatusProps) {
   const suggestion = view.no_match?.suggestion ?? null;
   const matched = !!view.offered || outcome === 'answered' || outcome === 'intro';
   const canWithdraw = !streaming && !TERMINAL.includes(outcome);
-  const partial = !!send.done && !send.done.failed_closed && send.done.gates_failed > 0;
+  const gatesFailed = send.done ? send.done.gates_failed : (view.gates_failed ?? 0);
+  const partial = outcome !== 'failed' && !streaming && gatesFailed > 0;
   const traceLines = view.trace.map(splitTraceLine);
 
   return (
@@ -640,9 +641,9 @@ export function RealStatus({ initial, from, example }: RealStatusProps) {
                 </Button>
               </p>
             ) : null}
-            {partial && send.done ? (
+            {partial ? (
               <p className="small" id="st-partial">
-                {partialFailureCopy(send.done.gates_failed, null)}
+                {partialFailureCopy(gatesFailed, null)}
               </p>
             ) : null}
             <TraceLines lines={traceLines} />

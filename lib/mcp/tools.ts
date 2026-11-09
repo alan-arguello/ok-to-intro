@@ -172,7 +172,7 @@ export async function tryRules(args: TryRulesArgs, ctx: McpRequestContext, signa
 
   const before = await getLiveState();
   const stop = linked(signal);
-  const start = await startTry({ rules, mode: 'auto' } as Parameters<typeof startTry>[0], { clientKey: ctx.clientKey, signal: stop.signal });
+  const start = await startTry({ rules, mode: 'auto' }, { clientKey: ctx.clientKey, signal: stop.signal });
   if (!start.ok) {
     const b = start.body;
     if (b.error === 'invalid_rules') return fail(errorText(b.message, 'next: fix the rules and call try_rules again.'));
@@ -689,7 +689,7 @@ export async function setRules(args: { rules: string }, ctx: McpRequestContext, 
   // Test on the 12 SAMPLE asks first (live when it can run; a preset's recorded file otherwise).
   let test: Parameters<typeof setRulesReceipt>[0]['test'] = { not_tested: 'live checks are unavailable' };
   const stop = linked(signal);
-  const start = await startTry({ rules, mode: 'auto' } as Parameters<typeof startTry>[0], { clientKey: ctx.clientKey, signal: stop.signal });
+  const start = await startTry({ rules, mode: 'auto' }, { clientKey: ctx.clientKey, signal: stop.signal });
   if (start.ok) {
     const { items } = await collect<TryEvent>(start.events, BUDGET_MS.try, stop);
     const rows: CapRow[] = SAMPLE_ASKS.map((a) => ({ ask_id: a.id, day: a.day, gate: null, error: null }));

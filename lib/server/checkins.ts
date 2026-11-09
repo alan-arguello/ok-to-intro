@@ -65,6 +65,7 @@ function toCheckinView(row: CheckinRow): CheckinView {
   const c = row.checkin;
   return {
     checkin_id: c.id,
+    ask_id: c.role === 'asker' ? String(row.ask.id) : null,
     kind: c.kind,
     role: c.role,
     sample: false,

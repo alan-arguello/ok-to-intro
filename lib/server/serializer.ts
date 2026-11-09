@@ -365,6 +365,7 @@ export function serializeForAsker(snapshot: AskSnapshot, now: Date = new Date())
     next_checkpoint: nextCheckpoint(now).toISOString(),
     cells,
     people_interrupted: visible.length,
+    gates_failed: failedGateCount(snapshot),
     offered,
     questions: askerQuestions,
     matched_line,

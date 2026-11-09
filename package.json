@@ -32,7 +32,9 @@
     "audit": "node scripts/audit-sweep.mjs",
     "shoot": "node scripts/shoot.mjs",
     "recordings:authored": "tsx scripts/build-authored-recordings.ts",
-    "build:check": "node scripts/build-check.mjs"
+    "build:check": "node scripts/build-check.mjs",
+    "plugin:build": "tsx scripts/build-plugin.ts",
+    "plugin:check": "tsx scripts/build-plugin.ts --check"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.6.0",

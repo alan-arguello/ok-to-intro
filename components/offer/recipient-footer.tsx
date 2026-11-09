@@ -26,8 +26,8 @@ export function offerFooterLinks(mode: RecipientMode): FooterLink[] {
 }
 
 /**
- * /c: by the recipient's role. A REAL check-in doesn't carry its ask's id, so an asker's “Your ask” opens their
- * asks under Your gate; on SAMPLE it opens the sample ask in this tab (`sa_health` is the canonical one).
+ * /c: by the recipient's role. A REAL asker's “Your ask” opens that ask (CheckinView.ask_id), or their asks under
+ * Your gate when the id is missing; on SAMPLE it opens the sample ask in this tab (`sa_health` is the canonical one).
  */
 export function checkinFooterLinks(mode: RecipientMode, role: 'asker' | 'member', askId: string | null): FooterLink[] {
   if (role === 'member') {
@@ -38,7 +38,7 @@ export function checkinFooterLinks(mode: RecipientMode, role: 'asker' | 'member'
     ];
   }
   return [
-    { href: mode === 'sample' ? `/ask/${encodeURIComponent(askId ?? 'sa_health')}` : '/me#asks', label: 'Your ask' },
+    { href: mode === 'sample' ? `/ask/${encodeURIComponent(askId ?? 'sa_health')}` : askId ? `/ask/${encodeURIComponent(askId)}` : '/me#asks', label: 'Your ask' },
     { href: '/me#delete', label: 'Delete my data' },
   ];
 }

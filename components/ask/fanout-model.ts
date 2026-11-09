@@ -727,6 +727,7 @@ export function exampleRealView(): import('@/lib/types').AskerAskView {
     next_checkpoint: '2026-11-10T09:00:00-06:00',
     cells,
     people_interrupted: 1,
+    gates_failed: 0,
     offered: { reply_by: OFFER_SAMPLE.reply_by_iso, position: 1, in_line: 3 },
     questions: [],
     matched_line: null,

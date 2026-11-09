@@ -75,6 +75,7 @@ function offer(over: Partial<OfferView> = {}): OfferView {
 function checkin(over: Partial<CheckinView> = {}): CheckinView {
   return {
     checkin_id: 'c_88',
+    ask_id: null,
     kind: 'd1',
     role: 'asker',
     sample: false,

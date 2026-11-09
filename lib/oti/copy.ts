@@ -48,7 +48,7 @@ export const NO_LINE_COVERS = 'No line in your rules covers this ask.';
 
 /** Privacy notes repeated across /me, /privacy and the playground help. */
 export const RULES_TO_ANTHROPIC =
-  'Your rules go to Anthropic’s API for each check, and Anthropic keeps API data for up to 30 days. Alan, who runs this instance, has database access. The public board shows counts, never names.';
+  'Your rules go to Anthropic’s API for each check, and Anthropic deletes API data within 30 days by default. Alan, who runs this instance, has database access. The public board shows counts, never names.';
 export const PLAYGROUND_RULES_HELP = 'Each run sends your rules to Anthropic’s API. Nothing is stored unless you join.';
 
 /** Labels for recorded data, by source (docs/CONTRACT.md §e). */

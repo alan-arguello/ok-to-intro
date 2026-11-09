@@ -257,8 +257,10 @@ describe('3 open asks, the queue and one edited resend a week', () => {
     const busy = { id, email: 'busy@example.com' };
     const open = [await newAsk({}, busy), await newAsk({}, busy), await newAsk({}, busy)];
     const queued = [await newAsk({}, busy), await newAsk({}, busy), await newAsk({}, busy)];
-    const statuses = await net.all<{ status: string }>(`select status from public.asks where asker_id = $1 order by created_at, id`, [id]);
-    expect(statuses.map((s) => s.status)).toEqual(['ready', 'ready', 'ready', 'queued', 'queued', 'queued']);
+    // By id, not by created_at: asks created in the same millisecond have no stable order.
+    const statusOf = async (askId: string | undefined) => (await net.one<{ status: string }>(`select status from public.asks where id = $1`, [askId]))?.status;
+    expect(await Promise.all(open.map(statusOf))).toEqual(['ready', 'ready', 'ready']);
+    expect(await Promise.all(queued.map(statusOf))).toEqual(['queued', 'queued', 'queued']);
     const c = compiledAsk();
     expect(await createAsk(busy, { text: c.text, compiled: c, idempotency_key: 'one-too-many' })).toMatchObject({ ok: false, reason: 'not_allowed' });
     expect(await startSend(queued[0] as string, busy, { clientKey: null })).toMatchObject({ ok: false, status: 409, body: { error: 'queued' } });

@@ -115,6 +115,7 @@ html:has(#me-bar) { scroll-padding-bottom: 92px; }
 .pause-done form { display: contents; }
 .pause-notice { margin-top: var(--s5); }
 .pause-off { display: grid; gap: var(--s3); }
+.pause-sample-note { margin-top: var(--s6); color: var(--ink-2); }
 .pause-off .btn-row { margin-top: var(--s2); }
 @media (max-width: 760px) { .pause-main { padding-top: var(--s6); } }
 

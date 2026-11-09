@@ -1,15 +1,5 @@
--- Proposed migration for docs/requests/s7-site.md (“board counts as of a checkpoint”), kept here so
--- tests/site/board-sql.test.ts can prove it on PGlite before BE2 or the integrator copies it into
--- supabase/migrations/0003_board_as_of.sql.
---
--- Why: /board is public and regenerates every minute. With the counts as they are now, an asker who is the only one
--- with an open ask can watch “people interrupted” move the minute a member passes, which the asker serializer hides
--- until the next 09:00 / 21:00 checkpoint (docs/CONTRACT.md §d.5). Counting every audit fact up to the last
--- checkpoint gives the board the same timing askers get. lib/server/board.ts already calls
--- board_snapshot(p_as_of => last checkpoint) and falls back to the zero-argument function until this ships.
---
--- Same numbers as 0001's board_snapshot(), with every audit fact and every row filtered to `p_as_of`. The old
--- zero-argument function is dropped so a call without arguments isn't ambiguous (it now means “as of now”).
+-- 0003: board counts as of the last 09:00/21:00 checkpoint (docs/requests/s7-site.md #1).
+-- Proven on PGlite by tests/site/board-sql.test.ts (which loads this file).
 
 drop function if exists public.board_snapshot();
 

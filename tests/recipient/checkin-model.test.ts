@@ -23,6 +23,7 @@ const q = (sp: Record<string, string>, qa = false): CheckinQuery => parseCheckin
 function view(over: Partial<CheckinView> = {}): CheckinView {
   return {
     checkin_id: 'c_88aB',
+    ask_id: null,
     kind: 'd1',
     role: 'asker',
     sample: false,

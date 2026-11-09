@@ -183,6 +183,7 @@ describe('REAL links without JS (BE2 mocked)', () => {
   it('a check-in answer reaches BE2 once per value', async () => {
     const view: CheckinView = {
       checkin_id: 'c_88',
+      ask_id: 'a_91x',
       kind: 'd14',
       role: 'asker',
       sample: false,

@@ -164,7 +164,7 @@ describe('end to end on PGlite: SQL → getBoard → boardView', () => {
 
   it('renders the counts board_snapshot(p_as_of) returns, as of the checkpoint', async () => {
     db = await createTestDb();
-    await db.pg.exec(readFileSync(fileURLToPath(new URL('./fixtures/board-as-of.sql', import.meta.url)), 'utf8'));
+    await db.pg.exec(readFileSync(fileURLToPath(new URL('../../supabase/migrations/0003_board_as_of.sql', import.meta.url)), 'utf8'));
     const m = await db.createMember('e2e@example.com', { rules: 'No fundraising asks.' });
     await db.pg.query(`update public.members set created_at = '2026-11-09T12:00:00Z'`);
     await db.pg.query(

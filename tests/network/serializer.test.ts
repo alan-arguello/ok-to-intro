@@ -26,7 +26,7 @@ const FORBIDDEN_VALUES = [/SECRET/, /7d0a4f3c-4c1a/, /@SECRET/];
 // `reason` appears once, legitimately: closed.reason, the ask's own close reason (checked below).
 const FORBIDDEN_KEYS = ['member_id', 'email', 'label', 'cap', 'used', 'paused', 'paused_until', 'reason_code', 'no_reason', 'no_note', 'rules', 'latency_ms', 'ms', 'confidence', 'skip', 'na', 'city', 'model', 'gates_ran'];
 
-const VIEW_KEYS = ['answer', 'as_of', 'cells', 'closed', 'compiled', 'id', 'intro', 'matched_line', 'network', 'next_checkpoint', 'no_match', 'offered', 'outcome', 'people_interrupted', 'questions', 'sent_at', 'subject', 'trace', 'withdrawn_at'];
+const VIEW_KEYS = ['answer', 'as_of', 'cells', 'closed', 'compiled', 'gates_failed', 'id', 'intro', 'matched_line', 'network', 'next_checkpoint', 'no_match', 'offered', 'outcome', 'people_interrupted', 'questions', 'sent_at', 'subject', 'trace', 'withdrawn_at'];
 
 const COMPILED: CompiledAsk = {
   parts: {

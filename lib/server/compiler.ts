@@ -11,6 +11,7 @@ import type { CitedQuote, CompiledPart, CompileEvent, CompileRefusalKind, Compil
 import { isBudgetStop, nextMonthStartFrom, pauseLive, recordUsage, usageCost, type UsageLike } from './budget';
 import { classifyModelError, curly, snapToWords } from './gate';
 import { canRunLive, getLiveState, getModelClient, recordModelCall } from './live';
+import { recordAudit } from './audit';
 import { checkRateLimit } from './ratelimit';
 import { buildCompileRequest, COMPILER_FALLBACK_BETA, COMPILER_MODEL, COMPILER_TIMEOUT_MS, PART_QUESTIONS, SDK_MAX_RETRIES } from './rubric';
 
@@ -464,6 +465,21 @@ function refusedEvents(kind: CompileRefusalKind, text: string, network: Network)
 }
 
 /**
+ * Records each refusal of a REAL-network draft for the board (“+N refused by the compiler” next to Asks sent).
+ * SAMPLE drafts (the playground and /ask's sample network) are not counted. BE1 is the one writer (requests §3).
+ */
+function auditRefusals(events: AsyncIterable<CompileEvent>, network: Network): AsyncIterable<CompileEvent> {
+  if (network !== 'real') return events;
+  async function* tapped(): AsyncGenerator<CompileEvent> {
+    for await (const e of events) {
+      if (e.event === 'refused') void recordAudit('compile_refused', { detail: { kind: e.data.kind } });
+      yield e;
+    }
+  }
+  return tapped();
+}
+
+/**
  * Starts a compile stream (plan → part × 5 → done, or refused, or error). Used by POST /api/compile and the
  * MCP tool draft_ask. Checks input (1..600 characters), the rate limit and live availability first.
  */
@@ -474,13 +490,13 @@ export async function startCompile(input: CompileRequest, context: { clientKey: 
   const network: Network = input.network === 'real' ? 'real' : 'sample';
 
   const refusal = codeRefusal(text);
-  if (refusal) return { ok: true, events: refusedEvents(refusal, text, network) };
+  if (refusal) return { ok: true, events: auditRefusals(refusedEvents(refusal, text, network), network) };
 
   const live = await getLiveState();
   if (!canRunLive(live)) return { ok: false, status: 503, body: { error: 'live_unavailable', live: live.state, until: live.paused_until } };
   const limit = await checkRateLimit(context.clientKey, 'compile');
   if (!limit.ok) return { ok: false, status: 429, body: { error: 'rate_limited', retry_at: limit.retry_at } };
-  return { ok: true, events: liveCompile(text, network, context.signal) };
+  return { ok: true, events: auditRefusals(liveCompile(text, network, context.signal), network) };
 }
 
 /** For tests: forget that the fallback beta was rejected, and set (or restore) the compile deadline. */

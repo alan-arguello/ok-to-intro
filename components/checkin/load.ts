@@ -122,7 +122,7 @@ async function realModel(segment: string, q: CheckinQuery, nonce: string, now: n
     self: '/',
     mode: 'real',
     ui,
-    source: { kind: 'none' },
+    source: c.ask_id ? { kind: 'ask', id: c.ask_id } : { kind: 'none' },
     other: { name: c.other_name, first: c.other_first },
     subject: bareSubject(c.intro_subject),
     introMade: day(c.intro_made_at),

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { ButtonLink, ButtonRow } from '@/components/kit/button';
+import { SampleTag } from '@/components/kit/pills';
 import { isPauseChoice, PAUSE_COPY, pausePhrase, type PauseChoice } from '@/components/member/copy';
 import { pauseViewState, type PauseViewState } from '@/components/member/pause-state';
 import { PauseView } from '@/components/member/pause-view';
@@ -48,6 +49,7 @@ function Message({ title, body, action }: { title: string; body: string; action:
 }
 
 const MAIN = 'container container--narrow pause-main';
+const PAUSE_SAMPLE_NOTE = 'A fictional member. Buttons show what happens; nothing is paused.';
 
 export default async function PausePage({ params, searchParams }: Props) {
   const { token } = await params;
@@ -56,7 +58,8 @@ export default async function PausePage({ params, searchParams }: Props) {
   const qa = qaState('pause', sp.state);
   const until = one(sp.until);
 
-  if (qa) {
+  // /pause/sample: the fictional member every SAMPLE email and page links to. Buttons show what happens; nothing changes.
+  if (qa || token === 'sample') {
     const preselected: PauseChoice = isPauseChoice(until) ? until : 'month';
     const initial: PauseViewState =
       qa === 'paused'
@@ -64,7 +67,12 @@ export default async function PausePage({ params, searchParams }: Props) {
         : { kind: 'confirm', choice: preselected, error: qa === 'post-failed' ? 'failed' : null, undone: false };
     return (
       <SlimPage meta={`${EXAMPLE_ME.name} · cap ${EXAMPLE_ME.cap} a month`} mainClassName={MAIN}>
-        <PauseView key={qa} token={token} sample initial={initial} nowMs={nowMs} />
+        <PauseView key={qa ?? 'sample'} token={token} sample initial={initial} nowMs={nowMs} />
+        {qa ? null : (
+          <p className="small pause-sample-note">
+            <SampleTag /> {PAUSE_SAMPLE_NOTE}
+          </p>
+        )}
       </SlimPage>
     );
   }

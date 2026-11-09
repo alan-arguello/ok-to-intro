@@ -10,6 +10,9 @@ import { checkinQuestion } from '@/lib/emails';
 import { checkinSave } from './actions';
 import '@/styles/offer.css';
 
+/** Server actions run follow-up work after the response (next/server after()); the daily cron is the backstop. */
+export const maxDuration = 60;
+
 /**
  * S5 · the check-in page, `/c/[token]` (owner R). Reached from the +1 day and +14 day emails (`?v=` preselects;
  * only this page's Save records), from /me with a `c_…` id, and as `/c/sample` from the SAMPLE loop. Dynamic, never

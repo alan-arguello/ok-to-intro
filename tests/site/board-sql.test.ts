@@ -9,7 +9,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { parseBoardSnapshot } from '@/components/board/model';
 import { createTestDb, type TestDb } from '../db/harness';
 
-const FIXTURE = fileURLToPath(new URL('./fixtures/board-as-of.sql', import.meta.url));
+const FIXTURE = fileURLToPath(new URL('../../supabase/migrations/0003_board_as_of.sql', import.meta.url));
 const RULES = 'Happy to talk to founders about Postgres, queues or LLM evals in production.';
 
 let db: TestDb;

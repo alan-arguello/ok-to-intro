@@ -52,7 +52,7 @@ export async function getHealth(): Promise<HealthSnapshot> {
     live_paused_until: live.paused_until,
     db,
     email: flags.hasResend ? 'ok' : 'off',
-    network: flags.realNetwork ? 'real' : 'sample_only',
+    network: flags.realNetwork && flags.hasResend ? 'real' : 'sample_only',
     checked_at: new Date(now).toISOString(),
   };
 }
