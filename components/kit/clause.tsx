@@ -41,19 +41,21 @@ export interface RulesReadViewProps {
   label?: string;
   id?: string;
   className?: string;
+  /** Never grey out untouched lines (no tallies yet: “unused” means nothing). */
+  plain?: boolean;
 }
 
 /**
  * `.rules` read view: one <li> per rules line, the quoted words marked at the offsets code found,
  * a tally per line; unused lines get `.is-unused`.
  */
-export function RulesReadView({ rules, ranges, tallies, activeKeys, label = 'Your rules, read view', id, className }: RulesReadViewProps) {
+export function RulesReadView({ rules, ranges, tallies, activeKeys, label = 'Your rules, read view', id, className, plain = false }: RulesReadViewProps) {
   const lines = readViewLines(rules, ranges);
   const active = new Set(activeKeys ?? []);
   return (
     <ol className={cx('rules', className)} aria-label={label} id={id}>
       {lines.map((line) => (
-        <li key={line.index} className={line.unused ? 'is-unused' : undefined}>
+        <li key={line.index} className={line.unused && !plain ? 'is-unused' : undefined}>
           {line.segments.map((seg, i) =>
             seg.mark ? (
               <mark key={i} className={cx('mark', seg.className, seg.keys.some((k) => active.has(k)) && 'is-active')} data-keys={seg.keys.join(' ') || undefined}>

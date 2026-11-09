@@ -859,7 +859,7 @@ export function MeView({ initial }: { initial: MeInitial }) {
                     ) : null}
                   </span>
                 </div>
-                {editorOpen ? rulesEditor('me-frules-ta', 'me-frules-l') : <RulesReadView rules={rules} ranges={[]} className="me-rules-plain" />}
+                {editorOpen ? rulesEditor('me-frules-ta', 'me-frules-l') : <RulesReadView rules={rules} ranges={[]} plain />}
               </div>
               <div className="me-grid2">
                 <div data-slot="cap">{capField}</div>
@@ -906,7 +906,7 @@ export function MeView({ initial }: { initial: MeInitial }) {
               {editorOpen ? (
                 rulesEditor('me-rules-ta')
               ) : (
-                <RulesReadView rules={saved.rules} ranges={readView.ranges} tallies={readView.tallies} className={readView.tallies ? undefined : 'me-rules-plain'} />
+                <RulesReadView rules={saved.rules} ranges={readView.ranges} tallies={readView.tallies} plain={!readView.tallies} />
               )}
               {help && !editorOpen ? <p className="help me-help">{help}</p> : null}
               <p className="me-ledger">{ledgerText}</p>

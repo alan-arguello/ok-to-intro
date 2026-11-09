@@ -28,10 +28,17 @@ function subscribeOnline(onChange: () => void) {
   };
 }
 
+const PLAYGROUND_STATE_BANNER: Record<string, string> = { 'api-down': 'down', budget: 'budget', offline: 'offline', 'rate-limited': 'limited' };
+
 export function Banner({ qa }: { qa: boolean }) {
   const forced = useSyncExternalStore(
     noSubscribe,
-    () => resolveDegraded(new URLSearchParams(window.location.search).get('degraded'), qa),
+    () => {
+      const sp = new URLSearchParams(window.location.search);
+      // On `/`, the playground's degraded QA states imply their banner, as in the prototype's degrade().
+      const implied = window.location.pathname === '/' ? PLAYGROUND_STATE_BANNER[sp.get('state') ?? ''] : undefined;
+      return resolveDegraded(sp.get('degraded') ?? implied, qa);
+    },
     () => null,
   );
   const offline = useSyncExternalStore(

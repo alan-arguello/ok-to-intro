@@ -125,4 +125,3 @@ html:has(#me-bar) { scroll-padding-bottom: 92px; }
 /* The plain read view (first visit, or nothing reached the gate yet) has no tallies, so no line is “unused”: the
    prototype shows every line in ink. The kit's RulesReadView marks untouched lines .is-unused; this scoped variant
    undoes that only here (docs/requests/s3-member.md asks F for a `plain` prop instead). */
-.rules.me-rules-plain > li.is-unused { color: var(--ink); }
