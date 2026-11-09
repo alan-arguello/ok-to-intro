@@ -32,6 +32,7 @@
     "audit": "node scripts/audit-sweep.mjs",
     "shoot": "node scripts/shoot.mjs",
     "recordings:authored": "tsx scripts/build-authored-recordings.ts",
+    "recordings:fixtures": "tsx scripts/build-authored-recordings.ts --out tests/fixtures/recorded/authored",
     "build:check": "node scripts/build-check.mjs",
     "plugin:build": "tsx scripts/build-plugin.ts",
     "plugin:check": "tsx scripts/build-plugin.ts --check"

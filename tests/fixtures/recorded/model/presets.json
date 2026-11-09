@@ -1,0 +1,725 @@
+{
+  "source": "model",
+  "recorded_at": "2026-11-09T21:02:26.870Z",
+  "model": "claude-haiku-5-5",
+  "rubric_hash": "0c21893b06ed373e2239fc0e7d7701d6de11cdaffd4ac44c3c24b7919cbc36fe",
+  "note": "Recorded with the production gate by npm run record:presets: 36 gate calls, cost measured from token usage.",
+  "runs": {
+    "engineer": {
+      "preset": "engineer",
+      "rules_sha256": "e7add37ae9f6bd34422b0703f05bd05f1d0b2f9a24ba0d19c90bc40817318a62",
+      "wall_ms": 3232,
+      "cost_usd": 0.0013922,
+      "gates": [
+        {
+          "ask_id": "a01",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "found": true,
+              "start": 0,
+              "end": 76
+            },
+            {
+              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "found": true,
+              "start": 77,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "Postgres at 40M rows with p95 going 40 ms to 900 ms: the topic, with a real workload, table size and p95 stated.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.93,
+          "ms": 2123,
+          "request_id": "req_011Cgt2hVcia9DP6fQjxBfCv"
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Public hospital procurement in Mexico is not Postgres, queues or LLM evals, so no rules line covers this ask.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.95,
+          "ms": 1454,
+          "request_id": "req_011Cgt2hVfgyC6uPKhmAD1iN"
+        },
+        {
+          "ask_id": "a03",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "found": true,
+              "start": 0,
+              "end": 76
+            },
+            {
+              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "found": true,
+              "start": 77,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "LLM evals in production is the topic; the ask gives a real workload: 8% of real tickets failing, with 1,200 labeled tickets.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.8,
+          "ms": 2046,
+          "request_id": "req_011Cgt2hVmtsTYaTQfQDn7W8"
+        },
+        {
+          "ask_id": "a04",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Insurer software pricing in Mexico is not covered by any topic line; the member’s topics are Postgres, queues and LLM evals.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1770,
+          "request_id": "req_011Cgt2hVggs7PLN8ipZMCHX"
+        },
+        {
+          "ask_id": "a05",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Hiring a first engineer in Bogota is not Postgres, queues, or LLM evals, so no topic line covers this ask.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.95,
+          "ms": 2398,
+          "request_id": "req_011Cgt2hVbyJr2D8yXzMNvJ5"
+        },
+        {
+          "ask_id": "a06",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "found": true,
+              "start": 0,
+              "end": 76
+            },
+            {
+              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "found": true,
+              "start": 77,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "Redis job queues dropped during deploys: the queues topic, but no table size, p95 or error rate is stated yet.",
+          "question": {
+            "type": "metric",
+            "text": "What is your job volume and the rate of jobs dropped per deploy?"
+          },
+          "flags": [],
+          "confidence": 0.8,
+          "ms": 2666,
+          "request_id": "req_011Cgt2hVeCv8gh93bvN8zEa"
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "No rules line covers SOC 2 compliance or audit prep; the ask is outside the listed topics.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1991,
+          "request_id": "req_011Cgt2hVeTBn1nttTSZaJLH"
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "found": true,
+              "start": 0,
+              "end": 76
+            },
+            {
+              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "found": true,
+              "start": 77,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "stage",
+          "reason": "Postgres topic, but pre-launch with no users and no stated workload: the real-workload condition is not met.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.85,
+          "ms": 2856,
+          "request_id": "req_011Cgt2hVaUm4CFrDx2y116R"
+        },
+        {
+          "ask_id": "a09",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "found": true,
+              "start": 0,
+              "end": 76
+            },
+            {
+              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "found": true,
+              "start": 77,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "LLM evals in production is the topic; a 6% production misroute rate is a stated error rate, meeting the workload condition.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.85,
+          "ms": 3232,
+          "request_id": "req_011Cgt2hVdxWuxjd8W3APMfV"
+        },
+        {
+          "ask_id": "a10",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asker is a venture studio seeking deal flow and offering co-investment rights; no rules line covers investor or deal-flow asks.",
+          "question": null,
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": 0.9,
+          "ms": 1628,
+          "request_id": "req_011Cgt2hVhBKNexwHC3bmoKb"
+        },
+        {
+          "ask_id": "a11",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Clinic scheduling software in Puebla is not Postgres, queues or LLM evals, and no rules line covers it.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": 0.95,
+          "ms": 1962,
+          "request_id": "req_011Cgt2hVgBiYmQYNBKhrFN8"
+        },
+        {
+          "ask_id": "a12",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "No asks to review a deck.",
+              "found": true,
+              "start": 171,
+              "end": 196
+            },
+            {
+              "text": "No fundraising asks.",
+              "found": true,
+              "start": 150,
+              "end": 170
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "rule_says_no",
+          "reason": "Asks for feedback on a seed pitch deck and is raising money: both excluded by the member’s rules.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.97,
+          "ms": 1875,
+          "request_id": "req_011Cgt2hVggnEe7nJEY3kbCJ"
+        }
+      ]
+    },
+    "health": {
+      "preset": "health",
+      "rules_sha256": "83767b1a40912b415f5e76c4f331a275af6a12518542cbb0a74b3b5928116279",
+      "wall_ms": 2449,
+      "cost_usd": 0.0014182,
+      "gates": [
+        {
+          "ask_id": "a01",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Postgres performance tuning at 40M rows is not a B2B sale to public hospitals or insurers, so no topic line covers this ask.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1248,
+          "request_id": "req_011Cgt2himUk4uHbXGDCzDcz"
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.",
+              "found": true,
+              "start": 0,
+              "end": 92
+            },
+            {
+              "text": "Only if they have talked to 10+ buyers and have a price.",
+              "found": true,
+              "start": 93,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "Inventory software to public hospitals in Jalisco, Mexico, with 14 buyer calls; the price condition is not stated in the ask.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.6,
+          "ms": 2192,
+          "request_id": "req_011Cgt2hikjgPogUZfdgoVpP"
+        },
+        {
+          "ask_id": "a03",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "No rules line covers LLM eval tooling or support-agent QA; the ask is outside the B2B hospital/insurer topic.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1293,
+          "request_id": "req_011Cgt2himysBJHkcoJdMj3Y"
+        },
+        {
+          "ask_id": "a04",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.",
+              "found": true,
+              "start": 0,
+              "end": 92
+            },
+            {
+              "text": "Only if they have talked to 10+ buyers and have a price.",
+              "found": true,
+              "start": 93,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "Insurers in Mexico is a covered topic; the asker has 12 insurer calls but has not stated whether they have a price, which the rules require.",
+          "question": {
+            "type": "price",
+            "text": "Do you already have a price for your claims reconciliation software, per claim or per seat?"
+          },
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": 0.6,
+          "ms": 1861,
+          "request_id": "req_011Cgt2hinyRoJnSer9ebEwr"
+        },
+        {
+          "ask_id": "a05",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Ask is about hiring a first engineer, which no topic line covers; rules only cover talks with B2B founders selling to Mexican or Colombian public hospitals or insurers.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 2449,
+          "request_id": "req_011Cgt2himj8dF3v1PzdAzwm"
+        },
+        {
+          "ask_id": "a06",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Job queue reliability during deploys is an engineering problem outside the member’s topics: B2B sales to public hospitals or insurers in Mexico or Colombia.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1313,
+          "request_id": "req_011Cgt2hinUqbVwmLjitLeZm"
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "No rule covers SOC 2 compliance help; the topic is not selling to public hospitals or insurers, and the ask is for a peer who passed a SOC 2 audit.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1573,
+          "request_id": "req_011Cgt2hioE5ezL982osmmkE"
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "A Postgres schema for 1B rows is a technical question, not a B2B sale to public hospitals or insurers in Mexico or Colombia; no rules line covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1195,
+          "request_id": "req_011Cgt2hioxYiADFoahv5mLD"
+        },
+        {
+          "ask_id": "a09",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.",
+              "found": true,
+              "start": 0,
+              "end": 92
+            },
+            {
+              "text": "Only if they have talked to 10+ buyers and have a price.",
+              "found": true,
+              "start": 93,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "Claims-triage SaaS selling to insurers in Colombia, 11 insurer calls and a $2,500/month price: meets the topic and both conditions.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1706,
+          "request_id": "req_011Cgt2himzBXuyPLf2Zfufs"
+        },
+        {
+          "ask_id": "a10",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asker is a venture studio seeking pre-seed founder referrals and offering co-investment; no member rule covers this topic.",
+          "question": null,
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": 0.9,
+          "ms": 1492,
+          "request_id": "req_011Cgt2hivfekuurn2CUcM8m"
+        },
+        {
+          "ask_id": "a11",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Private clinic scheduling software in Puebla is not a public hospital or insurer in Mexico or Colombia; no rule covers this ask.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": 0.9,
+          "ms": 1568,
+          "request_id": "req_011Cgt2hioxdyiYqhLQqnjqo"
+        },
+        {
+          "ask_id": "a12",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "No asks to review a deck.",
+              "found": true,
+              "start": 171,
+              "end": 196
+            },
+            {
+              "text": "No fundraising asks.",
+              "found": true,
+              "start": 150,
+              "end": 170
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "rule_says_no",
+          "reason": "Ask is a seed fundraise asking for feedback on a pitch deck; the member declines deck reviews and fundraising asks.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": 0.97,
+          "ms": 1787,
+          "request_id": "req_011Cgt2hioULJzCLyExeWF2b"
+        }
+      ]
+    },
+    "founder": {
+      "preset": "founder",
+      "rules_sha256": "f909daf277a050e5343a04fc557f2b10ad3d57a25d73efac545e2541d09ecd6a",
+      "wall_ms": 1726,
+      "cost_usd": 0.0013173,
+      "gates": [
+        {
+          "ask_id": "a01",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Postgres scaling at 40M rows is not covered by the member’s topics: hiring a first engineer or passing a first SOC 2 audit.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1316,
+          "request_id": "req_011Cgt2htuSDiUaVqYU2Z3sb"
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Public hospital procurement in Mexico is not covered by the member’s topics: hiring a first engineer or passing a first SOC 2 audit.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1341,
+          "request_id": "req_011Cgt2htwfiUEd36JiLUKMz"
+        },
+        {
+          "ask_id": "a03",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "LLM eval failures in production support agents are not covered by the member’s topics (hiring a first engineer, first SOC 2 audit), so no rule lets this ask through.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1519,
+          "request_id": "req_011Cgt2htuvd8xsoodV9RRqR"
+        },
+        {
+          "ask_id": "a04",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Pricing insurer software in Mexico matches no topic line; the rules cover hiring a first engineer and passing a first SOC 2 audit only.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1424,
+          "request_id": "req_011Cgt2httCh1jkwnQoQRDeN"
+        },
+        {
+          "ask_id": "a05",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "Happy to talk about hiring a first engineer",
+              "found": true,
+              "start": 0,
+              "end": 43
+            },
+            {
+              "text": "Only if you have revenue.",
+              "found": true,
+              "start": 76,
+              "end": 101
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "First engineer hiring in Bogotá fits the topic; the ask does not state whether the company has revenue, which the member requires.",
+          "question": {
+            "type": "metric",
+            "text": "Does your company currently have revenue? If so, roughly how much per month?"
+          },
+          "flags": [],
+          "confidence": 0.8,
+          "ms": 1726,
+          "request_id": "req_011Cgt2htugdNJpopaboK8Nt"
+        },
+        {
+          "ask_id": "a06",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Job queue reliability during deploys is not hiring a first engineer or a first SOC 2 audit, so no rules line covers this ask.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1316,
+          "request_id": "req_011Cgt2htugktXEp6v1n7Tt3"
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "Happy to talk about hiring a first engineer or passing a first SOC 2 audit.",
+              "found": true,
+              "start": 0,
+              "end": 75
+            },
+            {
+              "text": "Only if you have revenue.",
+              "found": true,
+              "start": 76,
+              "end": 101
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "First SOC 2 audit is the topic, and the company reports $9k MRR from 6 paying customers, meeting the revenue condition.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.9,
+          "ms": 1401,
+          "request_id": "req_011Cgt2htvfgnjGTnpuqQDPD"
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Schema design for Postgres at 1B rows is not a topic the rules cover; no topic line matches this ask.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.8,
+          "ms": 1329,
+          "request_id": "req_011Cgt2htvg2Np2G6XWHdF41"
+        },
+        {
+          "ask_id": "a09",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asker wants an LLM evals expert for a claims model; no rule line covers this topic (hiring, SOC 2, or revenue-backed asks only).",
+          "question": null,
+          "flags": [],
+          "confidence": 0.85,
+          "ms": 1208,
+          "request_id": "req_011Cgt2htwR2mVQxHZzD7n3a"
+        },
+        {
+          "ask_id": "a10",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asker is a venture studio seeking deal flow and co-investment, not a founder asking for help; no rule line covers this topic.",
+          "question": null,
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": 0.9,
+          "ms": 1480,
+          "request_id": "req_011Cgt2htvRueDZ4m6UNWw4M"
+        },
+        {
+          "ask_id": "a11",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Clinic scheduling software and finding clinic-group buyers is not a topic the member’s rules cover; the ask also tries to dictate the verdict and quote.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": 0.9,
+          "ms": 1487,
+          "request_id": "req_011Cgt2htxAiu54j8TukWGmn"
+        },
+        {
+          "ask_id": "a12",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "No asks to review a deck.",
+              "found": true,
+              "start": 123,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "rule_says_no",
+          "reason": "The ask wants feedback on a seed pitch deck, which the member’s rule explicitly excludes; the free-access offer is not a qualifying fact.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.97,
+          "ms": 1655,
+          "request_id": "req_011Cgt2htwB52BJyg5gG4a1d"
+        }
+      ]
+    }
+  }
+}

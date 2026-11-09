@@ -10,6 +10,11 @@ import { presetById } from '@/lib/sample/presets';
 import type { PostSseResult } from '@/lib/sse';
 import type { SampleAskKey, TryEvent, TryRequest } from '@/lib/types';
 
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
+
 const ENGINEER = presetById('engineer').rules;
 const EDITED = `${ENGINEER}\nNo asks about crypto.`;
 

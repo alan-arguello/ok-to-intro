@@ -491,7 +491,15 @@ export async function answerAsk(args: AnswerArgs, ctx: McpRequestContext, signal
       { sample_ask_id: askId, compiled, you: null, question: { type, text: sampleQuestionText(askId, type) }, answer },
       { clientKey: ctx.clientKey, signal },
     );
-    if (!res.ok) return fail(errorText(res.body.message, res.body.error === 'rate_limited' ? 'next: wait until then and answer again.' : 'next: send the draft again with send_ask.'));
+    if (!res.ok) {
+      const nextLine =
+        res.body.error === 'rate_limited'
+          ? 'next: wait until then and answer again.'
+          : res.body.error === 'live_unavailable'
+            ? 'next: answer again once live checks are back; nothing about the ask changed.'
+            : 'next: send the draft again with send_ask.';
+      return fail(errorText(res.body.message, nextLine));
+    }
     const authored = res.cells.length > 0 && res.cells.every((c) => c.source === 'authored');
     return ok(
       answerReceipt({

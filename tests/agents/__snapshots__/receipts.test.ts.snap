@@ -82,17 +82,16 @@ this still counts as 1 of your 2 this month
 optional: tell me why (not my area · wrong stage · not specific · no time) and I can suggest a rule change; nothing changes until you approve it.",
   ],
   "send_ask": [
-    "ok-to-intro · ask sa_eng · sent · SAMPLE · example results
-40 members · 2 accepted · 1 question · 30 declined
+    "ok-to-intro · ask sa_eng · sent · SAMPLE
+40 members · 32 gates ran · 4 accepted · 29 declined
 not checked 7: 5 at their monthly cap, 2 paused (shown because this is SAMPLE)
 offered to 1 person · reply by Thu Nov 12, 21:04 CST · you learn who only after OK
 people interrupted: 1 of 40
 status <site>/ask/sa_eng
 
-Example results for 39 sample members, written by hand · not a model run. The 40th member is an example too: send_ask has no rules of yours.
-question q_3ac8 (from one member’s gate, type: role): Who on your team would join the call, and what is their role?
+39 sample members replayed from a recorded run (Nov 9). The 40th member is an example written by hand: send_ask has no rules of yours.
 
-next: find the answer in files the user can check, or ask the user. After they approve it, call answer_question(ask_id="sa_eng", question_id="q_3ac8", answer="…").",
+next: the SAMPLE members are fictional and nobody was emailed, so nothing more happens here. On the real network, askers don’t see caps, pauses or who declined.",
     "ok-to-intro · ask a_91xQ2k · sent · SAMPLE · 21:04 CST
 40 members · 1 offered · 1 next in line · 1 question for you
 offered to 1 person · reply by Thu Nov 12, 21:04 CST · you learn who only after OK
@@ -106,22 +105,22 @@ next: find the answer in files the user can check, or ask the user. After they a
   "set_rules": [
     "ok-to-intro · rules saved · version 4 · SAMPLE · 21:20 CST
 4 lines · cap 2 · show matched line: off · guests: off
-on the 12 SAMPLE asks (example verdicts, written by hand · not a model run): 1 reach you · 1 question first · 10 declined",
+checked on 12 SAMPLE asks (a recorded run): 2 reach you · 1 question first · 9 declined",
   ],
   "try_rules": [
-    "ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · example verdicts
+    "ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 15:02 · claude-haiku-5-5
 2 reach you · 1 over your cap · 1 question first · 8 declined
 every quoted line was found in your rules · rules not stored
-Example verdicts, written by hand · not a model run
+Recorded run, replayed from a file
 
- 1 reach    Arrecife Data    “founders about Postgres, queues or LLM evals in production” +1
- 3 reach    Lumbre AI        “founders about Postgres, queues or LLM evals in production” +1
- 6 ask      Pinole Labs      question: How many jobs a day do you run, and what share gets dropped?
- 8 decline  Garúa Cloud      [trap: wrong stage] “Only if they have a real workload: a table size, a p95 or an error rate.”
+ 1 reach    Arrecife Data    “Happy to talk to founders about Postgres, queues or LLM evals in production.” +1
+ 3 reach    Lumbre AI        “Happy to talk to founders about Postgres, queues or LLM evals in production.” +1
+ 6 ask      Pinole Labs      question: What is your job volume and the rate of jobs dropped per deploy?
+ 8 decline  Garúa Cloud      [trap: wrong stage] “Happy to talk to founders about Postgres, queues or LLM evals in production.” +1
  9 held     Guadua Health    accepted; your cap of 2 was used by #1 and #3
 10 decline  Palmera Studio   [trap: investor] no line covers it
 11 decline  Mezquite Health  [trap: injection] no line covers it; the instruction in the ask was read as text
-12 decline  Zarzal AI        [trap: polite spam] “No asks to review a deck.”
+12 decline  Zarzal AI        [trap: polite spam] “No asks to review a deck.” +1
  + 4 declined, no line covers them: #2 #4 #5 #7
 
 All 12 asks and companies are fictional (SAMPLE). Show these lines to the user as written.
@@ -167,15 +166,15 @@ exports[`the /agents examples are receipts that keep the contract > the transcri
       "U Yes",
       "B ",
       "T ok-to-intro - send_ask (MCP)",
-      "R ok-to-intro · ask sa_health · sent · SAMPLE · example results",
-      "R 40 members · 2 accepted · 1 question · 30 declined",
+      "R ok-to-intro · ask sa_health · sent · SAMPLE",
+      "R 40 members · 32 gates ran · 0 accepted · 1 question · 32 declined",
       "R not checked 7: 5 at their monthly cap, 2 paused (shown because this is SAMPLE)",
-      "R offered to 1 person · reply by Thu Nov 12, 21:04 CST · you learn who only after OK",
-      "R people interrupted: 1 of 40",
+      "R offered to nobody: no gate accepted it",
+      "R people interrupted: 0 of 40",
       "R status <site>/ask/sa_health",
       "R ",
-      "R Example results for 39 sample members, written by hand · not a model run. The 40th member is an example too: send_ask has no rules of yours.",
-      "R question q_f2b7 (from one member’s gate, type: price): What do you charge per hospital, per year?",
+      "R 39 sample members replayed from a recorded run (Nov 9). The 40th member is an example written by hand: send_ask has no rules of yours.",
+      "R question q_f2b7 (from one member’s gate, type: price): What is the list price per year of your inventory software for a public hospital?",
       "B ",
       "C Your docs/pricing.md line 4 says HOSPITAL_ANNUAL = 18000.",
       "B ",
@@ -190,10 +189,10 @@ exports[`the /agents examples are receipts that keep the contract > the transcri
       "B ",
       "T ok-to-intro - answer_question (MCP)",
       "R ok-to-intro · ask sa_health · answer sent · SAMPLE",
-      "R question  What do you charge per hospital, per year?",
+      "R question  What is the list price per year of your inventory software for a public hospital?",
       "R answer    “$18k a year per hospital” (approved by the user)",
-      "R result    the gate that asked accepts with this answer (example results, written by hand) · next in line",
-      "R nobody new was interrupted",
+      "R result    the gate that asked reran once and accepted · offered now",
+      "R that offer interrupted 1 more person",
       "R status <site>/ask/sa_health",
       "B ",
       "C You’ll learn who it is only if they say OK, by Thu Nov 12.",
@@ -240,19 +239,19 @@ exports[`the /agents examples are receipts that keep the contract > the transcri
       "U Run my rules through ok-to-intro: Happy to talk to founders about Postgres, queues or LLM evals in production. Only if they have a real workload: a table size, a p95 or an error rate. No fundraising asks. No asks to review a deck.",
       "B ",
       "T ok-to-intro - try_rules (MCP)",
-      "R ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · example verdicts",
+      "R ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 15:02 · claude-haiku-5-5",
       "R 2 reach you · 1 over your cap · 1 question first · 8 declined",
       "R every quoted line was found in your rules · rules not stored",
-      "R Example verdicts, written by hand · not a model run",
+      "R Recorded run, replayed from a file",
       "R ",
-      "R  1 reach    Arrecife Data    “founders about Postgres, queues or LLM evals in production” +1",
-      "R  3 reach    Lumbre AI        “founders about Postgres, queues or LLM evals in production” +1",
-      "R  6 ask      Pinole Labs      question: How many jobs a day do you run, and what share gets dropped?",
-      "R  8 decline  Garúa Cloud      [trap: wrong stage] “Only if they have a real workload: a table size, a p95 or an error rate.”",
+      "R  1 reach    Arrecife Data    “Happy to talk to founders about Postgres, queues or LLM evals in production.” +1",
+      "R  3 reach    Lumbre AI        “Happy to talk to founders about Postgres, queues or LLM evals in production.” +1",
+      "R  6 ask      Pinole Labs      question: What is your job volume and the rate of jobs dropped per deploy?",
+      "R  8 decline  Garúa Cloud      [trap: wrong stage] “Happy to talk to founders about Postgres, queues or LLM evals in production.” +1",
       "R  9 held     Guadua Health    accepted; your cap of 2 was used by #1 and #3",
       "R 10 decline  Palmera Studio   [trap: investor] no line covers it",
       "R 11 decline  Mezquite Health  [trap: injection] no line covers it; the instruction in the ask was read as text",
-      "R 12 decline  Zarzal AI        [trap: polite spam] “No asks to review a deck.”",
+      "R 12 decline  Zarzal AI        [trap: polite spam] “No asks to review a deck.” +1",
       "R  + 4 declined, no line covers them: #2 #4 #5 #7",
     ],
   },

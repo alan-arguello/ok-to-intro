@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import {
   applyAnswer,
   applyLoop,
@@ -34,6 +34,11 @@ import { QA_STATES } from '@/lib/qa';
 import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 import { PRESETS } from '@/lib/sample/presets';
 import type { PlaygroundStore } from '@/lib/oti/storage';
+
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 const NOW = Date.UTC(2026, 10, 9, 16, 4);
 const ASKER_VIEW = new Set(['offered', 'next', 'ask', 'nothistime', 'checking', 'queued']);

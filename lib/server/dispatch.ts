@@ -852,7 +852,7 @@ export type SampleAnswerResult =
  * Which members asked: for the 3 sample asks, the recorded file says; for a custom-text send, this instance
  * remembers it for an hour (an unknown id answers 400 “Send it again”). The authored file has no rerun rows: the
  * hand-written sample expects each gate that asked to accept once it has the answer (prototype data.js), and those
- * cells say `authored`. A model file's members rerun live.
+ * cells say `authored`. A model file's members rerun live; without live calls the answer is refused (503 live_unavailable).
  */
 export async function answerSampleQuestion(input: SampleAnswerInput, context: { clientKey: string | null; signal?: AbortSignal }): Promise<SampleAnswerResult> {
   const id = typeof input?.sample_ask_id === 'string' ? input.sample_ask_id : '';
@@ -889,6 +889,12 @@ export async function answerSampleQuestion(input: SampleAnswerInput, context: { 
     const limit = await checkRateLimit(context.clientKey, 'sample_send');
     if (!limit.ok) return { ok: false, status: 429, body: rateRefusal(limit.retry_at, 'sample') };
   } else liveOk = false;
+  // Sample members from a model file (or a custom send) rerun live. Without live calls none of them can rerun, so
+  // refuse, as a REAL answer does, rather than report failed reruns as gates that “reran once and declined”.
+  if (askers.length > 0 && !authoredReruns && !liveOk) {
+    const base = liveRefusal(live, false);
+    return { ok: false, status: 503, body: { ...base, message: `The gates that asked rerun live, and they can’t right now. ${base.message}` } };
+  }
 
   const ask: GateInput['ask'] = { text: input.compiled.text, subject: input.compiled.subject, parts: input.compiled.parts, ...(sa ? { asker_stage: sa.as.stage } : {}) };
   const answers = [{ type: q.type, text: answer }];

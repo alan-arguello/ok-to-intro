@@ -303,7 +303,8 @@ function askTranscript(): Transcript {
           answer: '$18k a year per hospital',
           reran: q.gates,
           accepted: q.gates,
-          offered_now: false,
+          // As answerSampleQuestion does: when no gate held the ask, the rerun accept is offered now.
+          offered_now: !send.offer,
           authored: send.members === 'authored',
           wall_ms: null,
         }),

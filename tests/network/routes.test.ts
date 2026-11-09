@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { POST as createAsk } from '@/app/api/asks/route';
 import { GET as getAsk } from '@/app/api/asks/[id]/route';
 import { POST as send } from '@/app/api/asks/[id]/send/route';
@@ -14,6 +14,11 @@ import { assembleAskText } from '@/lib/oti/ask';
 import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 import { readSse } from '@/lib/sse';
 import type { CompiledAsk, FanoutEvent } from '@/lib/types';
+
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 /**
  * This instance has no keys at all (no Supabase, no model, no Resend, no cron secret): every REAL route answers its

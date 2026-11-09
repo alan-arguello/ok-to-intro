@@ -6,6 +6,11 @@ import { AskCompose, type AskComposeProps } from '@/components/ask/compose';
 import { getRun, resetSampleStoreForTests } from '@/components/ask/sample-store';
 import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
+
 const push = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push, replace: vi.fn(), prefetch: vi.fn(), back: vi.fn() }), usePathname: () => '/ask' }));
 

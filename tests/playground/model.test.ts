@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { findClause } from '@/lib/oti/clause';
 import { BANNED_COPY } from '@/lib/oti/text';
 import { presetById } from '@/lib/sample/presets';
@@ -30,6 +30,11 @@ import {
   type RowGate,
   type Run,
 } from '@/components/playground/model';
+
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 const ENGINEER = presetById('engineer').rules;
 const run = () => recordedRunFor('engineer', ENGINEER, Date.parse('2026-11-09T16:00:00Z'));

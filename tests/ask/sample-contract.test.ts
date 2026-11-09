@@ -4,7 +4,7 @@
  * code the page runs. The asker view S2 paints must agree with the counts BE2 reports in `done`.
  */
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { exampleRows, initialCompose, composeReducer, compiledAskOf, sampleKindOf } from '@/components/ask/compose-model';
 import { applyAnswer, cellView, emptyRun, holderCell, legendItems, NETWORK_TOTAL, pendingQuestions, youCell, type SampleRun } from '@/components/ask/fanout-model';
 import { foldEvent, sampleSendBody } from '@/components/ask/sample-runner';
@@ -13,6 +13,11 @@ import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 import { PRESETS } from '@/lib/sample/presets';
 import { createSseParser, encodeSseEvent } from '@/lib/sse';
 import type { FanoutEvent, PresetId } from '@/lib/types';
+
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 const NOW = Date.UTC(2026, 10, 9, 16, 4);
 const PRESET_IDS: PresetId[] = ['engineer', 'health', 'founder'];

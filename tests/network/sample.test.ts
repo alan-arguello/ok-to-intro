@@ -27,6 +27,11 @@ import { PRESETS } from '@/lib/sample/presets';
 import type { CompiledAsk, FanoutCellEventSample, FanoutEvent } from '@/lib/types';
 import { accepts, asksBack, collect, declines } from './support';
 
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
+
 const ENG = SAMPLE_NETWORK_ASKS.engineer;
 const HEALTH = SAMPLE_NETWORK_ASKS.health;
 

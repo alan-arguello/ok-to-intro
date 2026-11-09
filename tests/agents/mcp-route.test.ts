@@ -1,9 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { DELETE, GET, POST } from '@/app/mcp/route';
 import { TOOL_CATALOG } from '@/lib/mcp/catalog';
 import { SERVER_INSTRUCTIONS } from '@/lib/mcp/server';
 import { AUTHORED_LABEL } from '@/lib/oti/copy';
 import { PRESET_RECORDINGS } from '@/lib/recorded';
+
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 /**
  * /mcp end to end through the route handler, as Claude Code calls it (Streamable HTTP, stateless, the 2025-era

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { errorExamples, hookExample, toolExamples, transcripts } from '@/components/agents/examples';
 import { AUTHORED_FANOUT_LABEL, AUTHORED_LABEL, SUGGESTED_EDIT_UNTESTED } from '@/lib/oti/copy';
 import { BANNED_COPY } from '@/lib/oti/text';
@@ -26,11 +26,20 @@ import {
   type TryRowResult,
   tryRulesReceipt,
 } from '@/lib/receipts';
-import { PRESET_RECORDINGS, recordedGateEvent } from '@/lib/recorded';
+import { type PresetsFile, recordedGateEvent } from '@/lib/recorded';
 import { SAMPLE_ASKS } from '@/lib/sample/asks';
 import { presetById } from '@/lib/sample/presets';
 import { SITE_URL } from '@/lib/site';
 import type { GateDecision } from '@/lib/types';
+import authoredPresetsJson from '../fixtures/recorded/authored/presets.json';
+
+// The /agents examples render data/recorded. Pinned here to a copy of the claude-haiku-5-5 recording (commit 6a17cf9),
+// so the snapshots change only when the receipts do; tests/agents/receipts-authored.test.ts pins the hand-written files.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/model/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/model/sample-network.json'));
+
+/** The hand-written Engineer verdicts (npm run recordings:fixtures): the try_rules formatter tests below use them. */
+const AUTHORED_PRESETS = authoredPresetsJson as unknown as PresetsFile;
 
 /** Snapshots don't depend on the configured origin. */
 const stable = (text: string) => text.split(SITE_URL).join('<site>');
@@ -62,8 +71,8 @@ function expectReceipt(text: string) {
 }
 
 function engineerAuthored(): TryRowResult[] {
-  const run = PRESET_RECORDINGS.runs.engineer;
-  return SAMPLE_ASKS.map((a, i) => ({ kind: 'gate', decision: recordedGateEvent(run.gates.find((g) => g.ask_id === a.id)!, i, PRESET_RECORDINGS) }));
+  const run = AUTHORED_PRESETS.runs.engineer;
+  return SAMPLE_ASKS.map((a, i) => ({ kind: 'gate', decision: recordedGateEvent(run.gates.find((g) => g.ask_id === a.id)!, i, AUTHORED_PRESETS) }));
 }
 
 describe('the /agents examples are receipts that keep the contract', () => {
@@ -95,16 +104,17 @@ describe('the /agents examples are receipts that keep the contract', () => {
     }
   });
 
-  it('label the hand-written runs as such', () => {
+  it('label a model recording as recorded, never as written by hand', () => {
     const tryText = examples.try_rules[0] as string;
-    if (PRESET_RECORDINGS.source === 'authored') {
-      expect(tryText).toContain(AUTHORED_LABEL);
-      expect(tryText.split('\n')[0]).toContain('example verdicts');
-      expect(tryText).not.toMatch(/\blive\b/);
-    }
+    expect(tryText.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 15:02 · claude-haiku-5-5');
+    expect(tryText).toContain('Recorded run, replayed from a file');
+    expect(tryText).not.toContain(AUTHORED_LABEL);
+    expect(tryText).not.toMatch(/example verdicts|written by hand|\blive\b/);
     const sample = examples.send_ask[0] as string;
-    expect(sample).toContain(AUTHORED_FANOUT_LABEL);
-    expect(sample).not.toMatch(/gates ran/);
+    expect(sample).toContain('39 sample members replayed from a recorded run (Nov 9).');
+    expect(sample).toMatch(/32 gates ran/);
+    expect(sample).not.toContain(AUTHORED_FANOUT_LABEL);
+    expect(sample.split('\n')[0]).not.toMatch(/example results/);
   });
 
   it('the transcripts and error and hook examples match their snapshots', () => {

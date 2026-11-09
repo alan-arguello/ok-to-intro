@@ -658,10 +658,10 @@ export interface TraceRow {
  * by time; runs without timing keep arrival order and drop the time column.
  */
 export function traceRows(run: Run, map: DisplayMap, cap: number, reachDays: readonly number[]): TraceRow[] {
-  type Line = { t: number | null; order: number; segs: TraceSeg[] };
+  type Line = { t: number | null; order: number; segs: TraceSeg[]; end?: boolean };
   const lines: Line[] = [];
   let order = 0;
-  const push = (t: number | null, segs: TraceSeg[]) => lines.push({ t, order: order++, segs });
+  const push = (t: number | null, segs: TraceSeg[], end = false) => lines.push({ t, order: order++, segs, end });
   const company = (id: SampleAskKey) => askOf(id).company;
   const num = (id: SampleAskKey) => `#${indexOf(id) + 1}`;
 
@@ -726,12 +726,13 @@ export function traceRows(run: Run, map: DisplayMap, cap: number, reachDays: rea
       let cost = '';
       if (run.source === 'fixture') cost = ' · QA fixture, no model cost';
       else if (isModelSource(run.source) && e.cost_usd !== null) cost = ` · $${e.cost_usd.toFixed(4)}`;
-      push(e.t, [{ text: `done  ${acc} accept · ${ab} ask_back · ${dec} decline · ${fail} failed${cost}` }]);
+      push(e.t, [{ text: `done  ${acc} accept · ${ab} ask_back · ${dec} decline · ${fail} failed${cost}` }], true);
     }
   }
 
   const timed = isModelSource(run.source) && lines.every((l) => l.t !== null);
-  if (timed) lines.sort((x, y) => (x.t as number) - (y.t as number) || x.order - y.order);
+  // `done` stays last: the last gate can arrive at the run's wall time, and its check and cap lines sit at +1 and +2 ms.
+  if (timed) lines.sort((x, y) => Number(!!x.end) - Number(!!y.end) || (x.t as number) - (y.t as number) || x.order - y.order);
   return lines.map((l) => ({ time: timed ? traceTime(l.t as number) : null, segs: l.segs }));
 }
 

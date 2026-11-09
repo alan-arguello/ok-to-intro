@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/try/route';
 import { AUTHORED_VERDICTS } from '@/lib/sample/verdicts';
 import { SAMPLE_ASKS } from '@/lib/sample/asks';
@@ -10,6 +10,11 @@ import { __setRateLimitDbForTests } from '@/lib/server/ratelimit';
 import { readSse } from '@/lib/sse';
 import type { TryDoneEvent, TryErrorEvent, TryEvent, TryGateEvent } from '@/lib/types';
 import { apiError, fakeFetch, message, verdict, type FakeRequest, type Responder } from './fake-api';
+
+// Pinned to the hand-written recordings (npm run recordings:fixtures), whatever data/recorded holds now: these tests
+// check the authored path and its exact contents. tests/recorded/model-source.test.ts covers a model recording.
+vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/authored/presets.json'));
+vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 const ENGINEER = PRESETS.find((p) => p.id === 'engineer')!.rules;
 const CUSTOM = ['Happy to talk to founders about Postgres at scale.', 'Only with real numbers.', 'No asks to review a deck.'].join('\n');

@@ -7,11 +7,14 @@
  *
  * `npm run record:presets` (BE1) replaces them with runs of the production gate (`source: "model"`).
  * This script refuses to overwrite a model recording unless --force is passed.
+ *
+ * `--out <dir>` writes the same two files to another directory instead (relative to the repo root). The tests pin the
+ * authored path this way: `npm run recordings:fixtures` writes tests/fixtures/recorded/authored/.
  */
 
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkQuotes } from '../lib/oti/clause';
 import { AUTHORED_VERDICTS, PRESETS, SAMPLE_FANOUTS, SAMPLE_MEMBERS, SAMPLE_NETWORK_ASKS } from '../lib/sample';
@@ -20,7 +23,12 @@ import { MODELS } from '../lib/site';
 import type { PresetId, SampleNetworkAskId } from '../lib/types';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const outDir = join(root, 'data', 'recorded');
+const outArg = process.argv.indexOf('--out');
+const outDir = outArg === -1 ? join(root, 'data', 'recorded') : resolve(root, process.argv[outArg + 1] ?? '');
+if (outArg !== -1 && !process.argv[outArg + 1]) {
+  console.error('--out needs a directory.');
+  process.exit(1);
+}
 const force = process.argv.includes('--force');
 const generatedAt = process.env.RECORDED_AT || '2026-11-09T09:00:00-06:00';
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex');
