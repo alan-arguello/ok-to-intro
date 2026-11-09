@@ -70,6 +70,8 @@ export function getModelClient(): Anthropic | null {
     apiKey,
     maxRetries: SDK_MAX_RETRIES,
     timeout: 30_000,
+    // Keys that are not scoped to a workspace must name one on every request.
+    ...(env.ANTHROPIC_WORKSPACE_ID && !testOverride ? { defaultHeaders: { 'anthropic-workspace-id': env.ANTHROPIC_WORKSPACE_ID } } : {}),
     fetch: retryPolicyFetch(testOverride?.fetch ?? globalThis.fetch.bind(globalThis)),
   });
   return client;

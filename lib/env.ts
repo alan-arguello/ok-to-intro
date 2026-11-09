@@ -32,6 +32,7 @@ const schema = {
   NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalString,
   SUPABASE_SERVICE_ROLE_KEY: optionalString,
   ANTHROPIC_API_KEY: optionalString,
+  ANTHROPIC_WORKSPACE_ID: optionalString,
   RESEND_API_KEY: optionalString,
   EMAIL_FROM: optionalString,
   CRON_SECRET: z.string().trim().min(16).optional(),
