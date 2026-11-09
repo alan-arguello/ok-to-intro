@@ -87,7 +87,9 @@ can't tell a pass from an expiry. Check-ins at +1 and +14 days turn intros into 
   render only in QA. Without keys, every feature shows its own “not configured” state.
 - **Board counts from `audit`**, an append-only table whose member ids are nulled on delete, so “Board counts stay,
   without your name” holds.
-- **Tokens**: 128-bit random, only the HMAC (with a per-purpose prefix) is stored; GET never consumes a token.
+- **Tokens**: 128 bits. Claude Code tokens and pause links are random; offer and check-in link tokens are derived
+  (HMAC of `TOKEN_HMAC_SECRET` and the row id) so a retried email is rebuilt byte for byte. Only an HMAC is stored;
+  GET never consumes a token.
 - **Static shell, client islands.** The shared layouts never read cookies; the header's “Sign in / Your gate” and the
   banner are client islands, so `/`, `/how`, `/privacy` and `/agents` stay static.
 - **No-JS token pages** use server actions with `redirect()` (303) and idempotency keys; /pause posts a plain form to

@@ -712,3 +712,28 @@ development. Expected states with no keys:
    Render the member's own words at the offsets code found, never the model's copy.
 10. **Audit every page and QA state** at 1280×900 and 375×812 with `scripts/shoot.mjs --audit`; one Chrome at a time;
     never start a second dev server or touch ports 8765/8766.
+
+## §integration · Decisions merged after the build (Nov 9)
+
+These override the sections above where they differ. Alan's decisions are in docs/requests/alan.md.
+
+- **REAL askers.** `REAL_ASKERS` unset or `*` = every signed-in member with a name and company may ask the REAL
+  network; signed-out visitors on /ask read “Sign in to ask the real network.” A list of emails restores the
+  allowlist. Every other protection applies in both modes.
+- **The REAL network needs email.** `networkConfigured()` and `/api/health` (`network: 'real'`) both require the
+  Supabase variables, `TOKEN_HMAC_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM`. An OK counts for the asker only once the
+  intro email went out.
+- **Types added:** `TryRequest.mode` (`live` | `recorded` | `auto`), `AskerAskView.gates_failed` (the count alone),
+  `CheckinView.ask_id` (the asker's own ask; null for the member). `database.types.ts` lists the `net_*` functions
+  and `board_snapshot(p_as_of)`.
+- **Board timing.** `0003_board_as_of.sql`: the board counts as of the last 09:00/21:00 checkpoint, the same timing
+  askers get. “Verdicts overruled by code” counts every `decided_by = 'clause_check'`.
+- **`compile_refused`** is written by BE1's `startCompile`, for REAL-network drafts only.
+- **§14, S2 row.** A sample chip's text (Missing 2 parts, Complete) renders its hand-written parts as found /
+  suggested / missing rows labelled `EXAMPLE_PARTS_LABEL`, with or without a key and with no request. The Vague chip
+  and any text under 6 words are refused by the compiler's code rule.
+- **§14, R row.** Without Supabase or `TOKEN_HMAC_SECRET`, a REAL /o or /c link renders “Offers/Check-ins aren't set
+  up on this instance. Nothing was sent to anyone.” (not configured is not an outage). A database error renders
+  “Something broke on our side.”
+- **/pause/sample** is a SAMPLE page: a fictional member, buttons that show what happens and change nothing.
+- **The intro email** goes to both people, so its pause link opens /me and it carries no List-Unsubscribe header.
