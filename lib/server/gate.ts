@@ -370,7 +370,7 @@ export async function runGateDetailed(input: GateInput, options: { signal?: Abor
     if (!callerLeft) recordModelCall({ ms, kind: failure.kind, gate: true });
     if (failure.kind === 'unavailable' || failure.kind === 'overloaded') {
       // Status and type only: never the request body (rules, ask) or the error body.
-      console.warn(`[gate] model call failed: ${failure.status ?? 'no status'} ${err instanceof APIError ? (err.type ?? '') : err instanceof Error ? err.name : ''}`.trim());
+      console.warn(`[gate] model call failed: ${failure.status ?? 'no status'} ${err instanceof APIError ? `${err.type ?? ''} ${String(err.message ?? '').slice(0, 200)}` : err instanceof Error ? err.name : ''}`.trim());
     }
     return fail(failure.kind, { retry_after_s: failure.retry_after_s, request_id: failure.request_id });
   }

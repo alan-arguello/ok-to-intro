@@ -444,7 +444,7 @@ function liveCompile(text: string, network: Network, signal: AbortSignal | undef
       if (failure.kind === 'budget') await pauseLive('anthropic_spend_limit', nextMonthStartFrom());
       recordModelCall({ ms, kind: failure.kind, gate: false });
       if (failure.kind === 'unavailable' || failure.kind === 'overloaded') {
-        console.warn(`[compile] model call failed: ${failure.status ?? 'no status'} ${err instanceof APIError ? (err.type ?? '') : err instanceof Error ? err.name : ''}`.trim());
+        console.warn(`[compile] model call failed: ${failure.status ?? 'no status'} ${err instanceof APIError ? `${err.type ?? ''} ${String(err.message ?? '').slice(0, 200)}` : err instanceof Error ? err.name : ''}`.trim());
       }
       while (pending.length) yield pending.shift() as CompileEvent;
       yield { event: 'error', data: failure.retry_after_s === undefined ? { kind: failure.kind } : { kind: failure.kind, retry_after_s: failure.retry_after_s } };
