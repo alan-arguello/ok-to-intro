@@ -20,13 +20,13 @@ function normalizeSiteUrl(raw: string | undefined): string {
 }
 
 /**
- * Origin of the deployed site, without a trailing slash, e.g. `https://oktointro.app`.
+ * Origin of the deployed site, without a trailing slash, e.g. `https://ok-to-intro.vercel.app`.
  * NEXT_PUBLIC_SITE_URL wins; on Vercel without it, the project's production domain (a system variable Vercel
  * exposes to Next.js builds); locally, http://localhost:3200.
  */
 export const SITE_URL: string = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL);
 
-/** Host shown in copy, e.g. `oktointro.app` (port kept for localhost). */
+/** Host shown in copy, e.g. `ok-to-intro.vercel.app` (port kept for localhost). */
 export const SITE_HOST: string = new URL(SITE_URL).host;
 
 /** True when the site runs on a real product domain (not localhost or a *.vercel.app preview). */
@@ -86,7 +86,7 @@ function validEmail(raw: string | undefined): string | null {
 export const CONTACT_EMAIL: string | null = validEmail(process.env.NEXT_PUBLIC_CONTACT_EMAIL) ?? (IS_PRODUCT_DOMAIN ? `alan@${MAIL_DOMAIN}` : null);
 export const CONTACT_FALLBACK_URL = `${REPO_URL}/issues`;
 
-/** Absolute URL for a path on this site. `absoluteUrl('/o/abc')` → `https://oktointro.app/o/abc`. */
+/** Absolute URL for a path on this site. `absoluteUrl('/o/abc')` → `https://ok-to-intro.vercel.app/o/abc`. */
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
 }
