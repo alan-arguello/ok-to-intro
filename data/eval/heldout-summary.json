@@ -1,0 +1,12 @@
+{
+  "source": "none",
+  "ran_at": null,
+  "model": null,
+  "rubric_hash": null,
+  "header": null,
+  "rows": [],
+  "totals": null,
+  "wrongly_let_through": null,
+  "wrongly_blocked": null,
+  "misses": []
+}

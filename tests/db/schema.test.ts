@@ -103,8 +103,27 @@ describe('create_offer and the offer state machine', () => {
     expect(await used(first, '2027-01-01')).toBe(1);
   });
 
-  it('never lets two people hold the same ask', async () => {
-    expect(await offer('o_chain2', 'a_chain1', second, '2027-01-04T21:05:00-06:00', 2)).toHaveLength(0);
+  it('never lets two people hold the same ask (OTI01: stop advancing)', async () => {
+    await expect(offer('o_chain2', 'a_chain1', second, '2027-01-04T21:05:00-06:00', 2)).rejects.toThrow(/already held/);
+    expect(await used(second, '2027-01-01')).toBe(0);
+  });
+
+  it('skips a member who is paused or not on yet (no row, no slot), so the next person in line can be tried', async () => {
+    const paused = await db.createMember('paused-offer@example.com', { rules: HEALTH_RULES, status: 'paused' });
+    const pending = await db.createMember('pending-offer@example.com', { rules: HEALTH_RULES, status: 'pending' });
+    await newAsk('a_chainp', asker);
+    await addToNetwork('a_chainp', [paused, pending]);
+    expect(await offer('o_chainp1', 'a_chainp', paused, '2027-01-04T22:00:00-06:00')).toHaveLength(0);
+    expect(await offer('o_chainp2', 'a_chainp', pending, '2027-01-04T22:00:00-06:00')).toHaveLength(0);
+    expect(await used(paused, '2027-01-01')).toBe(0);
+    expect(await used(pending, '2027-01-01')).toBe(0);
+  });
+
+  it('refuses to offer an ask that is not open (OTI02: withdrawn, closed, answered…)', async () => {
+    await newAsk('a_chainw', asker);
+    await addToNetwork('a_chainw', [second]);
+    await db.pg.query(`update public.asks set status = 'withdrawn', withdrawn_at = now() where id = 'a_chainw'`);
+    await expect(offer('o_chainw', 'a_chainw', second, '2027-01-04T22:00:00-06:00')).rejects.toThrow(/not open for offers/);
     expect(await used(second, '2027-01-01')).toBe(0);
   });
 
@@ -121,8 +140,10 @@ describe('create_offer and the offer state machine', () => {
     expect(r.rows[0]?.state).toBe('passed');
     expect(r.rows[0]?.responded_at).not.toBeNull();
     await expect(db.pg.query(`update public.offers set state = 'ok' where id = 'o_chain1'`)).rejects.toThrow(/already passed/);
-    // The optional “Why?” after a pass is the one later change allowed.
+    // The optional “Why?” after a pass is the one later change allowed …
     await db.pg.query(`update public.offers set no_reason = 'not_my_area' where id = 'o_chain1'`);
+    // … and it can't smuggle in another change.
+    await expect(db.pg.query(`update public.offers set no_reason = 'no_time', expires_at = expires_at + interval '1 day' where id = 'o_chain1'`)).rejects.toThrow(/is final/);
   });
 
   it('lets the next person in line hold the ask after a pass', async () => {
@@ -154,17 +175,19 @@ describe('save_rules', () => {
   });
 
   it('creates a new version on each save and keeps the current one in rules', async () => {
-    const v2 = await db.asUser(m, (tx) => tx.query<{ v: number }>(`select public.save_rules($1, $2, 'web') as v`, [m, `${HEALTH_RULES}\nNo asks about public procurement.`]));
+    const v2 = await db.asService((tx) => tx.query<{ v: number }>(`select public.save_rules($1, $2, 'web') as v`, [m, `${HEALTH_RULES}\nNo asks about public procurement.`]));
     expect(v2.rows[0]?.v).toBe(2);
     const cur = await db.pg.query<{ version: number; text: string }>(`select version, text from public.rules where member_id = $1`, [m]);
     expect(cur.rows[0]?.version).toBe(2);
     expect(cur.rows[0]?.text).toMatch(/public procurement/);
-    const versions = await db.asUser(m, (tx) => tx.query(`select version from public.rule_versions where member_id = $1`, [m]));
+    // The member can read their own versions (and only theirs).
+    const versions = await db.asUser(m, (tx) => tx.query(`select version from public.rule_versions`));
     expect(versions.rows).toHaveLength(2);
   });
 
-  it('refuses to save someone else’s rules', async () => {
-    await expect(db.asUser(m, (tx) => tx.query(`select public.save_rules($1, 'No asks.', 'web')`, [other]))).rejects.toThrow(/not your rules/);
+  it('is server-only: a signed-in member can’t call it, for their own rules or anyone else’s', async () => {
+    await expect(db.asUser(m, (tx) => tx.query(`select public.save_rules($1, 'No asks.', 'web')`, [m]))).rejects.toThrow(/permission denied/);
+    await expect(db.asUser(m, (tx) => tx.query(`select public.save_rules($1, 'No asks.', 'web')`, [other]))).rejects.toThrow(/permission denied/);
   });
 
   it('refuses empty and over-long rules', async () => {
@@ -192,8 +215,20 @@ describe('row level security', () => {
   });
 
   it('anon reads nothing', async () => {
-    for (const table of ['members', 'rules', 'rule_versions', 'cap_usage', 'asks', 'offers', 'gate_decisions', 'audit', 'api_tokens', 'checkins', 'real_askers']) {
+    for (const table of [
+      'members', 'rules', 'rule_versions', 'cap_usage', 'asks', 'offers', 'gate_decisions', 'audit', 'api_tokens', 'checkins', 'real_askers',
+      'drafts', 'model_usage', 'app_state', 'hook_seen', 'pause_tokens', 'email_outbox', 'rate_limits', 'intros', 'questions', 'ask_members',
+    ]) {
       await expect(db.asAnon((tx) => tx.query(`select * from public.${table}`))).rejects.toThrow(/permission denied/);
+    }
+  });
+
+  it('members never read server-only tables or token hashes', async () => {
+    for (const table of ['drafts', 'model_usage', 'app_state', 'hook_seen', 'pause_tokens', 'email_outbox', 'rate_limits', 'audit', 'real_askers', 'questions']) {
+      await expect(db.asUser(ana, (tx) => tx.query(`select * from public.${table}`))).rejects.toThrow(/permission denied/);
+    }
+    for (const table of ['offers', 'checkins', 'api_tokens']) {
+      await expect(db.asUser(ana, (tx) => tx.query(`select token_hash from public.${table}`))).rejects.toThrow(/permission denied/);
     }
   });
 
@@ -213,28 +248,28 @@ describe('row level security', () => {
     expect(rules.rows.map((r) => r.member_id)).toEqual([ana]);
     const offers = await db.asUser(ana, (tx) => tx.query<{ id: string }>(`select id from public.offers`));
     expect(offers.rows.map((r) => r.id)).toEqual(['o_rls1']);
-    // Ana was offered Lucía's ask but did not write it: the ask row stays the asker's.
-    expect((await db.asUser(ana, (tx) => tx.query(`select id from public.asks`))).rows).toHaveLength(0);
+    // Ana was offered Lucía's ask but did not write it, and nobody reads `asks` directly.
+    await expect(db.asUser(ana, (tx) => tx.query(`select id from public.asks`))).rejects.toThrow(/permission denied/);
     // Tomás was checked and declined: he sees nothing about it.
     expect((await db.asUser(tomas, (tx) => tx.query(`select id from public.offers`))).rows).toHaveLength(0);
   });
 
-  it('an asker sees their own asks but never gate decisions or who was checked', async () => {
-    const asks = await db.asUser(lucia, (tx) => tx.query<{ id: string }>(`select id from public.asks`));
-    expect(asks.rows.map((r) => r.id)).toEqual(['a_rls1']);
+  it('an asker reads nothing raw about their ask: no ask row, no gate decisions, no one checked, no offer', async () => {
+    // Everything an asker sees goes through the serializer (status / close_reason / updated_at would date a No).
+    await expect(db.asUser(lucia, (tx) => tx.query(`select id from public.asks`))).rejects.toThrow(/permission denied/);
     await expect(db.asUser(lucia, (tx) => tx.query(`select * from public.gate_decisions`))).rejects.toThrow(/permission denied/);
     await expect(db.asUser(lucia, (tx) => tx.query(`select * from public.ask_members`))).rejects.toThrow(/permission denied/);
     // RLS hides the member's offer row from the asker.
     expect((await db.asUser(lucia, (tx) => tx.query(`select id from public.offers`))).rows).toHaveLength(0);
   });
 
-  it('a member edits only their own settings columns', async () => {
-    await db.asUser(ana, (tx) => tx.query(`update public.members set cap = 3 where id = $1`, [ana]));
-    const other = await db.asUser(ana, (tx) => tx.query(`update public.members set cap = 5 where id = $1`, [tomas]));
-    expect(other.affectedRows ?? 0).toBe(0);
-    await expect(db.asUser(ana, (tx) => tx.query(`update public.members set email = 'x@example.com' where id = $1`, [ana]))).rejects.toThrow(/permission denied/);
+  it('members write nothing directly: no insert (no spoofed email), no settings update, server code only', async () => {
+    const stranger = await db.createUser('stranger@example.com');
+    await expect(db.asUser(stranger, (tx) => tx.query(`insert into public.members (id, email) values ($1, 'victim@example.com')`, [stranger]))).rejects.toThrow(/permission denied/);
+    await expect(db.asUser(ana, (tx) => tx.query(`update public.members set cap = 3 where id = $1`, [ana]))).rejects.toThrow(/permission denied/);
+    await expect(db.asUser(ana, (tx) => tx.query(`update public.members set status = 'on' where id = $1`, [tomas]))).rejects.toThrow(/permission denied/);
     const caps = await db.pg.query<{ id: string; cap: number }>(`select id, cap from public.members where id in ($1, $2)`, [ana, tomas]);
-    expect(Object.fromEntries(caps.rows.map((r) => [r.id, r.cap]))).toEqual({ [ana]: 3, [tomas]: 2 });
+    expect(Object.fromEntries(caps.rows.map((r) => [r.id, r.cap]))).toEqual({ [ana]: 2, [tomas]: 2 });
   });
 });
 
@@ -313,5 +348,32 @@ describe('board_snapshot and real_line', () => {
     expect(leftover.rows[0]).toEqual({ member_id: null });
     const line = await db.asService((tx) => tx.query<{ l: Record<string, unknown> }>(`select public.real_line() as l`));
     expect(line.rows[0]?.l).toMatchObject({ intros: 0 });
+  });
+});
+
+describe('model_usage, drafts and app_state (server-only shared state)', () => {
+  it('adds usage per local day in Mexico City and returns the day’s total', async () => {
+    const add = (usd: number, at: string) =>
+      db.asService((tx) => tx.query<{ total: string }>(`select public.add_model_usage($1, 1, $2::timestamptz) as total`, [usd, at]));
+    // 23:30 on Nov 30 in Mexico City is Dec 1 in UTC: it still counts for Nov 30.
+    expect(Number((await add(0.5, '2026-11-30T23:30:00-06:00')).rows[0]?.total)).toBeCloseTo(0.5);
+    expect(Number((await add(0.25, '2026-11-30T08:00:00-06:00')).rows[0]?.total)).toBeCloseTo(0.75);
+    expect(Number((await add(0.1, '2026-12-01T00:30:00-06:00')).rows[0]?.total)).toBeCloseTo(0.1);
+    const days = await db.pg.query<{ day: string; calls: number }>(`select day::text, calls from public.model_usage order by day`);
+    expect(days.rows).toEqual([
+      { day: '2026-11-30', calls: 2 },
+      { day: '2026-12-01', calls: 1 },
+    ]);
+  });
+
+  it('keeps drafts and app state server-only', async () => {
+    const m = await db.createMember('drafter@example.com', { rules: HEALTH_RULES });
+    await db.asService((tx) => tx.query(`insert into public.drafts (id, owner_id, raw) values ('d_7Kx2', $1, 'Our Postgres p95 went from 40 ms to 900 ms.')`, [m]));
+    await db.asService((tx) => tx.query(`insert into public.app_state (key, value) values ('live_pause', '{"state":"budget"}')`));
+    await expect(db.asUser(m, (tx) => tx.query(`select id from public.drafts`))).rejects.toThrow(/permission denied/);
+    await expect(db.asUser(m, (tx) => tx.query(`select public.add_model_usage(1)`))).rejects.toThrow(/permission denied/);
+    // Deleting the member deletes their drafts.
+    await db.pg.query(`delete from auth.users where id = $1`, [m]);
+    expect((await db.pg.query(`select id from public.drafts where id = 'd_7Kx2'`)).rows).toHaveLength(0);
   });
 });

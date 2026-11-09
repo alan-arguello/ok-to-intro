@@ -16,7 +16,7 @@
  *   await db.close();
  *
  * PGlite is one connection in WASM: it proves logic, constraints and RLS, not concurrency. The cap race test
- * (scripts/race-test.ts) runs against a real Postgres via DATABASE_URL.
+ * (scripts/race-test.ts) runs against a real Supabase Postgres through supabase-js RPC (no extra driver).
  */
 
 import { readdirSync, readFileSync } from 'node:fs';

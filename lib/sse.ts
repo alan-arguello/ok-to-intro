@@ -130,6 +130,63 @@ export function sseResponse<E extends SseEnvelope>(
   return new Response(stream, { status: options.status ?? 200, headers: { ...SSE_HEADERS, ...(options.headers ?? {}) } });
 }
 
+/**
+ * Work that must finish even when the client goes away: a REAL send persists every gate decision and makes the offer
+ * whether or not the asker's tab stays open (tech.md “finish through waitUntil or after()”). `work` starts at once,
+ * independent of any consumer, and what it emits is buffered; iterating `events` replays the buffer, then follows
+ * new events until the work settles. Breaking out of the loop (sseFromIterable does when the client disconnects)
+ * does NOT stop the work. In a route handler, also call `after(() => run.done)` (next/server) so the platform keeps
+ * the function alive until it settles. `done` never rejects (a thrown error is logged without details).
+ *
+ *   const run = detachedEvents<FanoutEvent>(async (emit) => { emit({ event: 'plan', data }); … });
+ *   after(() => run.done);
+ *   return { ok: true, ask_id, events: run.events };
+ *
+ * The playground (/api/try) must NOT use this: its gates stop when the visitor leaves (request.signal).
+ */
+export function detachedEvents<E>(work: (emit: (event: E) => void) => Promise<void>): { events: AsyncIterable<E>; done: Promise<void> } {
+  const buffer: E[] = [];
+  const waiters = new Set<() => void>();
+  let finished = false;
+  const wakeAll = () => {
+    for (const w of [...waiters]) w();
+    waiters.clear();
+  };
+  const done = (async () => {
+    try {
+      await work((event) => {
+        if (finished) return;
+        buffer.push(event);
+        wakeAll();
+      });
+    } catch (err: unknown) {
+      console.error('[sse] detached work failed:', err instanceof Error ? `${err.name}: ${err.message}` : 'unknown error');
+    } finally {
+      finished = true;
+      wakeAll();
+    }
+  })();
+  const events: AsyncIterable<E> = {
+    [Symbol.asyncIterator](): AsyncIterator<E> {
+      let i = 0;
+      return {
+        async next(): Promise<IteratorResult<E>> {
+          for (;;) {
+            if (i < buffer.length) return { value: buffer[i++] as E, done: false };
+            if (finished) return { value: undefined, done: true };
+            await new Promise<void>((resolve) => waiters.add(resolve));
+          }
+        },
+        async return(): Promise<IteratorResult<E>> {
+          // The consumer left; the work goes on.
+          return { value: undefined, done: true };
+        },
+      };
+    },
+  };
+  return { events, done };
+}
+
 /** Streams an async iterable of envelopes (e.g. BE1's `runTry`) as SSE. */
 export function sseFromIterable<E extends SseEnvelope>(request: Request | null, events: (signal: AbortSignal) => AsyncIterable<E>, options?: { pingMs?: number }): Response {
   return sseResponse<E>(

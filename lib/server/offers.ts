@@ -1,5 +1,5 @@
 import 'server-only';
-import type { Fact, NoReason, OfferAction, OfferActionResult, OfferLookup } from '@/lib/types';
+import type { Fact, NoReason, OfferAction, OfferActionResult, OfferLookup, QuestionType } from '@/lib/types';
 
 /**
  * Owner: BE2. Offers: one card to one member at a time, 72 hours to answer, counted against the member's cap at
@@ -74,7 +74,7 @@ export interface PendingQuestion {
   ask_id: string;
   ask_subject: string;
   question_id: string;
-  type: string;
+  type: QuestionType;
   text: string;
   gates: number;
 }

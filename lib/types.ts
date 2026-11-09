@@ -25,8 +25,12 @@ export type SampleNetworkAskId = 'sa_eng' | 'sa_health' | 'sa_founder';
 /** Where a recorded file came from. "authored" files are hand-written and are never presented as a model run. */
 export type RecordedSource = 'model' | 'authored';
 
-/** Where one verdict on screen came from. */
-export type VerdictSource = 'live' | 'recorded';
+/**
+ * Where one verdict on screen came from. `live`: a model call in this request. `recorded`: a model call recorded
+ * earlier (a `source: "model"` file). `authored`: hand-written SAMPLE data (a `source: "authored"` file); it is
+ * never labelled recorded, live or model, and carries no latency, cost or confidence (docs/CONTRACT.md §e).
+ */
+export type VerdictSource = 'live' | 'recorded' | 'authored';
 
 /* ========================================================================== *
  * Gates
@@ -116,6 +120,7 @@ export interface TryGateEvent extends GateDecision {
   ask_id: SampleAskKey;
   /** Milliseconds from the start of the run. `null` only for authored data, which has no real timing. */
   ms: number | null;
+  /** `/api/try` only ever streams `live`; recorded files render client-side as `recorded` or `authored`. */
   source: VerdictSource;
 }
 
@@ -258,7 +263,8 @@ export type Fact = readonly [FactLabel, string];
 
 /** Internal ask lifecycle (asks.status). Askers never see this directly: see AskerAskView. */
 export type AskStatus =
-  | 'queued' // the asker has 3 open asks; sends when one closes
+  | 'ready' // created by POST /api/asks, not sent yet (POST /api/asks/[id]/send sends it)
+  | 'queued' // the asker has 3 open asks; BE2 sends it when one of them closes
   | 'gating' // fan-out running
   | 'open' // at least one accept is offered or waiting; or a question is pending
   | 'answered' // a member answered in 2 lines; waiting on the asker's “Did that solve it?”
@@ -339,7 +345,11 @@ export interface FanoutCellEventSample {
   cap: number;
   used: number;
   na: 'at_cap' | 'paused' | null;
-  source: VerdictSource | 'authored';
+  /**
+   * The YOU cell is `live` (with `state: 'failed'` when live calls are unavailable: not checked, never an accept).
+   * The 39 sample members follow their recorded file's source: `recorded` or `authored`.
+   */
+  source: VerdictSource;
 }
 
 export interface FanoutQuestionEvent {
@@ -355,6 +365,8 @@ export interface FanoutOfferEvent {
   expires_at: string;
   /** SAMPLE only: who holds the offer. Never sent on REAL. */
   to?: 'you' | 'member';
+  /** SAMPLE only: the waffle position of the member who holds it (its cell carries the label). Never sent on REAL. */
+  cell?: number;
 }
 
 export interface FanoutDoneEvent {
@@ -362,8 +374,13 @@ export interface FanoutDoneEvent {
   people_interrupted: number;
   /** REAL: counts in the 4 asker states only. */
   counts: Record<AskerCellState, number>;
-  /** Gates that answered vs ran (“31 of 33 gates answered”). Failed gates count as not checked. */
-  gates_ran: number;
+  /**
+   * SAMPLE: gates that ran (“31 of 33 gates answered”). REAL: always null, because network size minus gates ran
+   * = members SQL skipped (at cap, paused, repeat pair), which askers must not learn. REAL copy uses the failure
+   * count alone (“2 gates failed and count as not checked, never as an accept.”).
+   */
+  gates_ran: number | null;
+  /** Failed gates (not checked, never an accept). */
   gates_failed: number;
   /** True when more than 1 in 5 gates failed and nothing was offered. */
   failed_closed: boolean;
@@ -377,12 +394,27 @@ export type FanoutEvent =
   | { event: 'error'; data: { kind: GateErrorKind | 'unavailable' | 'queued' | 'not_allowed'; message: string } }
   | { event: 'done'; data: FanoutDoneEvent };
 
+/**
+ * GET /api/asks/[id] with `Accept: text/event-stream` (REAL, owner only): the tail of a persisted ask.
+ * `view` is the whole serialized AskerAskView, sent on connect and again whenever anything asker-visible changes
+ * (each one replaces the last, so Last-Event-ID needs no replay). The server ends the stream after about 55 s or
+ * when the view stops changing on its own (outcome not `ready`/`gating`); `end` says which. The client closes its
+ * EventSource on `end` (EventSource would otherwise reconnect forever) and re-reads at the next checkpoint
+ * (`view.next_checkpoint`) or on focus.
+ */
+export type AskTailEvent =
+  | { event: 'view'; data: AskerAskView }
+  | { event: 'end'; data: { reason: 'settled' | 'timeout' | 'not_found' } };
+
 /* ========================================================================== *
  * What an asker can read about a REAL ask: the serializer's output (BE2 lib/server/serializer.ts)
  * ========================================================================== */
 
-/** The outcome card on /ask/[id] for REAL asks. Pass and expiry read the same (`offered` again, or `closed`). */
-export type AskerOutcome = 'queued' | 'gating' | 'offered' | 'question' | 'answered' | 'intro' | 'no_match' | 'closed' | 'failed' | 'withdrawn';
+/**
+ * The outcome card on /ask/[id] for REAL asks. Pass and expiry read the same (`offered` again, or `closed`).
+ * `ready`: created but not sent (the page sends it: POST /api/asks/[id]/send, then renders the stream).
+ */
+export type AskerOutcome = 'ready' | 'queued' | 'gating' | 'offered' | 'question' | 'answered' | 'intro' | 'no_match' | 'closed' | 'failed' | 'withdrawn';
 
 export interface AskerQuestion {
   id: string;
@@ -393,6 +425,12 @@ export interface AskerQuestion {
   answered_at: string | null;
 }
 
+/**
+ * Everything an asker may read about one REAL ask: the output of BE2's `serializeForAsker` (docs/CONTRACT.md §d).
+ * Timing rule: every timestamp that follows a MEMBER's action (a pass, an expiry, a 2-line answer, the offer moving
+ * on, a close after all passed) is the checkpoint at which it became visible (`as_of`), never the moment it
+ * happened. Timestamps of the asker's own actions (sent, withdrawn) and of an intro are exact.
+ */
 export interface AskerAskView {
   id: string;
   network: 'real';
@@ -406,17 +444,22 @@ export interface AskerAskView {
   /** Fixed shuffled positions; length = network size at send time. */
   cells: AskerCellState[];
   people_interrupted: number;
-  /** While someone holds the offer: their reply deadline and the line position (“2 of 3”). */
+  /**
+   * While someone holds the offer: their reply deadline and the line position (“2 of 3”). For position 1 the
+   * deadline is exact (offered at send + 72 h; the asker knows the send time). For position 2 and later it is
+   * rounded UP to the next 09:00/21:00 checkpoint, because the exact minute would date the previous member's No.
+   */
   offered: { reply_by: string; position: number; in_line: number } | null;
   questions: AskerQuestion[];
   /** “Matched a member's rules.” when null; the verbatim line only if that member turned it on. */
   matched_line: string | null;
-  /** A member's 2-line answer, without their name. */
+  /** A member's 2-line answer, without their name. `at` is the checkpoint it became visible at. */
   answer: { text: string; at: string } | null;
   /** Only after a member said OK. */
   intro: { member_name: string; member_line: string; sent_at: string; scheduling_url: string | null } | null;
   /** Coarse reasons over the whole network; buckets under 3 fold into `other`. Only for no_match. */
   no_match: { why: Partial<Record<'topic' | 'stage' | 'proof' | 'region', number>> & { other: number }; suggestion: AskEditSuggestion | null } | null;
+  /** `at` is the checkpoint the close became visible at (exact only for the asker's own close or a deadline). */
   closed: { reason: AskCloseReason; offered_count: number; at: string } | null;
   withdrawn_at: string | null;
   /** The raw trace lines the asker may see (ux-spec S2 “Raw trace for the asker on REAL”). */
@@ -448,7 +491,10 @@ export type OfferState = 'pending' | 'ok' | 'answered' | 'passed' | 'expired' | 
 export type OfferAction = 'ok' | 'answer' | 'no';
 export type NoReason = 'not_my_area' | 'wrong_stage' | 'not_specific' | 'no_time' | 'other';
 
-/** What /o/[token] renders. Built server-side; never contains the token or the member's id. */
+/**
+ * What /o/[token] renders. Built server-side for the member who holds the offer (the link is theirs); never contains
+ * the token or the member's id.
+ */
 export interface OfferView {
   offer_id: string;
   state: OfferState;
@@ -457,8 +503,18 @@ export interface OfferView {
   title: string;
   subject: string;
   asker: { name: string; first: string; company: string; stage: string; city: string };
-  /** The member's own words at the offsets code found. */
-  matched: { text: string; start: number; end: number } | null;
+  /**
+   * The member's own words at the offsets code found (offsets index `rules_version`'s text), plus the whole rules
+   * line that holds them: the context line of the No-reason diff.
+   */
+  matched: { text: string; start: number; end: number; line: string } | null;
+  /** The rules version the gate read (S4 “Rules updated, version 4”). */
+  rules_version: number;
+  /** The compiler's coarse topic for the ask (e.g. “Hospital procurement, Mexico”), for the templated No edit. */
+  topic: string | null;
+  /** The member's own scheduling link (“with your scheduling link” after OK), or null. */
+  scheduling_url: string | null;
+  /** Facts in card order (lib/oti/ask.ts askFacts): Problem, Needs, Tried, By, Offers, Price. */
   facts: Fact[];
   /** “1 of your 2 this month”. */
   cap: number;
@@ -536,6 +592,10 @@ export interface MemberProfile {
   name: string;
   /** “Who you are, in one line”, shown to askers only after OK. */
   one_line: string;
+  /** Asker profile (S2 “Sent as …” on REAL): edited in /me settings; empty strings until set. */
+  company: string;
+  stage: string;
+  city: string;
   scheduling_url: string | null;
   cap: number;
   show_matched: boolean;
@@ -579,14 +639,20 @@ export type BannerKind = 'slow' | 'down' | 'budget' | 'off' | 'limited' | 'offli
 
 /** The dated REAL line under the S1 lede: “Network since Nov 9: 23 members, 12 asks, 7 intros.” */
 export interface RealLine {
-  /** First day the network had a member, e.g. “Nov 9”. */
-  since: string;
+  /** First day the network had a member, e.g. “Nov 9”; null before anyone joined (honest zeros). */
+  since: string | null;
   members: number;
   asks: number;
   intros: number;
   /** When these counts were read, ISO. */
   as_of: string;
 }
+
+/**
+ * getRealLine() (S7) for S1. `not_configured`: show REAL_LINE_OFF. `db_down`: render no REAL line at all (never
+ * “not connected”, never stale numbers presented as current).
+ */
+export type RealLineResult = { ok: true; line: RealLine } | { ok: false; reason: 'not_configured' | 'db_down' };
 
 /* ========================================================================== *
  * Email templates (R owns lib/emails/**; BE2 sends)
@@ -628,13 +694,35 @@ export interface OfferEmailInput {
 }
 
 export interface IntroEmailInput {
-  subject_line_member: string;
+  /**
+   * Optional lower-case phrase after the member's name in the subject: “Intro: Lucía Ferrer (Orvella Health) and
+   * Ana Ruiz (public hospital procurement)”. Null drops the parenthetical (“… and Ana Ruiz”). R builds the subject.
+   */
+  member_context: string | null;
   member: { name: string; first: string; one_line: string; scheduling_url: string | null; email: string };
   asker: { name: string; first: string; company: string; stage: string; city: string; email: string };
+  /** The facts the asker approved, in card order (lib/oti/ask.ts askFacts). */
   facts: Fact[];
   /** Only if the member turned “Show askers the line that matched” on. */
   matched_line: string | null;
+  /** “Tomorrow we'll ask each of you one question, and Lucía one more in two weeks”: the two check-in dates. */
+  checkin_d1_label: string;
+  checkin_d14_label: string;
   member_footer: Extract<EmailFooter, { role: 'member' }>;
+}
+
+/** To the member who held an offer when the asker withdrew it (ux-spec S2 [withdrawn]: “was told it's no longer needed”). */
+export interface WithdrawnEmailInput {
+  member_first: string;
+  asker_first: string;
+  /** The ask's title (subject without “, 20 min?”). */
+  title: string;
+  /** e.g. “Tue Nov 10”. */
+  withdrawn_on: string;
+  /** “It still counted as 1 of your 2 this month.” */
+  cap: number;
+  nth: number;
+  footer: Extract<EmailFooter, { role: 'member' }>;
 }
 
 export interface CheckinEmailInput {
@@ -682,3 +770,39 @@ export interface NotConfigured {
 export type RateBucket = 'try' | 'compile' | 'send' | 'sample_send' | 'mcp' | 'pages';
 
 export type RateLimitResult = { ok: true; remaining: number } | { ok: false; retry_at: string; limit: number; window_s: number };
+
+/* ========================================================================== *
+ * The held-out eval: BE1's `npm run eval` writes data/eval/heldout-summary.json; S7 renders it on /board
+ * ========================================================================== */
+
+export type EvalCaseType = 'fits' | 'wrong_stage' | 'investor' | 'injection' | 'polite_spam' | 'other';
+
+/**
+ * data/eval/heldout-summary.json. `source: 'none'` (the committed placeholder) until `npm run eval` has run; the
+ * board then shows “No eval run yet”, never example numbers. Eval cases are written for the eval (fictional rules
+ * and asks), so the misses may be shown in full; REAL rules and asks never appear on the board.
+ */
+export interface EvalSummary {
+  source: 'none' | 'eval';
+  ran_at: string | null;
+  model: string | null;
+  rubric_hash: string | null;
+  /** “20 cases written by Alex Torrenegra (Alan’s cofounder), who didn’t see the rubric or the gate prompt · …”. */
+  header: string | null;
+  /** One row per case type: n cases, correct per run (3 runs), correct for the keyword baseline. */
+  rows: { case_type: EvalCaseType; label: string; n: number; runs: number[]; baseline: number }[];
+  totals: { n: number; runs: number[]; baseline: number } | null;
+  wrongly_let_through: { runs: number[]; baseline: number } | null;
+  wrongly_blocked: { runs: number[]; baseline: number } | null;
+  misses: {
+    case_id: string;
+    case_type: EvalCaseType;
+    ask: string;
+    rules_excerpt: string;
+    expected: Verdict;
+    /** One entry per run; `not_checked` when the gate failed. */
+    actual: (Verdict | 'not_checked')[];
+    /** The quotes the gate cited in the first run that missed. */
+    cited: string[];
+  }[];
+}

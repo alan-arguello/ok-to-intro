@@ -1,3 +1,4 @@
+import { crossOrigin, isSameOrigin } from '@/lib/http';
 import { startSend } from '@/lib/server/dispatch';
 import { clientKey } from '@/lib/server/ratelimit';
 import { sseFromIterable } from '@/lib/sse';
@@ -12,6 +13,7 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request, ctx: { params: Promise<{ id: string }> }) {
+  if (!isSameOrigin(request)) return crossOrigin();
   const { id } = await ctx.params;
   const who = await getUser();
   if (!who.ok) {

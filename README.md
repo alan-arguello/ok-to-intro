@@ -11,7 +11,7 @@ and every intro is followed to an outcome.
 
 ## Run it locally
 
-Requirements: Node 22.12+ and npm.
+Requirements: Node 22.22+ or 24.15+ (package.json `engines`) and npm.
 
 ```sh
 npm install
@@ -28,7 +28,7 @@ npm run dev                  # http://localhost:3200
 | `npm run recordings:authored` | regenerate the hand-written SAMPLE recordings |
 | `npm run record:presets` | re-record the presets with the production gate (needs `ANTHROPIC_API_KEY`) |
 | `npm run eval` | the held-out eval |
-| `npm run race` | 20 concurrent asks, 1 free slot, exactly 1 offer (needs `DATABASE_URL`) |
+| `npm run race` | 20 concurrent asks, 1 free slot, exactly 1 offer (needs a Supabase project: URL + service-role key) |
 | `npm run smoke` | the pre-deploy smoke test |
 
 ## How it's built

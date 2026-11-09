@@ -1,7 +1,9 @@
 -- OK to Intro · 0001_init.sql · foundation schema (owner: F; frozen during the build; later changes go in 0002_*.sql)
 --
--- Every table has RLS on. anon gets nothing. authenticated users read only their own rows where a page needs it.
--- The server writes with the service role (bypasses RLS) and every write path checks ownership in code.
+-- Every table has RLS on. anon gets nothing. authenticated users may only read a few of their own rows; they can't
+-- write anything directly. The server writes with the service role (bypasses RLS) and every write path checks
+-- ownership in code. Askers never read `asks` directly: everything they see goes through the asker serializer
+-- (docs/CONTRACT.md §d), because raw columns (status, close_reason, updated_at) would date a member's No.
 -- Facts the public board counts live in `audit`, which survives member deletion (ids there are set null),
 -- so “Board counts stay, without your name” (ux-spec S3) holds.
 --
@@ -175,8 +177,11 @@ create table public.asks (
   raw              text not null check (char_length(raw) between 1 and 600),
   compiled         jsonb not null check (jsonb_typeof(compiled) = 'object'),
   subject          text not null check (char_length(subject) between 1 and 45),
-  status           text not null default 'queued'
-                   check (status in ('queued', 'gating', 'open', 'answered', 'intro', 'no_match', 'closed', 'failed', 'withdrawn')),
+  -- ready: created, not sent yet (POST /api/asks/[id]/send sends it). queued: the asker already has 3 open asks.
+  status           text not null default 'ready'
+                   check (status in ('ready', 'queued', 'gating', 'open', 'answered', 'intro', 'no_match', 'closed', 'failed', 'withdrawn')),
+  -- An edited resend of an earlier ask (“Edit and resend”): at most one a week per original (BE2 enforces).
+  resend_of        text references public.asks (id) on delete set null,
   close_reason     text check (close_reason in ('all_passed', 'deadline', 'solved', 'answer_timeout', 'asker_closed')),
   deadline         date,
   -- Members in the network when the fan-out ran (the waffle size).
@@ -192,7 +197,9 @@ create table public.asks (
   unique (asker_id, idempotency_key)
 );
 create index asks_asker_created on public.asks (asker_id, created_at desc);
-create index asks_open on public.asks (status) where status in ('queued', 'gating', 'open', 'answered');
+-- Open asks count toward the 3-open-asks limit (ready ones are about to send).
+create index asks_open on public.asks (asker_id, status) where status in ('ready', 'queued', 'gating', 'open', 'answered');
+create index asks_resend_of on public.asks (resend_of) where resend_of is not null;
 create trigger asks_touch before update on public.asks for each row execute function public.touch_updated_at();
 
 -- One row per member in the network when an ask fanned out: its fixed waffle position and, if SQL dropped the
@@ -313,19 +320,24 @@ begin
     end if;
   elsif new.state <> old.state then
     raise exception 'offer % is already %', old.id, old.state using errcode = '55000';
-  elsif old.state = 'passed' and (new.no_reason is distinct from old.no_reason or new.no_note is distinct from old.no_note) then
-    null; -- the optional “Why?” after a pass
-  elsif row(new.answer, new.responded_at, new.expires_at, new.offered_at, new.member_id, new.ask_id)
-        is distinct from row(old.answer, old.responded_at, old.expires_at, old.offered_at, old.member_id, old.ask_id) then
+  elsif row(new.answer, new.responded_at, new.expires_at, new.offered_at, new.member_id, new.ask_id, new.month, new.position)
+        is distinct from row(old.answer, old.responded_at, old.expires_at, old.offered_at, old.member_id, old.ask_id, old.month, old.position) then
+    raise exception 'offer % is final', old.id using errcode = '55000';
+  elsif old.state <> 'passed' and (new.no_reason is distinct from old.no_reason or new.no_note is distinct from old.no_note) then
     raise exception 'offer % is final', old.id using errcode = '55000';
   end if;
+  -- The one later change a final offer allows: the optional “Why?” after a pass (no_reason, no_note).
   return new;
 end
 $$;
 create trigger offers_state before update on public.offers for each row execute function public.offers_state_machine();
 
 -- Creates an offer only if the member's monthly cap has a free slot (reserve_slot), in one transaction.
--- Returns the new offer, or no row when the cap is full or someone already holds the ask.
+-- Outcomes (BE2's advance loop depends on telling them apart):
+--   one row          the new offer (the slot was taken at delivery, whatever the answer will be);
+--   no row           THIS member can't take it now (cap full, paused, gate not on): try the next person in line;
+--   error OTI01      someone already holds the ask: stop, another request advanced it;
+--   error OTI02      the ask isn't open for offers (status not gating/open: withdrawn, closed, answered, intro…): stop.
 create or replace function public.create_offer(
   p_offer_id   text,
   p_ask_id     text,
@@ -340,14 +352,23 @@ security definer
 set search_path = ''
 as $$
 declare
-  v_month date := public.cap_month(p_at);
+  v_month  date := public.cap_month(p_at);
+  v_status text;
+  v_member public.members;
 begin
   -- Lock the ask so two dispatchers can't both offer it.
-  perform 1 from public.asks where id = p_ask_id for update;
+  select status into v_status from public.asks where id = p_ask_id for update;
   if not found then
     raise exception 'no such ask' using errcode = '23503';
   end if;
+  if v_status not in ('gating', 'open') then
+    raise exception 'ask % is %, not open for offers', p_ask_id, v_status using errcode = 'OTI02';
+  end if;
   if exists (select 1 from public.offers where ask_id = p_ask_id and state = 'pending') then
+    raise exception 'ask % is already held', p_ask_id using errcode = 'OTI01';
+  end if;
+  select * into v_member from public.members where id = p_member;
+  if not found or not public.member_is_active(v_member, p_at) then
     return;
   end if;
   if not public.reserve_slot(p_member, v_month) then
@@ -427,12 +448,17 @@ create table public.api_tokens (
 );
 create unique index api_tokens_one_active on public.api_tokens (member_id) where revoked_at is null;
 
--- “Pause all asks” links in emails and List-Unsubscribe (no sign-in). Pausing is the only thing they can do.
+-- “Pause all asks” links in emails and List-Unsubscribe (no sign-in). A token can pause, and can undo the pause it
+-- made itself within 24 hours (the /pause page's Undo): it restores undo_status / undo_paused_until, nothing else.
 create table public.pause_tokens (
-  token_hash    text primary key check (token_hash ~ '^[0-9a-f]{64}$'),
-  member_id     uuid not null references public.members (id) on delete cascade,
-  created_at    timestamptz not null default now(),
-  last_used_at  timestamptz
+  token_hash         text primary key check (token_hash ~ '^[0-9a-f]{64}$'),
+  member_id          uuid not null references public.members (id) on delete cascade,
+  created_at         timestamptz not null default now(),
+  last_used_at       timestamptz,
+  -- Set when this token paused the member: when, and the member's state just before (for Undo).
+  paused_at          timestamptz,
+  undo_status        text check (undo_status in ('pending', 'on', 'paused')),
+  undo_paused_until  timestamptz
 );
 create index pause_tokens_member on public.pause_tokens (member_id);
 
@@ -477,7 +503,71 @@ create table public.email_outbox (
   updated_at   timestamptz not null default now()
 );
 create index email_outbox_due on public.email_outbox (send_at) where status in ('queued', 'failed');
+create index email_outbox_member on public.email_outbox (member_id) where status in ('queued', 'scheduled');
 create trigger email_outbox_touch before update on public.email_outbox for each row execute function public.touch_updated_at();
+
+-- MCP drafts (draft_ask → draft_ask with draft_id → send_ask with draft_id). mcp-handler is stateless, so the
+-- draft lives here between calls. Open SAMPLE drafts have no owner; drafts expire after 24 hours (the daily cron
+-- deletes them). Server only.
+create table public.drafts (
+  id          text primary key check (id ~ '^d_[0-9A-Za-z]{3,16}$'),
+  -- The member whose token drafted it, or null for an open (no token) SAMPLE draft.
+  owner_id    uuid references public.members (id) on delete cascade,
+  network     text not null default 'sample' check (network in ('sample', 'real')),
+  raw         text not null check (char_length(raw) between 1 and 600),
+  -- lib/types CompiledPart[]: what the compiler returned, then completed by the user's answers.
+  parts       jsonb not null default '[]'::jsonb check (jsonb_typeof(parts) = 'array'),
+  subject     text check (subject is null or char_length(subject) between 1 and 45),
+  topic       text check (topic is null or char_length(topic) <= 80),
+  state       text not null default 'missing' check (state in ('missing', 'ready', 'refused', 'sent')),
+  -- The ask it became (a_… on REAL, sa_… on SAMPLE), once sent.
+  ask_id      text,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now(),
+  expires_at  timestamptz not null default (now() + interval '24 hours')
+);
+create index drafts_expires on public.drafts (expires_at);
+create trigger drafts_touch before update on public.drafts for each row execute function public.touch_updated_at();
+
+-- Model spend per local day in Mexico City, across every server instance: the app-level daily budget
+-- (DAILY_BUDGET_USD) is checked against this before live calls. Server only.
+create table public.model_usage (
+  day         date primary key,
+  usd         numeric(12, 6) not null default 0 check (usd >= 0),
+  calls       integer not null default 0 check (calls >= 0),
+  updated_at  timestamptz not null default now()
+);
+
+-- Adds measured usage and returns the day's total in USD (one statement, safe under concurrency).
+create or replace function public.add_model_usage(p_usd numeric, p_calls integer default 1, p_at timestamptz default now())
+returns numeric
+language sql
+security definer
+set search_path = ''
+as $$
+  insert into public.model_usage as u (day, usd, calls, updated_at)
+  values ((p_at at time zone 'America/Mexico_City')::date, greatest(coalesce(p_usd, 0), 0), greatest(coalesce(p_calls, 0), 0), now())
+  on conflict (day) do update set usd = u.usd + excluded.usd, calls = u.calls + excluded.calls, updated_at = now()
+  returning usd
+$$;
+
+-- What the SessionStart hook already showed a member (ux-spec S6: each item at most twice, when it arrives and when
+-- under 24 h remain). item = 'offer:o_…' | 'question:q_…' | 'checkin:c_…'. Server only.
+create table public.hook_seen (
+  member_id      uuid not null references public.members (id) on delete cascade,
+  item           text not null check (char_length(item) <= 64),
+  shown          smallint not null default 0 check (shown between 0 and 2),
+  last_shown_at  timestamptz,
+  primary key (member_id, item)
+);
+
+-- Small shared state for server instances, e.g. key 'live_pause' = {"state": "budget", "until": "…"} when
+-- Anthropic reports a spend limit (BE1). Server only; never holds secrets, rules, asks or personal data.
+create table public.app_state (
+  key         text primary key check (char_length(key) <= 64),
+  value       jsonb not null default '{}'::jsonb check (jsonb_typeof(value) = 'object'),
+  updated_at  timestamptz not null default now()
+);
 
 -- Append-only facts. The public board counts these. Member references become null when a member deletes their
 -- data; ask and offer ids are plain text (no foreign keys), so the counts survive.
@@ -724,6 +814,10 @@ alter table public.audit          enable row level security;
 alter table public.eval_cases     enable row level security;
 alter table public.eval_runs      enable row level security;
 alter table public.eval_results   enable row level security;
+alter table public.drafts         enable row level security;
+alter table public.model_usage    enable row level security;
+alter table public.app_state      enable row level security;
+alter table public.hook_seen      enable row level security;
 
 -- anon: nothing, anywhere. Supabase grants every new table, sequence and function in public to anon and
 -- authenticated by default; take that back here, and stop it for objects later migrations create (0002+ must
@@ -735,24 +829,24 @@ alter default privileges in schema public revoke all on tables from anon, authen
 alter default privileges in schema public revoke all on sequences from anon, authenticated;
 alter default privileges in schema public revoke execute on functions from anon, authenticated, public;
 
--- authenticated: read your own rows where a page needs them; edit your own member settings.
+-- authenticated: read a few of your own rows; write nothing directly. Every write goes through server code with the
+-- service role, which checks the session, audits and cancels scheduled emails where needed. (A direct insert would
+-- let someone sign in as A and store B's address as their member email; direct updates would skip the audit.)
+-- `asks` is deliberately not readable: an asker's view goes through the serializer (status, close_reason and
+-- updated_at would reveal when a member said No). Token hashes are never selectable.
 revoke all on all tables in schema public from authenticated;
-grant select on public.members, public.rules, public.rule_versions, public.cap_usage, public.asks,
-               public.offers, public.intros, public.checkins, public.api_tokens to authenticated;
-grant insert (id, email, name) on public.members to authenticated;
-grant update (name, one_line, company, stage, city, scheduling_url, cap, show_matched, accept_guests, status, paused_until)
-  on public.members to authenticated;
-grant execute on function public.save_rules(uuid, text, text) to authenticated;
+grant select on public.members, public.rules, public.rule_versions, public.cap_usage, public.intros to authenticated;
+grant select (id, ask_id, member_id, position, month, state, offered_at, expires_at, responded_at, answer, no_reason, no_note, created_at)
+  on public.offers to authenticated;
+grant select (id, intro_id, member_id, role, kind, due_at, sent_at, answer, answered_at, reminder_at, closes_at, created_at)
+  on public.checkins to authenticated;
+grant select (id, member_id, label, created_at, last_used_at, last_used_from, revoked_at) on public.api_tokens to authenticated;
 grant execute on function public.cap_month(timestamptz), public.member_is_active(public.members, timestamptz) to authenticated;
 
 create policy members_select_own on public.members for select to authenticated using (id = (select auth.uid()));
-create policy members_insert_own on public.members for insert to authenticated with check (id = (select auth.uid()));
-create policy members_update_own on public.members for update to authenticated
-  using (id = (select auth.uid())) with check (id = (select auth.uid()));
 create policy rules_select_own on public.rules for select to authenticated using (member_id = (select auth.uid()));
 create policy rule_versions_select_own on public.rule_versions for select to authenticated using (member_id = (select auth.uid()));
 create policy cap_usage_select_own on public.cap_usage for select to authenticated using (member_id = (select auth.uid()));
-create policy asks_select_own on public.asks for select to authenticated using (asker_id = (select auth.uid()));
 create policy offers_select_own on public.offers for select to authenticated using (member_id = (select auth.uid()));
 create policy intros_select_party on public.intros for select to authenticated
   using (member_id = (select auth.uid()) or asker_id = (select auth.uid()));

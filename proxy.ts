@@ -6,6 +6,10 @@ import { NextResponse, type NextRequest } from 'next/server';
  * It refreshes an expiring Supabase session and writes the new cookies on the response, the way @supabase/ssr
  * requires, and does nothing else: it never redirects, never reads request bodies (SSE routes stream through it
  * untouched) and is a no-op when Supabase isn't configured. Pages decide access themselves (requireMember).
+ *
+ * Every path that calls getUser()/requireMember() must be in the matcher: a Server Component can't write cookies,
+ * so a refresh there would rotate the refresh token without saving it and sign the person out on the next request.
+ * That includes /o and /c (the signed-in `o_…`/`c_…` links from /me) and their server actions.
  */
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -39,5 +43,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/me/:path*', '/join', '/ask/:path*', '/api/asks/:path*'],
+  matcher: ['/me/:path*', '/join', '/ask/:path*', '/api/asks/:path*', '/o/:path*', '/c/:path*'],
 };

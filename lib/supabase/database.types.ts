@@ -67,7 +67,10 @@ export type AskRow = {
   /** lib/types CompiledAsk */
   compiled: Json;
   subject: string;
-  status: 'queued' | 'gating' | 'open' | 'answered' | 'intro' | 'no_match' | 'closed' | 'failed' | 'withdrawn';
+  /** ready = created, not sent yet; queued = the asker already has 3 open asks (lib/types AskStatus). */
+  status: 'ready' | 'queued' | 'gating' | 'open' | 'answered' | 'intro' | 'no_match' | 'closed' | 'failed' | 'withdrawn';
+  /** An edited resend of this earlier ask (at most one a week per original). */
+  resend_of: string | null;
   close_reason: 'all_passed' | 'deadline' | 'solved' | 'answer_timeout' | 'asker_closed' | null;
   deadline: string | null;
   network_size: number | null;
@@ -189,6 +192,10 @@ export type PauseTokenRow = {
   member_id: string;
   created_at: string;
   last_used_at: string | null;
+  /** Set when this token paused the member (Undo within 24 h restores the two undo_* values). */
+  paused_at: string | null;
+  undo_status: 'pending' | 'on' | 'paused' | null;
+  undo_paused_until: string | null;
 };
 
 export type RateLimitRow = {
@@ -209,6 +216,46 @@ export type EmailOutboxRow = {
   last_error: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type DraftRow = {
+  id: string;
+  /** The member whose token drafted it; null for an open SAMPLE draft. */
+  owner_id: string | null;
+  network: 'sample' | 'real';
+  raw: string;
+  /** lib/types CompiledPart[] */
+  parts: Json;
+  subject: string | null;
+  topic: string | null;
+  state: 'missing' | 'ready' | 'refused' | 'sent';
+  ask_id: string | null;
+  created_at: string;
+  updated_at: string;
+  expires_at: string;
+};
+
+export type ModelUsageRow = {
+  /** Local day in Mexico City, YYYY-MM-DD. */
+  day: string;
+  usd: number;
+  calls: number;
+  updated_at: string;
+};
+
+export type AppStateRow = {
+  key: string;
+  value: Json;
+  updated_at: string;
+};
+
+export type HookSeenRow = {
+  member_id: string;
+  /** 'offer:o_…' | 'question:q_…' | 'checkin:c_…' */
+  item: string;
+  /** 0..2: each item shows at most twice (when it arrives, and when under 24 h remain). */
+  shown: number;
+  last_shown_at: string | null;
 };
 
 export type AuditAction =
@@ -293,13 +340,17 @@ export type Database = {
       intros: Table<IntroRow, 'id' | 'ask_id' | 'offer_id' | 'member_id' | 'asker_id', 'sent_at' | 'created_at'>;
       checkins: Table<CheckinRow, 'id' | 'intro_id' | 'member_id' | 'role' | 'kind' | 'token_hash' | 'due_at' | 'closes_at', Exclude<keyof CheckinRow, 'id' | 'intro_id' | 'member_id' | 'role' | 'kind' | 'token_hash' | 'due_at' | 'closes_at'>>;
       api_tokens: Table<ApiTokenRow, 'id' | 'member_id' | 'token_hash', Exclude<keyof ApiTokenRow, 'id' | 'member_id' | 'token_hash'>>;
-      pause_tokens: Table<PauseTokenRow, 'token_hash' | 'member_id', 'created_at' | 'last_used_at'>;
+      pause_tokens: Table<PauseTokenRow, 'token_hash' | 'member_id', 'created_at' | 'last_used_at' | 'paused_at' | 'undo_status' | 'undo_paused_until'>;
       rate_limits: Table<RateLimitRow, 'key' | 'bucket' | 'window_start', 'count'>;
       email_outbox: Table<EmailOutboxRow, 'key' | 'kind', Exclude<keyof EmailOutboxRow, 'key' | 'kind'>>;
       audit: Table<AuditRow, 'action', Exclude<keyof AuditRow, 'id' | 'action'>>;
       eval_cases: Table<EvalCaseRow, 'id' | 'set_name' | 'case_type' | 'author' | 'rules' | 'ask_text' | 'expected', 'notes' | 'frozen_at' | 'created_at'>;
       eval_runs: Table<EvalRunRow, 'id' | 'label' | 'set_name' | 'model' | 'rubric_hash', 'baseline' | 'started_at' | 'finished_at' | 'totals'>;
       eval_results: Table<EvalResultRow, 'run_id' | 'case_id' | 'correct', Exclude<keyof EvalResultRow, 'run_id' | 'case_id' | 'correct'>>;
+      drafts: Table<DraftRow, 'id' | 'raw', Exclude<keyof DraftRow, 'id' | 'raw'>>;
+      model_usage: Table<ModelUsageRow, 'day', 'usd' | 'calls' | 'updated_at'>;
+      app_state: Table<AppStateRow, 'key', 'value' | 'updated_at'>;
+      hook_seen: Table<HookSeenRow, 'member_id' | 'item', 'shown' | 'last_shown_at'>;
     };
     Views: { [_ in never]: never };
     Functions: {
@@ -308,6 +359,10 @@ export type Database = {
       reserve_slot: { Args: { p_member: string; p_month?: string }; Returns: boolean };
       create_offer: {
         Args: { p_offer_id: string; p_ask_id: string; p_member: string; p_token_hash: string; p_position?: number; p_at?: string };
+        /**
+         * One row: the new offer. No row: this member can't take it now (cap full, paused, not on): try the next.
+         * Error code 'OTI01': someone already holds the ask (stop). 'OTI02': the ask isn't open for offers (stop).
+         */
         Returns: OfferRow[];
       };
       expire_due_offers: { Args: { p_now?: string }; Returns: OfferRow[] };
@@ -315,6 +370,8 @@ export type Database = {
       prefilter_members: { Args: { p_asker: string; p_at?: string }; Returns: PrefilterRow[] };
       real_line: { Args: Record<string, never>; Returns: Json };
       board_snapshot: { Args: Record<string, never>; Returns: Json };
+      /** Adds measured model usage; returns the local day's total in USD. */
+      add_model_usage: { Args: { p_usd: number; p_calls?: number; p_at?: string }; Returns: number };
     };
     Enums: { [_ in never]: never };
     CompositeTypes: { [_ in never]: never };

@@ -31,7 +31,6 @@ const schema = {
   NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalString,
   SUPABASE_SERVICE_ROLE_KEY: optionalString,
-  DATABASE_URL: optionalString,
   ANTHROPIC_API_KEY: optionalString,
   RESEND_API_KEY: optionalString,
   EMAIL_FROM: optionalString,
@@ -111,6 +110,18 @@ export const { hasAnthropic, hasSupabase, hasSupabaseAdmin, hasTokenSecret, real
 
 /** REAL askers allowlist from the environment (lower-cased). The server seeds the `real_askers` table from it. */
 export const REAL_ASKERS: readonly string[] = Object.freeze([...(env.REAL_ASKERS ?? [])]);
+
+/**
+ * Who may ask the REAL network (docs/requests/alan.md, Nov 9): `open` when REAL_ASKERS is unset, empty or `*`
+ * (every signed-in member with a complete asker profile); `allowlist` when it lists emails (only those, plus
+ * `real_askers` rows Alan adds). A value with no valid email is still `allowlist` (fails closed: nobody).
+ * Every other protection applies in both modes: 3 open asks, one edited resend a week, rate limits, the compiler.
+ */
+export function realAskersMode(raw: string | undefined = process.env.REAL_ASKERS): 'open' | 'allowlist' {
+  const v = (raw ?? '').trim();
+  return v === '' || v === '*' ? 'open' : 'allowlist';
+}
+export const REAL_ASKERS_MODE: 'open' | 'allowlist' = realAskersMode();
 
 /** Exposed for tests only: parse an arbitrary environment object with the same rules. */
 export const __parseEnvForTests = parseEnv;

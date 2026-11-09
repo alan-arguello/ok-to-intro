@@ -1,8 +1,10 @@
 import { env, hasCron } from '@/lib/env';
 
 /**
- * Owner: BE2. GET /api/cron/daily — the Vercel cron backstop (Hobby runs once a day): expire offers past 72 h and
- * move them on, send due check-ins the scheduler missed, retry failed emails, prune rate-limit windows.
+ * Owner: BE2. GET /api/cron/daily — the Vercel cron backstop (Hobby runs once a day, ±59 min): expire offers past
+ * 72 h and move them on, send due check-ins the scheduler missed, retry failed emails, delete expired drafts, prune
+ * rate-limit windows older than a day, and call BE1's warmGate() too (with /api/cron/warm that is two warm calls a
+ * day, so the structured-output grammar never sits 24 h unused despite cron jitter).
  * Requires `Authorization: Bearer <CRON_SECRET>`. 401 without it; 503 when CRON_SECRET isn't set.
  *
  * STUB (foundation): BE2 replaces the work below with lib/server/cron.ts.

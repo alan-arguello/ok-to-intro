@@ -14,7 +14,7 @@ export const BANNER_COPY: Record<BannerKind, { tone: 'warn' | 'plain'; text: str
     text: 'Live checks are paused until {date}: this demo reached its model budget. Presets show their recorded run. Nothing you typed was sent.',
   },
   off: { tone: 'plain', text: 'Live checks are off on this instance: no model API key is set. Presets show their example verdicts.' },
-  limited: { tone: 'warn', text: 'You ran 20 live checks in 10 minutes. The next live run is available at {time}. Presets are unlimited.' },
+  limited: { tone: 'warn', text: 'You ran 20 live checks in 10 minutes. The next live run is at {time}. Presets are unlimited.' },
   offline: { tone: 'plain', text: 'You’re offline. What you typed is saved in this tab.' },
 };
 
@@ -53,6 +53,25 @@ export const PLAYGROUND_RULES_HELP = 'Each run sends your rules to Anthropic’s
 
 /** Labels for recorded data, by source (docs/CONTRACT.md §e). */
 export const AUTHORED_LABEL = 'Example verdicts, written by hand · not a model run';
+/** S2 SAMPLE fan-out and the send_ask SAMPLE receipt when sample-network.json is `source: "authored"`. */
+export const AUTHORED_FANOUT_LABEL = 'Example results for 39 sample members, written by hand · not a model run';
+/**
+ * Under the No-reason diff on a REAL /o page (and the MCP `respond` suggestion): the edit is templated by code and
+ * was not run against the sample asks, so no “Tested on …” line. SAMPLE uses OFFER_SAMPLE.suggested_edits.*.expected.
+ */
+export const SUGGESTED_EDIT_UNTESTED = 'Templated by code from your reason. Not run against the sample asks.';
+
+/**
+ * Who may ask the REAL network (S2 compose, POST /api/asks). `open` mode (REAL_ASKERS unset or `*`) and
+ * `allowlist` mode differ only for signed-out visitors and people not on the list.
+ */
+export const REAL_ASK_COPY = {
+  signedOutOpen: 'Sign in to ask the real network.',
+  signedOutAllowlist: 'The real network is open to invited founders while it’s small. Sign in if you were invited.',
+  notInvited: 'The real network is open to invited founders while it’s small. Your email isn’t on the list yet.',
+  profileIncomplete: 'Add your name and company under Your gate before asking the real network.',
+  notConfigured: 'The real network isn’t set up on this instance.',
+} as const;
 export const SAMPLE_NOTE = 'All 12 asks and companies are fictional (SAMPLE).';
 export const PROTOTYPE_NUMBERS_NOTE = 'Prototype: example numbers for layout. The live board reads from the database.';
 

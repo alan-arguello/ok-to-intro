@@ -1,8 +1,9 @@
 /**
  * The monthly cap, applied to a run of the 12 SAMPLE asks: the same rule Postgres applies to real offers
  * (`reserve_slot`): the first N accepts of the month reach the member; later accepts are over the cap.
- * Used by the playground (cap changes are recomputed here, no model call), the try_rules receipt and the
- * “Tested on the 12 sample asks” line on /o. Pure; safe in client and server code.
+ * Used by the playground (cap changes are recomputed here, no model call) and the try_rules receipt.
+ * Pure; safe in client and server code. In the playground the cap step is labelled “(code)”, never “(Postgres)”:
+ * Postgres enforces the cap only on real offers (docs/CONTRACT.md §e).
  */
 
 import type { DecidedBy, GateErrorKind, Verdict } from '@/lib/types';

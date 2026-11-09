@@ -13,8 +13,11 @@ export interface SuggestedEdit {
   context: string;
   /** The added line: templated by code, additive only, never names a company, never copies 6+ words of the ask. */
   add: string;
-  /** “Tested on the 12 sample asks: …” (format checked by tests). */
-  tested: string;
+  /**
+   * What a literal reading of the 12 sample asks expects from the edit. Hand-written, so it is labelled as such and
+   * never as a test run (docs/CONTRACT.md §e): “Expected on the 12 sample asks (written by hand, not a model run): …”.
+   */
+  expected: string;
 }
 
 export const OFFER_SAMPLE = {
@@ -39,19 +42,19 @@ export const OFFER_SAMPLE = {
   reply_by_iso: '2026-11-12T21:04:00-06:00',
   hours_left: 71,
   cap_line: '1 of your 2 this month',
-  /** One templated edit per No reason, tested against Ana's rules (the Health operator preset). */
+  /** One templated edit per No reason for Ana's rules (the Health operator preset); `expected` is hand-written. */
   suggested_edits: {
     area: {
       reason: 'not_my_area',
       context: 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.',
       add: 'No asks about public procurement.',
-      tested: 'Tested on the 12 sample asks: 1 change (Orvella Health: question first → decline). Nothing else changes.',
+      expected: 'Expected on the 12 sample asks (written by hand, not a model run): 1 change (Orvella Health: question first → decline). Nothing else changes.',
     },
     stage: {
       reason: 'wrong_stage',
       context: 'Only if they have talked to 10+ buyers and have a price.',
       add: 'Only after a first paying customer.',
-      tested: 'Tested on the 12 sample asks: 1 change (Guadua Health: accept → question first). Nothing else changes.',
+      expected: 'Expected on the 12 sample asks (written by hand, not a model run): 1 change (Guadua Health: accept → question first). Nothing else changes.',
     },
   } satisfies Record<'area' | 'stage', SuggestedEdit>,
 } as const;

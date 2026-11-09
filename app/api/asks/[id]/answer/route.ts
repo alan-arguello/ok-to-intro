@@ -1,3 +1,4 @@
+import { crossOrigin, isSameOrigin } from '@/lib/http';
 import { answerQuestion } from '@/lib/server/questions';
 import { getUser } from '@/lib/supabase/server';
 
@@ -12,6 +13,7 @@ export const dynamic = 'force-dynamic';
 const NO_STORE = { 'Cache-Control': 'no-store' };
 
 export async function POST(request: Request, ctx: { params: Promise<{ id: string }> }) {
+  if (!isSameOrigin(request)) return crossOrigin();
   const { id } = await ctx.params;
   const who = await getUser();
   if (!who.ok) return Response.json({ error: who.reason }, { status: who.reason === 'signed_out' ? 401 : 503, headers: NO_STORE });

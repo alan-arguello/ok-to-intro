@@ -15,7 +15,7 @@
  */
 
 import type { DisplayVerdict } from './cap';
-import type { GateQuestion, OfferAction, PresetId, QuestionType, SampleAskKey, SampleNetworkAskId } from '@/lib/types';
+import type { CompiledAsk, GateQuestion, OfferAction, PresetId, QuestionType, SampleAskKey, SampleNetworkAskId } from '@/lib/types';
 import type { QaState } from '@/lib/qa';
 
 export const STORAGE_KEYS = {
@@ -46,7 +46,11 @@ export interface PlaygroundStore {
 
 export interface SampleAskStore {
   v: 1;
-  id: SampleNetworkAskId;
+  /**
+   * `sa_eng | sa_health | sa_founder` for the three sample asks, or `sa_` + 6 characters (publicId('sampleAsk'))
+   * for a SAMPLE send of the visitor's own text. /ask/[id] renders any `sa_…` id from this store (isSampleAskId).
+   */
+  id: SampleNetworkAskId | `sa_${string}`;
   preset: PresetId;
   /** The S2 status page's outcome state (QA state names). */
   state: QaState<'askStatus'>;
@@ -56,6 +60,15 @@ export interface SampleAskStore {
   answered: { type: QuestionType; text: string } | null;
   /** When the visitor pressed Send (epoch ms): SAMPLE times are the viewer's own. */
   sent_at: number;
+  /** When the offer was made (epoch ms; reply by = this + 72 h), or null before the offer. */
+  offered_at: number | null;
+  /**
+   * The ask exactly as the visitor approved and sent it (subject, parts, text). /o/sample?ask=…, the sample email
+   * viewer and the sample check-in render THIS, so the loop shows the ask that was actually sent.
+   */
+  compiled: CompiledAsk;
+  /** The visitor's own words their gate quoted (found quotes only) when the YOU cell accepted; [] otherwise. */
+  you_cited: string[];
 }
 
 export interface SampleOfferStore {

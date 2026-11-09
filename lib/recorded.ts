@@ -142,8 +142,11 @@ export function presetRun(preset: PresetId): PresetRun {
   return PRESET_RECORDINGS.runs[preset];
 }
 
-/** A recorded gate as the `gate` event shape the playground renders (`source: "recorded"`). */
-export function recordedGateEvent(gate: RecordedGate, i: number): TryGateEvent {
+/**
+ * A recorded gate as the `gate` event shape the playground renders. Its `source` follows the file: `recorded` for a
+ * model recording, `authored` for hand-written data (never shown as recorded, live or model; no latency).
+ */
+export function recordedGateEvent(gate: RecordedGate, i: number, file: Pick<RecordedFile<unknown>, 'source'> = PRESET_RECORDINGS): TryGateEvent {
   return {
     i,
     ask_id: gate.ask_id,
@@ -155,9 +158,9 @@ export function recordedGateEvent(gate: RecordedGate, i: number): TryGateEvent {
     reason: gate.reason,
     question: gate.question ? { ...gate.question } : null,
     flags: [...gate.flags],
-    confidence: gate.confidence,
-    ms: gate.ms,
-    source: 'recorded',
+    confidence: isAuthored(file) ? null : gate.confidence,
+    ms: isAuthored(file) ? null : gate.ms,
+    source: isAuthored(file) ? 'authored' : 'recorded',
   };
 }
 

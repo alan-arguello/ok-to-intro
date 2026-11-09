@@ -73,11 +73,17 @@ export const INSTALL_PLUGIN_TWO_STEP = [
 ] as const;
 export const PLUGIN_CONFIGURE_COMMAND = `claude plugin configure ${PLUGIN_NAME}`;
 
+function validEmail(raw: string | undefined): string | null {
+  const v = (raw || '').trim().toLowerCase();
+  return /^[^\s@<>"]+@[^\s@<>"]+\.[a-z]{2,}$/.test(v) ? v : null;
+}
+
 /**
- * Contact address on the product's own domain (ux-spec S8 /privacy). `null` until the site runs on a product
- * domain: pages then link to the repo's issues instead, and never print a placeholder address.
+ * Contact address for /privacy and footers (ux-spec S8). NEXT_PUBLIC_CONTACT_EMAIL wins (e.g. an address on the
+ * domain mail is sent from, when the site itself runs on *.vercel.app); otherwise `alan@<product domain>` once the
+ * site runs on a product domain; otherwise `null`, and pages link to the repo's issues instead. Never a placeholder.
  */
-export const CONTACT_EMAIL: string | null = IS_PRODUCT_DOMAIN ? `alan@${MAIL_DOMAIN}` : null;
+export const CONTACT_EMAIL: string | null = validEmail(process.env.NEXT_PUBLIC_CONTACT_EMAIL) ?? (IS_PRODUCT_DOMAIN ? `alan@${MAIL_DOMAIN}` : null);
 export const CONTACT_FALLBACK_URL = `${REPO_URL}/issues`;
 
 /** Absolute URL for a path on this site. `absoluteUrl('/o/abc')` → `https://oktointro.app/o/abc`. */

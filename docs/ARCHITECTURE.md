@@ -11,9 +11,10 @@ interface between owners.
 - **Next.js 16 (App Router, Turbopack), React 19, TypeScript strict**, deployed on Vercel (Node runtime, `iad1`).
   No Cache Components: classic ISR (`revalidate`) for `/` (3600 s) and `/board` (60 s), dynamic rendering for
   token pages and signed-in pages. `proxy.ts` (Next 16's middleware) only refreshes Supabase sessions on
-  `/me`, `/join`, `/ask/*` and `/api/asks/*`.
+  `/me`, `/join`, `/ask/*`, `/api/asks/*`, `/o/*` and `/c/*` (every path that reads the session).
 - **Supabase**: Postgres with RLS on every table, email OTP sign-in (6-digit codes, never magic links), the service
-  role for server writes.
+  role for every write. Signed-in users can read a few of their own rows and write nothing directly; askers can't read
+  `asks` at all (the serializer is the only path).
 - **Anthropic**: `claude-haiku-5-5` for gates (structured output, thinking off, effort low, rubric cached ahead of the
   member's rules, the ask quoted as data), `claude-sonnet-5-5` for the 5-part compiler, `claude-opus-5-5` offline only.
 - **Resend** for email (idempotency keys, scheduled check-ins), **Vercel Cron** daily as a backstop.
@@ -66,7 +67,8 @@ suggested / missing; facts are never invented). REAL: `POST /api/asks` persists 
 `POST /api/asks/[id]/send` runs `prefilter_members` (SQL drops self, paused, at-cap and repeat pairs), fans out to
 the remaining gates (≤ 16 in flight, each decision persisted before it streams), and offers the ask to the best
 accept through `create_offer`, which calls `reserve_slot` under a row lock in the same transaction: two asks can't
-take a member's last slot. The stream the asker sees is serialized (4 states). SAMPLE: `POST /api/asks/sample` does
+take a member's last slot. The fan-out runs detached from the request (`detachedEvents` + `after()`), so it finishes
+and persists even if the asker closes the tab. The stream the asker sees is serialized (4 states). SAMPLE: `POST /api/asks/sample` does
 the same over 39 fictional members (recorded) plus the visitor's own gate (live), persisting nothing.
 
 **3. A member decides (BE2 email → R page → BE2).** The offer email's buttons are links; `/o/[token]` renders the card
@@ -88,4 +90,9 @@ can't tell a pass from an expiry. Check-ins at +1 and +14 days turn intros into 
 - **Tokens**: 128-bit random, only the HMAC (with a per-purpose prefix) is stored; GET never consumes a token.
 - **Static shell, client islands.** The shared layouts never read cookies; the header's “Sign in / Your gate” and the
   banner are client islands, so `/`, `/how`, `/privacy` and `/agents` stay static.
-- **No-JS token pages** use server actions with `redirect()` (303) and idempotency keys.
+- **No-JS token pages** use server actions with `redirect()` (303) and idempotency keys; /pause posts a plain form to
+  `/api/pause`, the same handler as one-click unsubscribe.
+- **One way to make an offer**: `create_offer` (cap check, one holder per ask, ask still open, member active), so the
+  cap holds under concurrency and a lazy “move on” can't race itself.
+- **Honest labels by source**: `live`, `recorded` (a model recording) or `authored` (hand-written); the playground's
+  cap step says “(code)” because it runs in the browser, and only real offers say Postgres.

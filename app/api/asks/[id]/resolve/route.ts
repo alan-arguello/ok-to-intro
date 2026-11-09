@@ -1,3 +1,4 @@
+import { crossOrigin, isSameOrigin } from '@/lib/http';
 import { getUser } from '@/lib/supabase/server';
 
 /**
@@ -9,7 +10,8 @@ import { getUser } from '@/lib/supabase/server';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function POST(_request: Request, ctx: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, ctx: { params: Promise<{ id: string }> }) {
+  if (!isSameOrigin(request)) return crossOrigin();
   await ctx.params;
   const who = await getUser();
   if (!who.ok) return Response.json({ error: who.reason }, { status: who.reason === 'signed_out' ? 401 : 503, headers: { 'Cache-Control': 'no-store' } });

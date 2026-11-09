@@ -87,3 +87,46 @@ describe('sseResponse + readSse', () => {
     await reader.cancel();
   });
 });
+
+describe('detachedEvents (REAL sends finish without the client)', () => {
+  it('keeps working after the consumer leaves, and replays everything to a consumer that arrives late', async () => {
+    const { detachedEvents } = await import('@/lib/sse');
+    const persisted: number[] = [];
+    const run = detachedEvents<number>(async (emit) => {
+      for (let n = 1; n <= 5; n++) {
+        await new Promise((r) => setTimeout(r, 5));
+        persisted.push(n);
+        emit(n);
+      }
+    });
+    const seen: number[] = [];
+    for await (const n of run.events) {
+      seen.push(n);
+      if (n === 2) break; // the client disconnected
+    }
+    await run.done;
+    expect(seen).toEqual([1, 2]);
+    expect(persisted).toEqual([1, 2, 3, 4, 5]);
+    const replay: number[] = [];
+    for await (const n of run.events) replay.push(n);
+    expect(replay).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it('never rejects when the work throws', async () => {
+    const { detachedEvents } = await import('@/lib/sse');
+    const err = console.error;
+    console.error = () => undefined;
+    try {
+      const run = detachedEvents<number>(async (emit) => {
+        emit(1);
+        throw new Error('boom');
+      });
+      await expect(run.done).resolves.toBeUndefined();
+      const got: number[] = [];
+      for await (const n of run.events) got.push(n);
+      expect(got).toEqual([1]);
+    } finally {
+      console.error = err;
+    }
+  });
+});

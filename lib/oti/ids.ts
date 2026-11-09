@@ -18,6 +18,8 @@ function randomBytes(n: number): Uint8Array {
 /** Prefixes by object, so an id says what it is. */
 export const ID_PREFIX = {
   ask: 'a',
+  /** A SAMPLE send of the visitor's own text (never persisted; its state lives in the browser tab). */
+  sampleAsk: 'sa',
   offer: 'o',
   question: 'q',
   intro: 'i',
@@ -52,3 +54,13 @@ export function looksLikeToken(s: string): boolean {
 
 /** `sample` is the public SAMPLE offer and check-in (/o/sample, /c/sample). */
 export const SAMPLE_TOKEN = 'sample';
+
+/** A SAMPLE ask id (`sa_eng`, `sa_health`, `sa_founder`, or `sa_` + random): rendered from the tab, never the database. */
+export function isSampleAskId(id: string): boolean {
+  return /^sa_[0-9A-Za-z]{3,16}$/.test(id);
+}
+
+/** A REAL ask id (`a_…`): owner-only, through the asker serializer. */
+export function isRealAskId(id: string): boolean {
+  return /^a_[0-9A-Za-z]{3,16}$/.test(id);
+}

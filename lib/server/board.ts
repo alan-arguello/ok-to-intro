@@ -1,5 +1,5 @@
 import 'server-only';
-import type { RealLine } from '@/lib/types';
+import type { RealLineResult } from '@/lib/types';
 
 /**
  * Owner: S7. Real counts for /board (public.board_snapshot) and the playground's REAL line (public.real_line),
@@ -10,9 +10,10 @@ import type { RealLine } from '@/lib/types';
  */
 
 /**
- * The dated REAL line under the S1 lede, or null when the real network isn't connected on this instance
- * (S1 then shows REAL_LINE_OFF from lib/oti/copy.ts) or the database can't be read.
+ * The dated REAL line under the S1 lede (public.real_line). Never throws, also at build time (S1 is prerendered):
+ * `not_configured` when the real network isn't connected on this instance (S1 shows REAL_LINE_OFF);
+ * `db_down` when it is configured but can't be read (S1 renders no REAL line rather than a wrong one).
  */
-export async function getRealLine(): Promise<RealLine | null> {
-  return null;
+export async function getRealLine(): Promise<RealLineResult> {
+  return { ok: false, reason: 'not_configured' };
 }

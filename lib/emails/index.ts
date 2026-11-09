@@ -5,6 +5,7 @@ import type {
   OfferEmailInput,
   OutcomeNoteEmailInput,
   QuestionEmailInput,
+  WithdrawnEmailInput,
 } from '@/lib/types';
 
 /**
@@ -50,13 +51,27 @@ export function offerEmail(input: OfferEmailInput): EmailMessage {
   );
 }
 
+/** “Intro: Lucía Ferrer (Orvella Health) and Ana Ruiz (public hospital procurement)” (the parenthetical is optional). */
+export function introSubject(input: Pick<IntroEmailInput, 'asker' | 'member' | 'member_context'>): string {
+  const member = input.member_context ? `${input.member.name} (${input.member_context})` : input.member.name;
+  return `Intro: ${input.asker.name} (${input.asker.company}) and ${member}`;
+}
+
 /** S5 intro email to both people (To: both; Reply-To: both; the service is not in the thread). */
 export function introEmail(input: IntroEmailInput): EmailMessage {
-  return plain(input.subject_line_member, `Reply all to pick a time.`, [
+  return plain(introSubject(input), `Reply all to pick a time.`, [
     `${input.member.name} · ${input.member.one_line}`,
     `${input.asker.name} · ${input.asker.company} (${input.asker.stage}, ${input.asker.city})`,
     '',
     `${input.asker.first}, ${input.member.first}: you both said yes, so here is the intro.`,
+  ]);
+}
+
+/** To the member who held the offer when the asker withdrew the ask (no buttons; nothing to do). */
+export function withdrawnEmail(input: WithdrawnEmailInput): EmailMessage {
+  return plain(`No longer needed: ${input.title}`, `${input.asker_first} withdrew this ask. Nothing to do.`, [
+    `${input.asker_first} withdrew the ask “${input.title}” on ${input.withdrawn_on}. Nothing to do.`,
+    `It still counted as ${input.nth} of your ${input.cap} this month.`,
   ]);
 }
 
