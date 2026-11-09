@@ -9,7 +9,7 @@ interface between owners.
 ## Stack
 
 - **Next.js 16 (App Router, Turbopack), React 19, TypeScript strict**, deployed on Vercel (Node runtime, `iad1`).
-  No Cache Components: classic ISR (`revalidate`) for `/` (3600 s) and `/board` (60 s), dynamic rendering for
+  No Cache Components: classic ISR (`revalidate`) for `/` and `/rules` (3600 s) and `/board` (60 s), dynamic rendering for
   token pages and signed-in pages. `proxy.ts` (Next 16's middleware) only refreshes Supabase sessions on
   `/me`, `/join`, `/ask/*`, `/api/asks/*`, `/o/*` and `/c/*` (every path that reads the session).
 - **Supabase**: Postgres with RLS on every table, email OTP sign-in (6-digit codes, never magic links), the service
@@ -27,8 +27,9 @@ interface between owners.
 app/
   layout.tsx            html, fonts (next/font: Outfit + Source Serif 4 roman 500), tokens.css, skip link, footer, live region, ⌘↵
   (site)/layout.tsx     full header (client island) + banner + <main id="main">
-    page.tsx            S1 playground (/)
-    ask/, ask/[id]/     S2 compose and status
+    page.tsx            the ask-first home (/): the S2 compose island, chat-style
+    rules/              S1 playground (/rules)
+    ask/, ask/[id]/     S2 compose (session-aware) and status
     join/, me/          S3
     agents/             S6
     board/, how/, privacy/   S7
@@ -56,13 +57,15 @@ data/recorded           presets.json, sample-network.json ({source: model|author
 
 ## The three flows
 
-**1. A reviewer tries their own rules (S1 → BE1).** The landing page is static. “Run” on an unedited preset renders
+**1. A reviewer tries their own rules (S1 → BE1).** The playground (`/rules`; the home page `/` is the ask composer
+since Nov 9, with a link to it) is static. “Run” on an unedited preset renders
 the recorded run embedded in the page (no request). Any edit runs live: `POST /api/try` streams `plan`, then one
 `gate` per ask as each model call returns, then `done`. Every gate's quotes go through `findClause` on the server;
 the browser marks the member's own words at the offsets the server found (the read view). The cap is a pure
 function (`applyCap`) the browser can re-apply without a model call. Nothing is stored.
 
-**2. A founder asks (S2 → BE1 compiler → BE2 fan-out).** `POST /api/compile` streams the 5 parts (found /
+**2. A founder asks (S2 → BE1 compiler → BE2 fan-out).** The home page `/` is the composer (static; /ask is the same
+island, rendered per request for the REAL option). `POST /api/compile` streams the 5 parts (found /
 suggested / missing; facts are never invented). REAL: `POST /api/asks` persists the ask, then
 `POST /api/asks/[id]/send` runs `prefilter_members` (SQL drops self, paused, at-cap and repeat pairs), fans out to
 the remaining gates (≤ 16 in flight, each decision persisted before it streams), and offers the ask to the best
@@ -91,7 +94,7 @@ can't tell a pass from an expiry. Check-ins at +1 and +14 days turn intros into 
   (HMAC of `TOKEN_HMAC_SECRET` and the row id) so a retried email is rebuilt byte for byte. Only an HMAC is stored;
   GET never consumes a token.
 - **Static shell, client islands.** The shared layouts never read cookies; the header's “Sign in / Your gate” and the
-  banner are client islands, so `/`, `/how`, `/privacy` and `/agents` stay static.
+  banner are client islands, so `/`, `/rules`, `/how`, `/privacy` and `/agents` stay static.
 - **No-JS token pages** use server actions with `redirect()` (303) and idempotency keys; /pause posts a plain form to
   `/api/pause`, the same handler as one-click unsubscribe.
 - **One way to make an offer**: `create_offer` (cap check, one holder per ask, ask still open, member active), so the

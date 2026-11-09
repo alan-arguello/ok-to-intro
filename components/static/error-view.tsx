@@ -24,7 +24,7 @@ export function ErrorView({ refCode, onRetry }: { refCode: string | null; onRetr
             {ERROR_COPY.retry}
           </Button>
           <ButtonLink size="lg" href={ROUTES.home}>
-            {ERROR_COPY.playground}
+            {ERROR_COPY.home}
           </ButtonLink>
         </ButtonRow>
       </header>

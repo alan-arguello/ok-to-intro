@@ -29,6 +29,7 @@ const shotsDir = opt('shots', '');
 
 /** lib/qa.ts QA_STATES (tests/site/scripts.test.ts fails if the two differ). */
 export const QA = {
+  home: ['default'],
   playground: ['not-run', 'running', 'done-recorded', 'done-live', 'rerun-changed', 'rerun-nochange', 'stale', 'cap-changed', 'partial-timeout', 'clause-check', 'marks', 'empty-rules', 'too-long', 'all-declined', 'all-accepted', 'rate-limited', 'api-down', 'budget', 'lost-stream', 'offline'],
   ask: ['empty', 'filled', 'compiling', 'compiled', 'ready', 'refused-vague', 'refused-yc', 'compiler-slow', 'compiler-down', 'queued', 'real-guest'],
   askStatus: ['offered', 'streaming', 'offered-you', 'ask-back', 'answered', 'intro', 'moved-on', 'no-match', 'closed-all-passed', 'expired-deadline', 'failed-closed', 'partial-failure', 'withdrawn', 'real'],
@@ -47,7 +48,9 @@ export const QA = {
 
 /** Where each QA page lives. `status` is the document status the page should answer with. */
 export const PAGES = {
-  playground: { path: '/' },
+  // `/` is the ask-first home (static); the playground moved to /rules on Nov 9.
+  home: { path: '/' },
+  playground: { path: '/rules' },
   ask: { path: '/ask' },
   askStatus: { path: '/ask/sa_eng' },
   board: { path: '/board' },
@@ -77,7 +80,8 @@ export function sweepUrls() {
     if (!(states.length === 1 && states[0] === 'default')) for (const s of states) urls.push({ path: `${page.path}?state=${s}`, status: page.status ?? 200 });
     if (key !== 'notFound' && key !== 'error') urls.push({ path: `${page.path}?degraded=down`, status: page.status ?? 200 });
   }
-  for (const d of DEGRADED) if (d !== 'down') urls.push({ path: `/?degraded=${d}`, status: 200 });
+  // Every degraded mode on the two pages that run live model calls: the playground and the home composer.
+  for (const d of DEGRADED) if (d !== 'down') urls.push({ path: `/rules?degraded=${d}`, status: 200 }, { path: `/?degraded=${d}`, status: 200 });
   for (const k of EMAIL_KINDS) urls.push({ path: `/emails/${k}`, status: 200 }, { path: `/emails/${k}?v=text`, status: 200 });
   urls.push({ path: '/kit', status: 200 });
   return urls;

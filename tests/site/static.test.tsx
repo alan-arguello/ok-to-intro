@@ -108,11 +108,11 @@ describe('/privacy', () => {
 });
 
 describe('404 and error', () => {
-  it('404: one black pill to the playground, Sign in beside it', () => {
+  it('404: one black pill to the home composer, Sign in beside it', () => {
     const out = renderToStaticMarkup(<NotFoundView />);
     expect(out).toContain('<h1 class="h1">Not found</h1>');
     expect(out.match(/btn--primary/g)?.length).toBe(1);
-    expect(out).toMatch(/<a class="btn btn--primary btn--lg" data-primary="" href="\/">Try the playground<\/a>/);
+    expect(out).toMatch(/<a class="btn btn--primary btn--lg" data-primary="" href="\/">Ask the network<\/a>/);
     expect(out).toContain('href="/join"');
     expect(notFoundMetadata.title).toBe('Not found');
   });
@@ -156,7 +156,7 @@ describe('share metadata, robots and sitemap', () => {
 
   it('lists only public pages, with absolute URLs from lib/site', () => {
     const urls = sitemap().map((e) => e.url);
-    expect(urls).toEqual(['/', '/ask', '/board', '/agents', '/how', '/privacy', '/join'].map((p) => `${SITE_URL}${p}`));
+    expect(urls).toEqual(['/', '/ask', '/rules', '/board', '/agents', '/how', '/privacy', '/join'].map((p) => `${SITE_URL}${p}`));
     expect(urls.join(' ')).not.toMatch(/\/(o|c|pause|me|api|kit)\b/);
   });
 });

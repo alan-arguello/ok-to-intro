@@ -292,7 +292,7 @@ export function JoinView({ available, qa }: { available: boolean; qa: boolean })
       {!carried && (available || simulate) ? (
         <p className="meta" id="join-new">
           {JOIN_COPY.newHere}{' '}
-          <Link className="link" href="/">
+          <Link className="link" href="/rules">
             {JOIN_COPY.writeFirst}
           </Link>
         </p>
@@ -307,7 +307,7 @@ export function JoinView({ available, qa }: { available: boolean; qa: boolean })
           <p className="label" id="join-carried-h">
             {JOIN_COPY.carriedLabel}
           </p>
-          <ButtonLink size="sm" href="/">
+          <ButtonLink size="sm" href="/rules">
             Edit
           </ButtonLink>
         </div>
@@ -327,7 +327,7 @@ export function JoinView({ available, qa }: { available: boolean; qa: boolean })
             {JOIN_COPY.unavailableBody}
           </Notice>
           <ButtonRow>
-            <ButtonLink variant="primary" size="lg" href="/" primary>
+            <ButtonLink variant="primary" size="lg" href="/rules" primary>
               {JOIN_COPY.tryPlayground}
             </ButtonLink>
           </ButtonRow>

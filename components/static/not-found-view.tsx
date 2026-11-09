@@ -17,7 +17,7 @@ export function NotFoundView() {
             {NOT_FOUND_COPY.signIn}
           </ButtonLink>
           <ButtonLink variant="primary" size="lg" href={ROUTES.home} primary>
-            {NOT_FOUND_COPY.playground}
+            {NOT_FOUND_COPY.home}
           </ButtonLink>
         </ButtonRow>
       </header>

@@ -131,7 +131,7 @@ export function EmailViewer({ kind, who, text, askId, from, serverNow }: EmailVi
               Back to your ask ›
             </Link>
           ) : (
-            <Link className="btn" href="/">
+            <Link className="btn" href="/rules">
               Back to the playground ›
             </Link>
           )}

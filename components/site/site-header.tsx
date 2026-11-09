@@ -7,9 +7,9 @@ import { hasSessionCookie } from '@/lib/supabase/cookie-hint';
 import { NAV_ITEMS, PRODUCT_NAME } from '@/lib/site';
 
 /**
- * The full header (every page except /o, /c and /pause): wordmark, Ask · Board · Agents · How it works, then
- * “Sign in”, which reads “Your gate” when a session cookie exists. At 760 px and below the nav collapses into a
- * 44 px Menu/Close button that opens 48 px rows (Try it first, Sign in last); Esc closes it.
+ * The full header (every page except /o, /c and /pause): wordmark, Ask · Be asked · Board · Agents · How it works,
+ * then “Sign in”, which reads “Your gate” when a session cookie exists. At 760 px and below the nav collapses into a
+ * 44 px Menu/Close button that opens 48 px rows (Sign in last); Esc closes it.
  * A client island: the shared layout never reads cookies, so pages stay static.
  */
 
@@ -24,7 +24,8 @@ function useSignedIn(): boolean {
 }
 
 function isCurrent(pathname: string, href: string): boolean {
-  if (href === '/') return pathname === '/';
+  // “Ask” is the home composer; /ask (the same composer, session-aware) and the status pages belong to it too.
+  if (href === '/') return pathname === '/' || pathname === '/ask' || pathname.startsWith('/ask/');
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -77,7 +78,7 @@ export function SiteHeader() {
         </button>
       </div>
       <nav id="site-menu" className="site-menu" aria-label="Menu" hidden={!open}>
-        {[{ href: '/', label: 'Try it' }, ...NAV_ITEMS, signin].map((item) => (
+        {[...NAV_ITEMS, signin].map((item) => (
           <Link key={item.href} href={item.href} aria-current={current(item.href)} onClick={() => setOpen(false)}>
             {item.label}
           </Link>

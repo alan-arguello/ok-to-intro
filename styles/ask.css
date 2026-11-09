@@ -12,7 +12,6 @@
 .ask-net .seg > [aria-disabled=true] { color: var(--ink-2); cursor: not-allowed; }
 .ask-as { color: var(--ink-2); }
 .ask-form > .ask-as { margin-top: var(--s3); }
-.ask-textarea { min-height: 132px; }
 .ask-form > .ask-samples { margin-top: var(--s3); }
 .ask-samples { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
 @media (max-width: 760px) { .ask-samples > .meta { flex-basis: 100%; } }
@@ -54,6 +53,38 @@
 
 /* build: the honesty label under the parts head (hand-written example parts). */
 .ask-parts-src { flex-basis: 100%; margin-top: -4px; }
+
+/* build (Nov 9 v2): chat-style compose on `/` and /ask. One composer box (textarea + its attached action), the
+   sample pills and the network under it, the reply (notes, 5 parts, subject, card, Send) below. No gradients, no
+   shadows beyond the kit's focus ring. */
+.ask-head--home { padding: var(--s10) 0 var(--s6); }
+.ask-head--home .lede { max-width: 38rem; }
+.ask-real-line { text-wrap: balance; }
+.ask-real-line .link { white-space: nowrap; }
+@media (max-width: 760px) { .ask-head--home { padding: var(--s6) 0 var(--s4); } }
+
+.ask-composer { border: 1px solid var(--line-input); border-radius: var(--r-sheet); background: var(--card); transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.ask-composer:has(.ask-textarea:focus-visible) { border-color: var(--focus); box-shadow: 0 0 0 1px var(--focus); }
+.ask-composer.is-invalid { border-color: var(--neg-text); }
+.ask-composer .ask-textarea { display: block; width: 100%; min-height: 104px; max-height: 50vh; padding: 16px 16px 6px; border: 0; border-radius: var(--r-sheet) var(--r-sheet) 0 0; background: transparent; resize: none; overflow-y: auto; font-size: 16px; line-height: 1.55; }
+.ask-composer .ask-textarea:focus-visible { border: 0; box-shadow: none; outline: none; }
+.ask-composer__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: 6px 8px 8px 16px; }
+.ask-composer__go { min-height: 44px; }
+.ask-form > .ask-samples { margin-top: var(--s3); }
+.ask-form > .ask-net { margin-top: var(--s4); }
+.ask-form > .ask-as { margin-top: var(--s2); }
+.ask-form > .ask-parts:not([hidden]) { margin-top: var(--s8); }
+
+.ask-other { margin-top: var(--s8); padding-bottom: var(--s10); }
+.ask-other__link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+.ask-other__box { margin-top: var(--s3); padding: var(--s4); border: 1px solid var(--line-soft); border-radius: var(--r-card); background: var(--panel); }
+.ask-other__box > * + * { margin-top: var(--s3); }
+.ask-other__head { align-items: center; }
+.ask-other__title { font-weight: 500; }
+.ask-other__list { list-style: none; margin: var(--s3) 0 0; padding: 0; }
+.ask-other__list > li { padding: var(--s2) 0; border-top: 1px solid var(--line-soft); }
+.ask-other__list > li:first-child { border-top: 0; padding-top: 0; }
+.ask-other__subject { font-size: 15px; line-height: 1.4; }
 
 /* =====================================================================
    S2 · Status

@@ -93,7 +93,7 @@ function walk(dir, out) {
   return out;
 }
 
-const PAGES = ['/', '/ask', '/board', '/agents', '/how', '/privacy', '/join', '/o/sample', '/c/sample'];
+const PAGES = ['/', '/rules', '/ask', '/board', '/agents', '/how', '/privacy', '/join', '/o/sample', '/c/sample'];
 const EMAIL_KINDS = ['offer', 'intro', 'checkin-1d', 'checkin-14d', 'question', 'outcome-note', 'code'];
 
 async function main() {

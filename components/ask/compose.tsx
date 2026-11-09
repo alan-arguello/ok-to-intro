@@ -1,15 +1,19 @@
 'use client';
 
 /**
- * S2 · /ask, the compose island (port of prototype/ask.html + a.js `Compose`). One specific ask: the network,
- * the founder's text, a check for the 5 parts (POST /api/compile, or the hand-written example for a sample chip),
- * the subject, the exact card a member gets, then Send. SAMPLE sends go to /ask/<sa_id>, whose state lives in this
- * tab; REAL sends create the ask (POST /api/asks) and open /ask/<a_id>, which sends it.
+ * S2 · the compose island on `/` (variant `home`) and `/ask` (variant `page`); port of prototype/ask.html + a.js
+ * `Compose`, laid out chat-style since Nov 9 (Alan: “the main window should be like ChatGPT”). One specific ask:
+ * the founder's text in one auto-growing composer with its action attached (Enter or ⌘↵ checks, Shift+Enter is a
+ * newline), the sample prompts as pills, the network, then the reply below it: a check for the 5 parts
+ * (POST /api/compile, or the hand-written example for a sample pill), the subject, the exact card a member gets,
+ * then Send. SAMPLE sends go to /ask/<sa_id>, whose state lives in this tab; REAL sends create the ask
+ * (POST /api/asks) and open /ask/<a_id>, which sends it. One component, one reducer: the variants differ only in
+ * the heading and the home page's link to the other side (/rules).
  */
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useReducer, useRef, type ChangeEvent, type KeyboardEvent, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useReducer, useRef, type ChangeEvent, type KeyboardEvent, type MouseEvent } from 'react';
 import { Bar } from '@/components/kit/blocks';
 import { Button } from '@/components/kit/button';
 import { cx } from '@/components/kit/cx';
@@ -28,6 +32,7 @@ import { ASK_TEXT_MAX, bareSubject, fmtN, SUBJECT_MAX } from '@/lib/oti/text';
 import { fmtClock } from '@/lib/oti/time';
 import type { QaState } from '@/lib/qa';
 import { PRESET_RECORDINGS } from '@/lib/recorded';
+import { sampleAskById } from '@/lib/sample/asks';
 import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 import { presetById, isPresetId } from '@/lib/sample/presets';
 import { postSse } from '@/lib/sse';
@@ -68,10 +73,16 @@ import {
   COMPILE_OFFLINE,
   COMPILE_SLOW,
   compileLimitedCopy,
+  COMPOSER_LABEL,
   compilerDownCopy,
   EXAMPLE_PARTS_LABEL,
   EXAMPLE_PROFILE_NOTE,
+  HOME_LEDE,
+  HOME_TITLE,
   liveBlockedCopy,
+  OTHER_SIDE_HEAD,
+  OTHER_SIDE_LINK,
+  OTHER_SIDE_NOTE,
   PART_LABEL,
   partsLeftCopy,
   QUEUED_COPY,
@@ -106,7 +117,19 @@ export interface AskComposeProps {
   /** `?new=1` (the status page's “‹ New ask”): start empty instead of from the draft kept in this tab. */
   fresh?: boolean;
   resend: ResendSeed | null;
+  /** `home` on `/` (display H1, the REAL line, the link to /rules); `page` on /ask. Default `page`. */
+  variant?: 'home' | 'page';
+  /** Home only: the dated REAL line, worded on the server (null renders none). */
+  realLine?: string | null;
+  /**
+   * Home only (a static page can't read the session): where a visitor who may be signed in goes to ask the REAL
+   * network. Set by the home island when REAL is set up and a session cookie exists; /ask resolves the session.
+   */
+  realHref?: string | null;
 }
+
+/** The home page's preview of the other side: 3 of the 12 SAMPLE asks the playground runs. */
+const OTHER_SIDE_IDS = ['a01', 'a03', 'a02'] as const;
 
 /* ---------- client-only start (sessionStorage), after hydration ---------- */
 
@@ -220,6 +243,7 @@ export function AskCompose(props: AskComposeProps) {
   const afterRender = useRef<(() => void) | null>(null);
   const sendKey = useRef<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLTextAreaElement>(null);
 
   const qa = props.qaState;
   const real: RealAccess = qa === 'real-guest' ? { kind: 'signed_out', mode: props.real.kind === 'signed_out' ? props.real.mode : 'open' } : qa === 'queued' ? { kind: 'allowed', profile: EXAMPLE_PROFILE, example: true } : props.real;
@@ -266,6 +290,14 @@ export function AskCompose(props: AskComposeProps) {
     afterRender.current = null;
     fn?.();
   });
+
+  // The composer grows with its text (CSS caps it at half the viewport, then it scrolls).
+  useLayoutEffect(() => {
+    const t = textRef.current;
+    if (!t) return;
+    t.style.height = 'auto';
+    t.style.height = `${t.scrollHeight + 2}px`;
+  }, [st.text]);
 
   // Abort a running check when leaving the page.
   useEffect(
@@ -519,8 +551,16 @@ export function AskCompose(props: AskComposeProps) {
 
   /* ----- events ----- */
 
+  /** The home page can't resolve a session: a visitor who may be signed in asks the REAL network on /ask. */
+  function toRealPage(): boolean {
+    if (!props.realHref) return false;
+    writeDraft(st.text);
+    router.push(props.realHref);
+    return true;
+  }
   function onNet(v: Network) {
     if (v === 'real' && real.kind !== 'allowed') {
+      if (toRealPage()) return;
       dispatch({ type: 'realOpen', open: true });
       return;
     }
@@ -528,7 +568,7 @@ export function AskCompose(props: AskComposeProps) {
   }
   function onNetClick(e: MouseEvent<HTMLDivElement>) {
     const t = e.target as HTMLElement;
-    if (t.closest('[data-value="real"][aria-disabled="true"]')) dispatch({ type: 'realOpen', open: true });
+    if (t.closest('[data-value="real"][aria-disabled="true"]') && !toRealPage()) dispatch({ type: 'realOpen', open: true });
   }
   /**
    * Keyboard parity with a click (prototype OTI.radiogroup): an arrow key from Sample moves focus onto the
@@ -544,6 +584,17 @@ export function AskCompose(props: AskComposeProps) {
   }
   function onText(e: ChangeEvent<HTMLTextAreaElement>) {
     dispatch({ type: 'text', text: e.target.value });
+  }
+  /**
+   * Chat-style keys: Enter checks the ask, Shift+Enter is a newline. ⌘↵ / Ctrl+↵ is left to the global shortcut,
+   * which presses the page's primary (Check, or Send once the parts are in). On touch keyboards Enter stays a
+   * newline (the composer's own button is right there), and IME composition is never interrupted.
+   */
+  function onTextKey(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key !== 'Enter' || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey || e.nativeEvent.isComposing) return;
+    if (typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches) return;
+    e.preventDefault();
+    if (!compiled) void check();
   }
   function fill(kind: 'vague' | 'partial' | 'complete') {
     stopCompile();
@@ -605,20 +656,76 @@ export function AskCompose(props: AskComposeProps) {
 
   const barSend = st.phase === 'compiled' && !st.stale;
   const barLeft = barSend && left > 0;
-  const barLabel = barSend ? (st.sending ? 'Sending…' : sendLabel(net)) : st.phase === 'compiling' ? 'Checking…' : st.stale ? 'Check again' : 'Check my ask';
-  const barDisabled = barSend ? !canSend : !canCheck;
+  const home = props.variant === 'home';
 
   return (
     <>
-      <div className="container container--col">
-        <header className="page-head page-head--left ask-head">
-          <h1 className="title">{ASK_TITLE}</h1>
-          <p className="lede">{ASK_LEDE}</p>
+      <div className={cx('container container--col ask-chat', home && 'ask-chat--home')}>
+        <header className={cx('page-head page-head--left ask-head', home && 'ask-head--home')}>
+          {home ? <h1 className="h1">{HOME_TITLE}</h1> : <h1 className="title">{ASK_TITLE}</h1>}
+          <p className="lede">{home ? HOME_LEDE : ASK_LEDE}</p>
+          {home && props.realLine ? (
+            <p className="meta ask-real-line">
+              <RealTag /> <span>{props.realLine}</span>{' '}
+              <Link className="link" href="/board">
+                Board
+              </Link>
+            </p>
+          ) : null}
         </header>
 
         <div className="ask-form" id="ask-form" ref={formRef}>
+          <div className={cx('ask-composer', counterOver && 'is-invalid')}>
+            <label className="sr-only" htmlFor="ask-text">
+              {COMPOSER_LABEL}
+            </label>
+            <Textarea
+              ref={textRef}
+              className="ask-textarea"
+              id="ask-text"
+              rows={3}
+              aria-describedby="ask-count"
+              placeholder={ASK_PLACEHOLDER}
+              value={st.text}
+              onChange={onText}
+              onKeyDown={onTextKey}
+              invalid={counterOver}
+              spellCheck
+            />
+            <div className="ask-composer__foot">
+              <Counter id="ask-count" over={counterOver}>
+                {fmtN(st.text.length)} / {fmtN(ASK_TEXT_MAX)}
+              </Counter>
+              <Button
+                variant={compiled ? 'outline' : 'primary'}
+                className="ask-composer__go"
+                primary={!compiled}
+                kbd={!compiled && st.phase !== 'compiling'}
+                busy={st.phase === 'compiling'}
+                aria-disabled={!canCheck}
+                id="ask-check"
+                onClick={() => void check()}
+              >
+                {checkLabel}
+              </Button>
+            </div>
+          </div>
+          <div className="ask-samples" id="ask-samples" hidden={net === 'real'}>
+            <span className="meta" id="ask-samples-lbl">
+              Try a sample:
+            </span>
+            <button className="chip" type="button" data-sample="vague" aria-describedby="ask-samples-lbl" onClick={() => fill('vague')}>
+              Vague
+            </button>
+            <button className="chip" type="button" data-sample="partial" aria-describedby="ask-samples-lbl" onClick={() => fill('partial')}>
+              Missing 2 parts
+            </button>
+            <button className="chip" type="button" data-sample="complete" aria-describedby="ask-samples-lbl" onClick={() => fill('complete')}>
+              Complete
+            </button>
+          </div>
           <div className="ask-net" onClickCapture={onNetClick} onKeyDown={onNetKey}>
-            <span className="label" id="ask-net-lbl">
+            <span className="meta" id="ask-net-lbl">
               Network
             </span>
             <RadioGroup<Network>
@@ -664,32 +771,6 @@ export function AskCompose(props: AskComposeProps) {
               </>
             )}
           </p>
-
-          <div className="field ask-field">
-            <div className="label-row">
-              <label className="label" htmlFor="ask-text">
-                What do you need?
-              </label>
-              <Counter id="ask-count" over={counterOver}>
-                {fmtN(st.text.length)} / {fmtN(ASK_TEXT_MAX)}
-              </Counter>
-            </div>
-            <Textarea className="ask-textarea" id="ask-text" rows={5} aria-describedby="ask-count" placeholder={ASK_PLACEHOLDER} value={st.text} onChange={onText} invalid={counterOver} spellCheck />
-          </div>
-          <div className="ask-samples" id="ask-samples" hidden={net === 'real'}>
-            <span className="meta" id="ask-samples-lbl">
-              Try a sample:
-            </span>
-            <button className="chip" type="button" data-sample="vague" aria-describedby="ask-samples-lbl" onClick={() => fill('vague')}>
-              Vague
-            </button>
-            <button className="chip" type="button" data-sample="partial" aria-describedby="ask-samples-lbl" onClick={() => fill('partial')}>
-              Missing 2 parts
-            </button>
-            <button className="chip" type="button" data-sample="complete" aria-describedby="ask-samples-lbl" onClick={() => fill('complete')}>
-              Complete
-            </button>
-          </div>
           <noscript>
             <div className="notice">
               <p>Checking and sending an ask needs JavaScript. Nothing was sent to anyone.</p>
@@ -778,21 +859,8 @@ export function AskCompose(props: AskComposeProps) {
             />
           </section>
 
-          <div className={cx('ask-actions', (compiled || (st.phase === 'compiling' && !!st.parts)) && 'is-sticky')} id="ask-actions">
+          <div className={cx('ask-actions', st.phase === 'compiled' && 'is-sticky')} id="ask-actions" hidden={st.phase !== 'compiled'}>
             <div className="btn-row">
-              <Button
-                variant={compiled ? 'outline' : 'primary'}
-                size="lg"
-                className={compiled ? undefined : 'hide-phone'}
-                primary={!compiled}
-                kbd={!compiled && st.phase !== 'compiling'}
-                busy={st.phase === 'compiling'}
-                aria-disabled={!canCheck}
-                id="ask-check"
-                onClick={() => void check()}
-              >
-                {checkLabel}
-              </Button>
               {st.phase === 'compiled' ? (
                 <Button variant="primary" size="lg" className="hide-phone" primary={compiled} kbd={compiled && !st.sending} busy={st.sending} aria-disabled={!canSend} id="ask-send" onClick={() => void send()}>
                   {st.sending ? 'Sending…' : sendLabel(net)}
@@ -806,31 +874,71 @@ export function AskCompose(props: AskComposeProps) {
             </div>
           </div>
         </div>
+
+        {home ? <OtherSide /> : null}
       </div>
 
-      <Bar>
-        {barLeft ? (
-          <button className="bar__text ask-bar-left" type="button" id="ask-bar-text" onClick={jumpToNext}>
-            {barPartsLeft(left)}
-          </button>
-        ) : null}
-        <Button
-          variant="primary"
-          className={cx('ask-bar-btn', !barLeft && 'ask-bar-full')}
-          primary
-          busy={st.phase === 'compiling' || st.sending}
-          aria-disabled={barDisabled}
-          id="ask-bar-btn"
-          onClick={() => {
-            if (barDisabled) return;
-            if (barSend) void send();
-            else void check();
-          }}
-        >
-          {barLabel}
-        </Button>
-      </Bar>
+      {barSend ? (
+        <Bar>
+          {barLeft ? (
+            <button className="bar__text ask-bar-left" type="button" id="ask-bar-text" onClick={jumpToNext}>
+              {barPartsLeft(left)}
+            </button>
+          ) : null}
+          <Button
+            variant="primary"
+            className={cx('ask-bar-btn', !barLeft && 'ask-bar-full')}
+            primary
+            busy={st.sending}
+            aria-disabled={!canSend}
+            id="ask-bar-btn"
+            onClick={() => {
+              if (canSend) void send();
+            }}
+          >
+            {st.sending ? 'Sending…' : sendLabel(net)}
+          </Button>
+        </Bar>
+      ) : null}
     </>
+  );
+}
+
+/* ---------- the other side (home only) ---------- */
+
+/**
+ * Under the composer on `/`: the quiet way to the member's side (/rules), with 3 of the 12 SAMPLE asks the
+ * playground checks, labelled Sample (fictional founders and companies, lib/sample).
+ */
+function OtherSide() {
+  const asks = OTHER_SIDE_IDS.map((id) => sampleAskById(id)).filter((a) => a !== null);
+  return (
+    <section className="ask-other" id="ask-other" aria-labelledby="ask-other-title">
+      <p>
+        <Link className="link ask-other__link" href="/rules">
+          {OTHER_SIDE_LINK}
+        </Link>
+      </p>
+      <div className="ask-other__box">
+        <div className="split ask-other__head">
+          <h2 className="small ask-other__title" id="ask-other-title">
+            {OTHER_SIDE_HEAD}
+          </h2>
+          <SampleTag />
+        </div>
+        <ul className="ask-other__list">
+          {asks.map((a) => (
+            <li key={a.id}>
+              <p className="ask-other__subject">{a.subject}</p>
+              <p className="meta">
+                {a.company} · {a.stage} · {a.city}
+              </p>
+            </li>
+          ))}
+        </ul>
+        <p className="meta">{OTHER_SIDE_NOTE}</p>
+      </div>
+    </section>
   );
 }
 

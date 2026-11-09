@@ -229,7 +229,7 @@ export function DeletedView() {
       </h1>
       <p className="lede">{ME_COPY.deletedBody}</p>
       <ButtonRow>
-        <ButtonLink variant="primary" href="/" primary>
+        <ButtonLink variant="primary" href="/rules" primary>
           Try the playground
         </ButtonLink>
       </ButtonRow>

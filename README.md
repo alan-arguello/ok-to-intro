@@ -21,7 +21,7 @@ member wrote, checks the ask, and only asks that pass the gate and fit under the
   72 hours to say OK, answer in 2 lines, or pass. A pass is private. The next accept gets the ask, and the asker
   only learns at the next 09:00/21:00 checkpoint, so a pass can't be told from an expiry. Names are exchanged only
   after an OK, in one intro email to both people.
-- **The compiler.** `/ask` turns a founder's text into 5 parts (the challenge, what they tried, who they need, by
+- **The compiler.** `/` (and `/ask`) turns a founder's text into 5 parts (the challenge, what they tried, who they need, by
   when, what they offer) with `claude-sonnet-5-5`. Each part is marked found, suggested or missing; facts are never
   invented. Vague asks and YC-application asks are refused.
 - **Check-ins.** At +1 day both people say whether the call happened and how useful it was. At +14 days the asker
@@ -40,7 +40,7 @@ member wrote, checks the ask, and only asks that pass the gate and fit under the
 - Resend for email (idempotency keys, scheduled check-ins), with a daily Vercel Cron as the backstop.
 - `/mcp` is a stateless MCP server (Streamable HTTP, `mcp-handler`). `plugins/ok-to-intro` is a Claude Code
   plugin with an `/ask` skill and a SessionStart hook.
-- `/`, `/how`, `/privacy` and `/agents` are static; `/board` regenerates every 60 s; token pages (`/o`, `/c`,
+- `/` (the ask composer), `/rules` (the playground), `/how`, `/privacy` and `/agents` are static; `/board` regenerates every 60 s; token pages (`/o`, `/c`,
   `/pause`) work without JavaScript.
 
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout, flows, decisions) and
@@ -86,7 +86,7 @@ instance” state. Features switch on when their variables appear.
 | `npm run eval` | The held-out eval; writes `data/eval/heldout-summary.json`, which /board and /how read |
 | `npm run bench` | Measures gate latency and cost |
 | `npm run race` | 20 concurrent offers for 1 free slot must produce exactly 1 (needs a Supabase dev project; otherwise it runs a logical check, prints SKIPPED and exits 2) |
-| `npm run smoke` | Pre-deploy smoke test: playground, ask → offered, offer → intro, board, degraded banners, links |
+| `npm run smoke` | Pre-deploy smoke test: the home composer, the playground on /rules, ask → offered (from / and /ask), offer → intro, board, degraded banners, links |
 | `npm run audit` | Headless-Chrome audit of every route and QA state at 1280×900 and 375×812 (console errors, overflow, contrast, labels, primaries) |
 | `npm run check:links` | Fails on placeholder domains and links to missing repo files |
 | `npm run plugin:build` / `plugin:check` | Regenerates or checks the plugin JSON for `NEXT_PUBLIC_SITE_URL` |

@@ -10,6 +10,8 @@
 import type { BannerKind } from '@/lib/types';
 
 export const QA_STATES = {
+  /** `/`, the ask-first home (static; its compose states live on /ask). */
+  home: ['default'],
   playground: [
     'not-run', 'running', 'done-recorded', 'done-live', 'rerun-changed', 'rerun-nochange', 'stale', 'cap-changed',
     'partial-timeout', 'clause-check', 'marks', 'empty-rules', 'too-long', 'all-declined', 'all-accepted',

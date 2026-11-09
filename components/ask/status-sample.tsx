@@ -662,7 +662,7 @@ function SampleStatusView({ run, id, qaState, liveOff, update }: ViewProps) {
     youLine = (
       <>
         {ST_COPY.noRules}{' '}
-        <Link className="link" href="/">
+        <Link className="link" href="/rules">
           {ST_COPY.noRulesLink}
         </Link>{' '}
         {ST_COPY.noRulesTail}

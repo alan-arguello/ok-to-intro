@@ -4,12 +4,14 @@
 // The smoke test before every deploy and before the email (ux-spec §8 "Smoke test"), steps 1–4 and 6, driven through
 // scripts/shoot.mjs (headless Chrome, one at a time). Owner: S7. Step 5 (a deployed live run watched with curl -N at the
 // Vercel edge) needs a deploy and a key, so it isn't here.
-//   1. / at 1280×900 and 375×812: the primary is in the first viewport; pressing it resolves all 12 rows (an unedited
-//      preset renders its stored run at once: ≤ 1 s here, ≤ 6 s if it ran live); 0 console errors or exceptions;
-//      scrollWidth equals the viewport; 0 contrast failures.
-//   2. /ask with the "Missing 2 parts" sample: Check, Use every suggestion and sample answer, Send; "Offered" within 6 s.
+//   1. / (the ask-first home) at 1280×900 and 375×812: the composer and its action (the one black pill) are in the
+//      first viewport. /rules (the playground) at both sizes: the primary is in the first viewport; pressing it
+//      resolves all 12 rows (an unedited preset renders its stored run at once: ≤ 1 s here, ≤ 6 s if it ran live).
+//      Both: 0 console errors or exceptions; scrollWidth equals the viewport; 0 contrast failures.
+//   2. / and /ask with the "Missing 2 parts" sample: Check, Use every suggestion and sample answer, Send; "Offered"
+//      within 6 s.
 //   3. /o/sample: OK to intro, then Send intro, and the intro-sent state. Then /c/sample?v=4 and /board render cleanly.
-//   4. Every public page with ?degraded=down renders the banner, and on / the presets still run. ?degraded= is a QA
+//   4. Every public page with ?degraded=down renders the banner, and on /rules the presets still run. ?degraded= is a QA
 //      control, so this step runs where QA is on (any dev server, or QA_STATES=1 on a preview) and says SKIP elsewhere.
 //   6. scripts/check-links.mjs (with --online: every external link must answer).
 // Exits 1 if any step fails.
@@ -75,7 +77,7 @@ const HELPERS = `
   const resolvedRows=()=>{const rows=[...document.querySelectorAll('.row[id^="pg-row-"]')];return {rows:rows.length,done:rows.filter((r)=>{const v=r.querySelector('.verdict');return v&&!/verdict--(notrun|checking)/.test(v.className)}).length}};
 `;
 
-/** Presses the first visible [data-primary] on / and waits for 12 resolved rows. */
+/** Presses the first visible [data-primary] on /rules and waits for 12 resolved rows. */
 const RUN_PLAYGROUND = `(async()=>{${HELPERS}
   const p=[...document.querySelectorAll('[data-primary]')].find(vis);
   if(!p) return JSON.stringify({ok:false, why:'no visible [data-primary]'});
@@ -89,18 +91,33 @@ const RUN_PLAYGROUND = `(async()=>{${HELPERS}
   return JSON.stringify({ok:!!got, ms, primary:label, bottom:Math.round(box.bottom), height:Math.round(box.height), innerHeight, before, after:resolvedRows()});
 })()`;
 
+/** The home composer: the textarea and its action in the first viewport, and the number of black pills in view. */
+const HOME_PROBE = `JSON.stringify((()=>{${HELPERS}
+  const t=document.querySelector('#ask-text'); const b=document.querySelector('#ask-check');
+  const pills=[...document.querySelectorAll('.btn--primary')].filter((e)=>{const r=e.getBoundingClientRect();return vis(e)&&r.bottom>0&&r.top<innerHeight}).length;
+  return {text:t?Math.round(t.getBoundingClientRect().bottom):null, action:b?Math.round(b.getBoundingClientRect().bottom):null, label:b?b.innerText.trim().replace(/\\s+/g,' '):null, primary:!!b&&b.hasAttribute('data-primary'), pills, innerHeight};
+})())`;
+
 async function step1() {
   for (const [width, height] of [[1280, 900], [375, 812]]) {
-    // The wait lets the 260 ms row flash and the 200 ms re-sort finish, so the audit measures settled colours.
-    const r = await shoot('/', { width, height, audit: true, actions: [{ eval: RUN_PLAYGROUND }, { wait: 700 }] });
-    const ev = evalOf(r);
     const at = `${width}×${height}`;
-    check('1', `/ ${at}: the primary is in the first viewport`, !!ev && ev.bottom <= ev.innerHeight, ev ? `“${ev.primary}” bottom ${ev.bottom} of ${ev.innerHeight}` : r.error || 'no probe');
-    check('1', `/ ${at}: pressing it resolves 12 rows`, !!ev?.ok && ev.ms <= 6000, ev ? `${ev.after.done} of ${ev.after.rows} in ${ev.ms} ms` : '');
+    const h = await shoot('/', { width, height, audit: true, actions: [{ eval: HOME_PROBE }] });
+    const hv = evalOf(h);
+    check('1', `/ ${at}: the composer and its action are in the first viewport`, !!hv && hv.text !== null && hv.action !== null && hv.text <= hv.innerHeight && hv.action <= hv.innerHeight && hv.primary, hv ? `“${hv.label}” bottom ${hv.action}, textarea bottom ${hv.text} of ${hv.innerHeight}` : h.error || 'no probe');
+    check('1', `/ ${at}: one black pill in view`, hv?.pills === 1, hv ? `${hv.pills}` : '');
+    check('1', `/ ${at}: no console errors or exceptions`, !errorsOf(h).length && !h.exceptions.length, [...errorsOf(h), ...h.exceptions].join(' | ').slice(0, 200));
+    check('1', `/ ${at}: no sideways scroll`, h.scrollWidth === h.innerWidth && !h.overflow.length, `scrollWidth ${h.scrollWidth}`);
+    check('1', `/ ${at}: no contrast failures`, (h.audit?.contrastFailureCount ?? 1) === 0, h.audit ? `${h.audit.contrastFailureCount}` : 'no audit');
+
+    // The wait lets the 260 ms row flash and the 200 ms re-sort finish, so the audit measures settled colours.
+    const r = await shoot('/rules', { width, height, audit: true, actions: [{ eval: RUN_PLAYGROUND }, { wait: 700 }] });
+    const ev = evalOf(r);
+    check('1', `/rules ${at}: the primary is in the first viewport`, !!ev && ev.bottom <= ev.innerHeight, ev ? `“${ev.primary}” bottom ${ev.bottom} of ${ev.innerHeight}` : r.error || 'no probe');
+    check('1', `/rules ${at}: pressing it resolves 12 rows`, !!ev?.ok && ev.ms <= 6000, ev ? `${ev.after.done} of ${ev.after.rows} in ${ev.ms} ms` : '');
     if (ev?.ok && ev.ms > 1000) console.log(`     note: ${ev.ms} ms is slower than an unedited preset should be (≤ 100 ms target)`);
-    check('1', `/ ${at}: no console errors or exceptions`, !errorsOf(r).length && !r.exceptions.length, [...errorsOf(r), ...r.exceptions].join(' | ').slice(0, 200));
-    check('1', `/ ${at}: no sideways scroll`, r.scrollWidth === r.innerWidth && !r.overflow.length, `scrollWidth ${r.scrollWidth}`);
-    check('1', `/ ${at}: no contrast failures`, (r.audit?.contrastFailureCount ?? 1) === 0, r.audit ? `${r.audit.contrastFailureCount}` : 'no audit');
+    check('1', `/rules ${at}: no console errors or exceptions`, !errorsOf(r).length && !r.exceptions.length, [...errorsOf(r), ...r.exceptions].join(' | ').slice(0, 200));
+    check('1', `/rules ${at}: no sideways scroll`, r.scrollWidth === r.innerWidth && !r.overflow.length, `scrollWidth ${r.scrollWidth}`);
+    check('1', `/rules ${at}: no contrast failures`, (r.audit?.contrastFailureCount ?? 1) === 0, r.audit ? `${r.audit.contrastFailureCount}` : 'no audit');
   }
 }
 
@@ -123,10 +140,12 @@ const ASK_FLOW = `(async()=>{${HELPERS}
 })()`;
 
 async function step2() {
-  const r = await shoot('/ask', { actions: [{ eval: ASK_FLOW }] });
-  const ev = evalOf(r);
-  check('2', '/ask “Missing 2 parts”: Check, Use, Send → Offered within 6 s', !!ev?.ok, ev ? (ev.ok ? `${ev.path} in ${ev.ms} ms` : ev.why || `no “Offered” (${ev.path}): ${ev.outcome}`) : r.error || 'no probe');
-  check('2', '/ask: no console errors or exceptions', !errorsOf(r).length && !r.exceptions.length, [...errorsOf(r), ...r.exceptions].join(' | ').slice(0, 200));
+  for (const path of ['/', '/ask']) {
+    const r = await shoot(path, { actions: [{ eval: ASK_FLOW }] });
+    const ev = evalOf(r);
+    check('2', `${path} “Missing 2 parts”: Check, Use, Send → Offered within 6 s`, !!ev?.ok, ev ? (ev.ok ? `${ev.path} in ${ev.ms} ms` : ev.why || `no “Offered” (${ev.path}): ${ev.outcome}`) : r.error || 'no probe');
+    check('2', `${path}: no console errors or exceptions`, !errorsOf(r).length && !r.exceptions.length, [...errorsOf(r), ...r.exceptions].join(' | ').slice(0, 200));
+  }
 }
 
 const OFFER_FLOW = `(async()=>{${HELPERS}
@@ -153,7 +172,7 @@ async function step3() {
   }
 }
 
-const PUBLIC = ['/', '/ask', '/board', '/agents', '/how', '/privacy', '/join', '/o/sample', '/c/sample'];
+const PUBLIC = ['/', '/rules', '/ask', '/board', '/agents', '/how', '/privacy', '/join', '/o/sample', '/c/sample'];
 const BANNER = `JSON.stringify((()=>{const b=document.querySelector('[data-banner]'); return {shown:!!b&&!b.hidden, text:b?b.textContent.trim():''}})())`;
 
 async function step4() {
@@ -170,15 +189,15 @@ async function step4() {
   }
   for (const path of PUBLIC) {
     const actions = [{ eval: BANNER }];
-    if (path === '/') actions.push({ eval: RUN_PLAYGROUND });
+    if (path === '/rules') actions.push({ eval: RUN_PLAYGROUND });
     const r = await shoot(`${path}${path.includes('?') ? '&' : '?'}degraded=down`, { actions });
     const b = evalOf(r, 0);
     const shown = !!b?.shown && /Live checks are paused/.test(b.text);
     const clean = !errorsOf(r).length && !r.exceptions.length;
     check('4', `${path}?degraded=down: banner shown, page renders`, shown && clean, shown ? (clean ? '' : [...errorsOf(r), ...r.exceptions].join(' | ').slice(0, 160)) : `banner: ${b ? JSON.stringify(b.text).slice(0, 80) : 'none'}`);
-    if (path === '/') {
+    if (path === '/rules') {
       const ev = evalOf(r, 1);
-      check('4', '/?degraded=down: presets still run', !!ev?.ok, ev ? `${ev.after.done} of ${ev.after.rows} in ${ev.ms} ms` : 'no probe');
+      check('4', '/rules?degraded=down: presets still run', !!ev?.ok, ev ? `${ev.after.done} of ${ev.after.rows} in ${ev.ms} ms` : 'no probe');
     }
   }
 }

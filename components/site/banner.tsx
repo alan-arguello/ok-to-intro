@@ -35,8 +35,8 @@ export function Banner({ qa }: { qa: boolean }) {
     noSubscribe,
     () => {
       const sp = new URLSearchParams(window.location.search);
-      // On `/`, the playground's degraded QA states imply their banner, as in the prototype's degrade().
-      const implied = window.location.pathname === '/' ? PLAYGROUND_STATE_BANNER[sp.get('state') ?? ''] : undefined;
+      // On `/rules`, the playground's degraded QA states imply their banner, as in the prototype's degrade().
+      const implied = window.location.pathname === '/rules' ? PLAYGROUND_STATE_BANNER[sp.get('state') ?? ''] : undefined;
       return resolveDegraded(sp.get('degraded') ?? implied, qa);
     },
     () => null,

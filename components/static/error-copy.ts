@@ -8,7 +8,8 @@ export const NOT_FOUND_COPY = {
   description: 'Nothing is at this address. Check the link, or sign in to see asks waiting on you.',
   lede: 'Nothing at this address. Check the link, or sign in to see asks waiting on you.',
   signIn: 'Sign in',
-  playground: 'Try the playground',
+  /** The home page (`/`, the ask composer). */
+  home: 'Ask the network',
 } as const;
 
 export const ERROR_COPY = {
@@ -16,7 +17,7 @@ export const ERROR_COPY = {
   h1: 'Something broke on our side',
   nothingSent: 'Nothing was sent to anyone.',
   retry: 'Try again',
-  playground: 'Try the playground',
+  home: 'Ask the network',
 } as const;
 
 /**

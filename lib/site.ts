@@ -95,6 +95,8 @@ export function absoluteUrl(path: string): string {
 export const ROUTES = {
   home: '/',
   ask: '/ask',
+  /** The member's side: the rules playground (it was `/` until the ask-first home). */
+  rules: '/rules',
   askStatus: (id: string) => `/ask/${encodeURIComponent(id)}`,
   board: '/board',
   agents: '/agents',
@@ -109,9 +111,13 @@ export const ROUTES = {
   kit: '/kit',
 } as const;
 
-/** Header nav (desktop) and the phone menu (which adds "Try it" first and "Sign in" last). */
+/**
+ * Header nav (desktop) and the phone menu (which adds "Sign in" last). “Ask” is the home page (the composer; it is
+ * also current on /ask and /ask/<id>); “Be asked” is the rules playground.
+ */
 export const NAV_ITEMS = [
-  { href: '/ask', label: 'Ask' },
+  { href: '/', label: 'Ask' },
+  { href: '/rules', label: 'Be asked' },
   { href: '/board', label: 'Board' },
   { href: '/agents', label: 'Agents' },
   { href: '/how', label: 'How it works' },

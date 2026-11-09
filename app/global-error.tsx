@@ -43,7 +43,7 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
                 </button>
                 {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- a full page load, on purpose */}
                 <a className="btn btn--lg" href="/">
-                  {ERROR_COPY.playground}
+                  {ERROR_COPY.home}
                 </a>
               </div>
             </header>

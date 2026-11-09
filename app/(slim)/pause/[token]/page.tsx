@@ -84,7 +84,7 @@ export default async function PausePage({ params, searchParams }: Props) {
         {res.reason === 'invalid' ? (
           <Message title={PAUSE_COPY.invalidTitle} body={PAUSE_COPY.invalidBody} action={{ href: '/me', label: PAUSE_COPY.yourGate }} />
         ) : res.reason === 'not_configured' ? (
-          <Message title={PAUSE_COPY.offTitle} body={PAUSE_COPY.offBody} action={{ href: '/', label: 'Try the playground' }} />
+          <Message title={PAUSE_COPY.offTitle} body={PAUSE_COPY.offBody} action={{ href: '/rules', label: 'Try the playground' }} />
         ) : (
           <Message title={PAUSE_COPY.downTitle} body={PAUSE_COPY.downBody} action={{ href: `/pause/${encodeURIComponent(token)}`, label: 'Try again', plain: true }} />
         )}

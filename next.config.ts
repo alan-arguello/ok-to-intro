@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   poweredByHeader: false,
   reactStrictMode: true,
+  // The playground was `/` until the ask-first home (Nov 9); old shared preset links (`/?preset=…`) still open it.
+  // A routing redirect, so `/` itself stays static. The query string carries over.
+  async redirects() {
+    return [{ source: '/', has: [{ type: 'query', key: 'preset' }], destination: '/rules', permanent: false }];
+  },
   async headers() {
     return [
       {

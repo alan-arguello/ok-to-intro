@@ -263,3 +263,84 @@ describe('/ask compose', () => {
     expect(screen.getAllByRole('button', { name: 'Use sample answer' })).toHaveLength(5);
   });
 });
+
+describe('/ (home): the same composer, ask-first', () => {
+  const HOME: Partial<AskComposeProps> = { variant: 'home', realLine: 'The real network isn’t connected on this instance yet.' };
+
+  it('server HTML: the display H1, one composer with its action attached, the pills, and the way to /rules', () => {
+    const html = renderToString(<AskCompose {...BASE} {...HOME} />).replace(/<!-- -->/g, '');
+    expect(html).toContain('<h1 class="h1">What do you need from the network?</h1>');
+    expect(html).not.toContain('Ask the network</h1>');
+    expect(html).toContain('The real network isn’t connected on this instance yet.');
+    // The textarea and its action share one composer box; the action is the page's one black pill before a check.
+    expect(html).toMatch(/class="ask-composer"[\s\S]*id="ask-text"[\s\S]*class="ask-composer__foot"[\s\S]*data-primary=""[^>]*>Check my ask/);
+    expect(html.match(/btn--primary/g)?.length).toBe(1);
+    expect(html).toContain('data-sample="partial"');
+    expect(html).toContain('href="/rules">Or decide what you’d agree to be asked →</a>');
+    // The preview of the other side is SAMPLE data and says so.
+    expect(html).toContain('Postgres p95 at 40M rows, 20 min?');
+    expect(html).toMatch(/On the other side: asks from other founders[\s\S]*Sample/);
+    // No phone bar until there is something to send.
+    expect(html).not.toContain('id="ask-bar-btn"');
+  });
+
+  it('/ask keeps its own heading and has no link block', () => {
+    const html = renderToString(<AskCompose {...BASE} />).replace(/<!-- -->/g, '');
+    expect(html).toContain('<h1 class="title">Ask the network</h1>');
+    expect(html).not.toContain('id="ask-other"');
+  });
+
+  it('Enter checks the ask, Shift+Enter is a newline, and the reply renders below with the phone bar', () => {
+    setup(HOME);
+    const ta = screen.getByLabelText('What do you need?') as HTMLTextAreaElement;
+    fireEvent.click(screen.getByRole('button', { name: 'Complete' }));
+    fireEvent.keyDown(ta, { key: 'Enter', shiftKey: true });
+    expect(document.getElementById('ask-parts')!.hidden).toBe(true);
+    fireEvent.keyDown(ta, { key: 'Enter' });
+    expect(document.getElementById('ask-parts')!.hidden).toBe(false);
+    expect(screen.getByText('Example parts, written by hand · not a compiler run')).toBeTruthy();
+    expect(fetch).not.toHaveBeenCalled();
+    expect(document.getElementById('ask-preview')!.hidden).toBe(false);
+    // After the check the composer's action is an outline “Check again”; Send is the primary (desktop row and phone bar).
+    const checkBtn = document.getElementById('ask-check')!;
+    expect(checkBtn.textContent).toContain('Check again');
+    expect(checkBtn.hasAttribute('data-primary')).toBe(false);
+    expect(document.getElementById('ask-send')!.hasAttribute('data-primary')).toBe(true);
+    expect(document.getElementById('ask-bar-btn')!.textContent).toBe('Send to 40 sample members');
+    // Enter on an unchanged, checked ask does nothing (Send stays a deliberate ⌘↵ or click).
+    fireEvent.keyDown(ta, { key: 'Enter' });
+    expect(push).not.toHaveBeenCalled();
+    fireEvent.click(document.getElementById('ask-send')!);
+    expect(push).toHaveBeenCalledWith('/ask/sa_eng');
+  });
+
+  it('your own text runs the live compiler from the home page', async () => {
+    const parts = ['challenge', 'tried', 'needs', 'by', 'offers'].map((key) => ({ key, state: 'found', text: `${key} text`, source: [], question: null }));
+    vi.stubGlobal('fetch', vi.fn(async () => sse([...parts.map((part, i) => ({ event: 'part', data: { i, part } })), { event: 'done', data: { parts, subject: 'Checkout drops at 3DS, 20 min?', topic: null, draft_id: null } }])));
+    setup({ ...HOME, live: { state: 'ok', until: null } });
+    const ta = screen.getByLabelText('What do you need?');
+    fireEvent.change(ta, { target: { value: 'Our checkout drops 4% of card payments at 3DS. Tried two processors. Need someone who ran payments, by Dec 4. Offer: our logs.' } });
+    fireEvent.keyDown(ta, { key: 'Enter' });
+    await flush();
+    await flush();
+    expect(fetch).toHaveBeenCalledWith('/api/compile', expect.anything());
+    expect(document.getElementById('ask-parts')!.hidden).toBe(false);
+    expect(screen.queryByText('Example parts, written by hand · not a compiler run')).toBeNull();
+  });
+
+  it('a static page hands a possibly signed-in visitor to /ask for the Real option, keeping the text', () => {
+    setup({ ...HOME, real: { kind: 'signed_out', mode: 'open' }, realHref: '/ask' });
+    fireEvent.change(screen.getByLabelText('What do you need?'), { target: { value: 'Draft for real' } });
+    fireEvent.click(screen.getByRole('radio', { name: 'Real' }));
+    expect(push).toHaveBeenCalledWith('/ask');
+    expect(JSON.parse(sessionStorage.getItem('oti.s2.draft')!)).toEqual({ v: 1, text: 'Draft for real' });
+    expect(document.getElementById('ask-real-note')!.hidden).toBe(true);
+  });
+
+  it('without a session hint, Real explains itself in place (REAL stays not set up here)', () => {
+    setup(HOME);
+    fireEvent.click(screen.getByRole('radio', { name: 'Real' }));
+    expect(push).not.toHaveBeenCalled();
+    expect(document.getElementById('ask-real-note')!.hidden).toBe(false);
+  });
+});

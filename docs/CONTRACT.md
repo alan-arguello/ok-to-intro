@@ -92,8 +92,8 @@ belong to that owner, who replaces them.
 | **F** (frozen) | `package.json`, `package-lock.json`, `tsconfig.json`, `next.config.ts`, `eslint.config.mjs`, `vitest.config.mts`, `vercel.json`, `.gitignore`, `.env.example`, `LICENSE`, `proxy.ts`, `types/**`, `app/layout.tsx`, `app/globals.css`, `app/tokens.css`, `app/(site)/layout.tsx`, `app/(slim)/layout.tsx`, `app/(site)/kit/**`, `components/kit/**`, `components/site/**`, `lib/{site,env,types,sse,qa,recorded,http,use-search-param}.ts`, `lib/sample/**`, `lib/oti/**` (incl. `ask.ts`, `rule-edits.ts`), `lib/supabase/**`, `supabase/migrations/0001_init.sql`, `tests/db/harness.ts`, `tests/db/schema.test.ts`, `tests/sample/**`, `tests/foundation/**`, `tests/stubs/**`, `styles/kit.css`, `scripts/build-authored-recordings.ts`, `scripts/build-check.mjs`, `docs/**` (except `docs/requests/<owner>.md`, which each owner writes) |
 | **BE1** gates | `lib/server/{gate,rubric,compiler,health,budget,ratelimit,live}.ts`, `app/api/{try,compile,health}/route.ts`, `scripts/{record-presets,eval,bench-gates,draft-eval-candidates}.ts`, `data/recorded/**` (F generated the authored files), `data/eval/**` (F committed the `source: "none"` placeholder `heldout-summary.json`), `tests/gates/**` |
 | **BE2** network | `lib/server/{asks,dispatch,offers,questions,intros,checkins,serializer,checkpoints,email-send,cron,audit}.ts`, `app/api/asks/**`, `app/api/cron/**`, `app/api/pause/route.ts`, `supabase/migrations/0002_*.sql` and later (new files only), `scripts/race-test.ts`, `tests/network/**` |
-| **S1** playground | `app/(site)/page.tsx`, `components/playground/**`, `styles/playground.css`, `tests/playground/**` |
-| **S2** ask | `app/(site)/ask/**`, `components/ask/**`, `styles/ask.css`, `tests/ask/**` |
+| **S1** playground | `app/(site)/rules/page.tsx` (the playground, `/rules`; it was `/` until Nov 9), `components/playground/**`, `styles/playground.css`, `tests/playground/**` |
+| **S2** ask | `app/(site)/page.tsx` (the ask-first home, `/`: the same compose island), `app/(site)/ask/**`, `components/ask/**`, `styles/ask.css`, `tests/ask/**` |
 | **S3** member | `app/(site)/join/**`, `app/(site)/me/**` (incl. `me/export/route.ts`), `app/(slim)/pause/**`, `components/member/**`, `lib/server/{member,api-tokens}.ts`, `styles/member.css`, `tests/member/**` |
 | **R** recipient | `app/(slim)/o/**`, `app/(slim)/c/**`, `app/(slim)/emails/**` (the public SAMPLE email viewer), `components/{offer,checkin}/**`, `lib/emails/**`, `styles/offer.css` (offer and check-in), `tests/recipient/**` |
 | **S6** agents | `app/(site)/agents/**`, `app/mcp/route.ts` (serves `/mcp`), `app/api/hook/route.ts` (the SessionStart hook endpoint), `lib/mcp/**`, `lib/receipts.ts`, `components/agents/**`, `.claude-plugin/**`, `plugins/ok-to-intro/**`, `scripts/build-plugin.ts` (writes the plugin's MCP URL and hook URL from lib/site.ts; the JSON files can't read env), `styles/agents.css`, `tests/agents/**` |
@@ -513,7 +513,10 @@ skips, always captioned “On the real network, askers see only: offered, next i
 
 ### Next 16 in this repo (read node_modules/next/dist/docs when in doubt)
 
-- **Static pages and query strings.** `/`, `/join`, `/agents`, `/how`, `/privacy`, `/board` are prerendered.
+- **Static pages and query strings.** `/`, `/rules`, `/join`, `/agents`, `/how`, `/privacy`, `/board` are prerendered.
+  `/` renders the /ask compose island (`components/ask/home-ask.tsx`): it can't read the session, so it passes
+  `not_configured` or `signed_out` from the environment and, when REAL is set up and a session cookie exists, hands
+  the Real option to `/ask`; it reads `?degraded=` and `/api/health` after hydration. Compose QA states stay on /ask.
   Never call `useSearchParams()` there: without a `<Suspense>` boundary `next build` fails (“Missing Suspense
   boundary with useSearchParams”) while `next dev` works. Use `useSearchParam(name)` / `useQaState(page, qa)` from
   `lib/use-search-param.ts` (null in the static HTML, the real value after hydration). Reading the page's
@@ -522,7 +525,7 @@ skips, always captioned “On the real network, askers see only: offered, next i
   `getMemberProfile`) for the REAL radio and “Sent as”, plus `?from=`, `?preset=`, `?edit=`, `?resend=`, and must
   still render the SAMPLE compose when Supabase isn't configured or doesn't answer.
 - `params` and `searchParams` are Promises: `const { id } = await params`.
-- `export const revalidate = 3600` must be a literal (not `60 * 60`). `/` uses 3600, `/board` 60. Classic ISR (no
+- `export const revalidate = 3600` must be a literal (not `60 * 60`). `/` and `/rules` use 3600, `/board` 60. Classic ISR (no
   Cache Components): `dynamic`, `revalidate`, `runtime = 'nodejs'`, `maxDuration` are all valid segment exports.
 - ISR and the database: during `next build` (`process.env.NEXT_PHASE === 'phase-production-build'`) a page must
   render its designed state when the database isn't configured or reachable; at runtime revalidation /board should
@@ -588,6 +591,8 @@ skips, always captioned “On the real network, askers see only: offered, next i
 
 | From | Link | To |
 |---|---|---|
+| Home `/` | “Or decide what you’d agree to be asked →” · header “Ask” · header “Be asked” | `/rules` · `/` · `/rules` |
+| Old preset links `/?preset=…` | (next.config.ts redirect, 307, query kept; `/` stays static) | `/rules?preset=…` |
 | S1 bridge, all-declined | “Send a sample ask (your gate is 1 of 40) ›”, “Write an ask your rules accept” | `/ask?from=playground` |
 | S1 bridge | “See a sample offer as a member would ›” | `/o/sample?from=playground` |
 | S1 bridge | “Keep these rules” | `/join` (rules carried in `oti.playground`) |
@@ -597,13 +602,14 @@ skips, always captioned “On the real network, askers see only: offered, next i
 | S2 (SAMPLE) | “Edit and resend” · “Use this edit” | `/ask?preset=<preset>` · `/ask?preset=<preset>&edit=1` |
 | S2 (REAL) | “Edit and resend” · “Use this edit” | `/ask?resend=<a_id>` · `/ask?resend=<a_id>&edit=1` (the compose page loads the asker's own ask server-side; `createAsk` gets `resend_of`) |
 | S2 compose (REAL) | after `POST /api/asks` · “Edit profile ›” · crumbs “‹ Your asks” | `/ask/<a_id>` · `/me#settings` · `/me#asks` |
-| R /o (SAMPLE) | “See the intro email ›” · “Back to your ask ›” (with `?ask=sa_…`) · “Back to the playground ›” (otherwise) | `/emails/intro?ask=<id>` · `/ask/<sa_id>` · `/` |
+| R /o (SAMPLE) | “See the intro email ›” · “Back to your ask ›” (with `?ask=sa_…`) · “Back to the playground ›” (otherwise) | `/emails/intro?ask=<id>` · `/ask/<sa_id>` · `/rules` |
 | R email viewer, /c/sample (SAMPLE) | “Back to your ask ›” (with `?ask=sa_…`) · “Your ask” footer link | `/ask/<sa_id>` |
 | R /o, /c (REAL) | “Your gate ›” · invalid “Sign in” | `/me` · `/join` |
 | Footers (emails, /c) | Pause all asks · Change your rules · Delete my data · Your ask | `/pause/<token>` · `/me#settings` · `/me#delete` · `/ask/<id>` |
-| S3 /me | “Review the ask” · “Test my rules ›” | `/o/<offer_id>` · `/` (writes `oti.playground`) |
-| S3 /join | “Write your rules first ›” · after verify | `/` · `/me?first=1` (or `?next=`) |
-| S7 404 / error | (Sign in) (Try the playground) | `/join` · `/` |
+| S3 /me | “Review the ask” · “Test my rules ›” | `/o/<offer_id>` · `/rules` (writes `oti.playground`) |
+| S3 /join | “Write your rules first ›” · carried rules “Edit” · after verify | `/rules` · `/rules` · `/me?first=1` (or `?next=`) |
+| S7 404 / error | (Sign in) (Ask the network) | `/join` · `/` |
+| S3 /pause off, /me errors · R email viewer · S2 “Write them on the playground” | “Try the playground” · “Back to the playground ›” | `/rules` |
 | Email viewer | kinds `offer`, `intro`, `checkin-1d`, `checkin-14d`, `question`, `outcome-note`, `code` | `/emails/<kind>?ask=<sa_id or a01…>&who=asker\|member&v=text` |
 
 /me anchors S3 must provide: `#asks`, `#settings`, `#token`, `#delete`.

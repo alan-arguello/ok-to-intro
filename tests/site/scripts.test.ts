@@ -26,6 +26,10 @@ describe('scripts/audit-sweep.mjs', () => {
     expect(paths).toContain('/o/sample?state=expired');
     expect(paths).toContain('/how/error-preview');
     expect(paths).toContain('/?degraded=budget');
+    // The playground moved to /rules (Nov 9); `/` is the static home composer.
+    expect(paths).toContain('/rules?state=done-recorded');
+    expect(paths).toContain('/rules?degraded=budget');
+    expect(paths).not.toContain('/?state=done-recorded');
     expect(paths).toContain('/emails/intro?v=text');
     expect(paths).not.toContain('/how?state=default');
     expect(urls.find((u) => u.path === '/qa-sweep-not-found')?.status).toBe(404);

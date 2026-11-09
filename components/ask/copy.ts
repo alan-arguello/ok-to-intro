@@ -10,6 +10,16 @@ export const ASK_TITLE = 'Ask the network';
 export const ASK_LEDE = 'One specific ask, checked against each member’s own rules. At most one person sees it at a time.';
 export const ASK_DESCRIPTION = 'Write one specific ask, check it for its 5 parts, see what a member would get, then send it to the sample network.';
 export const STATUS_DESCRIPTION = 'Where your ask stands: who it was offered to, the 40-member fan-out, any question for you and the raw trace.';
+/** The home page (`/`): the same composer, ask-first (Alan, Nov 9: “the main window should be like ChatGPT”). */
+export const HOME_TITLE = 'What do you need from the network?';
+export const HOME_LEDE = 'Write one specific ask. It’s checked for 5 parts, then against each member’s own rules. At most one person sees it at a time.';
+export const HOME_DESCRIPTION =
+  'Write one specific ask for a 20-minute call. It is checked for 5 parts, then against each member’s own rules; at most one person sees it at a time.';
+/** The quiet second entry under the composer: the member's side, on /rules. */
+export const OTHER_SIDE_LINK = 'Or decide what you’d agree to be asked →';
+export const OTHER_SIDE_HEAD = 'On the other side: asks from other founders';
+export const OTHER_SIDE_NOTE = 'Members write what they’d agree to be asked. A small model checks each ask against those words.';
+export const COMPOSER_LABEL = 'What do you need?';
 export const ASK_PLACEHOLDER = 'We sell X to Y. We tried Z. Need 20 minutes with someone who has done W, before [date]. In return: …';
 
 /** The 5 parts: row labels and the question a missing part asks (prototype LBL / QUESTION). */

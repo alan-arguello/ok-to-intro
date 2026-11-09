@@ -14,7 +14,7 @@ export function MeError({ notConfigured = false }: { notConfigured?: boolean }) 
         <p className="lede">{notConfigured ? ME_COPY.notConfigured : `${NOTHING_SENT} Your gate didn’t load; your settings are unchanged.`}</p>
         <ButtonRow>
           {notConfigured ? (
-            <ButtonLink variant="primary" href="/" primary>
+            <ButtonLink variant="primary" href="/rules" primary>
               Try the playground
             </ButtonLink>
           ) : (
@@ -22,7 +22,7 @@ export function MeError({ notConfigured = false }: { notConfigured?: boolean }) 
               <ButtonLink variant="primary" href="/me" primary plain>
                 Try again
               </ButtonLink>
-              <ButtonLink href="/">Try the playground</ButtonLink>
+              <ButtonLink href="/rules">Try the playground</ButtonLink>
             </>
           )}
         </ButtonRow>

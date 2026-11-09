@@ -23,7 +23,7 @@ describe('the error boundary (app/error.tsx)', () => {
     const primary = container.querySelectorAll('[data-primary]');
     expect(primary.length).toBe(1);
     expect(primary[0]?.textContent).toBe('Try again');
-    expect(screen.getByRole('link', { name: 'Try the playground' }).getAttribute('href')).toBe('/');
+    expect(screen.getByRole('link', { name: 'Ask the network' }).getAttribute('href')).toBe('/');
   });
 
   it('shows no ref for an error that happened in the browser', () => {

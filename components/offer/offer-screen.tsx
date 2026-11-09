@@ -590,7 +590,7 @@ function Result({ model, view, card, askId, actions, hidden, busy, failed, onPos
   const nextLink = sample
     ? source.kind === 'ask' && askId
       ? { href: `/ask/${encodeURIComponent(askId)}`, label: 'Back to your ask ›' }
-      : { href: '/', label: 'Back to the playground ›' }
+      : { href: '/rules', label: 'Back to the playground ›' }
     : { href: '/me', label: 'Your gate ›' };
   const addOffered = view === 'no' && (model.ui.why === 'area' || model.ui.why === 'stage') && !!model.edit && model.ui.step !== 'applied' && model.ui.step !== 'kept';
   const next = (

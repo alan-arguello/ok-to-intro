@@ -797,7 +797,7 @@ export function MeView({ initial }: { initial: MeInitial }) {
                   </div>
                 </div>
               )}
-              <ButtonLink href="/" onClick={testRules}>
+              <ButtonLink href="/rules" onClick={testRules}>
                 {ME_COPY.testRules}
               </ButtonLink>
             </div>
