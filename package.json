@@ -1,0 +1,65 @@
+{
+  "name": "ok-to-intro",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A founder asks the network for one specific person. Each member's gate checks the ask against rules that member wrote and a monthly cap.",
+  "license": "MIT",
+  "author": "Alan Arguello",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alan-arguello/ok-to-intro.git"
+  },
+  "engines": {
+    "node": "^22.22.2 || >=24.15.0"
+  },
+  "scripts": {
+    "dev": "NEXT_DIST_DIR=.next-dev next dev -p 3200",
+    "build": "next build",
+    "start": "next start -p 3300",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run lint && npm run test",
+    "check:data": "vitest run tests/sample",
+    "record:presets": "tsx scripts/record-presets.ts",
+    "eval": "tsx scripts/eval.ts",
+    "eval:draft": "tsx scripts/draft-eval-candidates.ts",
+    "race": "tsx scripts/race-test.ts",
+    "test:race": "tsx scripts/race-test.ts",
+    "bench": "tsx scripts/bench-gates.ts",
+    "smoke": "node scripts/smoke.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "audit": "node scripts/audit-sweep.mjs",
+    "shoot": "node scripts/shoot.mjs",
+    "recordings:authored": "tsx scripts/build-authored-recordings.ts",
+    "build:check": "node scripts/build-check.mjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.6.0",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.119.0",
+    "mcp-handler": "2.3.1",
+    "next": "16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "resend": "6.37.0",
+    "server-only": "0.0.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.15",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.5",
+    "jsdom": "31.0.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vite": "8.3.7",
+    "vitest": "5.1.0"
+  }
+}

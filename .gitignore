@@ -1,0 +1,26 @@
+# dependencies
+/node_modules
+
+# next.js (dev and build may use separate dist dirs via NEXT_DIST_DIR)
+/.next*/
+/out/
+/build/
+next-env.d.ts
+
+# testing and audits
+/coverage
+/.shots/
+
+# env files (copy .env.example to .env.local)
+.env*.local
+.env
+
+# logs
+*.log
+.dev-server.log
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+.vercel

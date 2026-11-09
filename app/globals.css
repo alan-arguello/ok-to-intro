@@ -1,0 +1,20 @@
+/* OK to Intro · app/globals.css · foundation-owned, frozen during the build.
+   tokens.css (imported first, unchanged from the prototype) holds every token, base style and shared component.
+   This file only adds what the Next.js app needs on top of it; it never overrides a token or a kit rule.
+   Page styles live in styles/<owner>.css, imported by each owner's own pages (docs/CONTRACT.md §f). */
+
+/* Phone bars without JS. The prototype set body.has-bar / body.has-bar-lg by hand; here the bar itself carries
+   data-has-bar (components/kit/blocks.tsx <Bar>) and :has() pads the body, so no-JS pages (/o, /c) work too.
+   Same values as tokens.css. */
+@media (max-width: 760px) {
+  body:has([data-has-bar]) { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+  body:has([data-has-bar="lg"]) { padding-bottom: calc(132px + env(safe-area-inset-bottom)); }
+  html:has([data-has-bar]) { scroll-padding-bottom: 92px; }
+}
+
+/* A trap's tell inside an ask: dotted ink underline (ux-spec §4.6 `.mark--trap`; prototype a.css). */
+.mark--trap { background: none; color: inherit; padding: 0; text-decoration: underline dotted var(--ink); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+/* <main> is rendered by the layouts (and SlimPage) so the skip link always has a target; pages put their
+   container inside it. Focus moved there by the skip link shows no ring on the whole region. */
+main:focus { outline: none; }

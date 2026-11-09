@@ -1,0 +1,691 @@
+{
+  "source": "authored",
+  "recorded_at": "2026-11-09T09:00:00-06:00",
+  "model": "claude-haiku-5-5",
+  "rubric_hash": null,
+  "note": "Hand-written expectations from lib/sample (a literal reading of each preset). Not a model run. Replace with `npm run record:presets`.",
+  "runs": {
+    "engineer": {
+      "preset": "engineer",
+      "rules_sha256": "e7add37ae9f6bd34422b0703f05bd05f1d0b2f9a24ba0d19c90bc40817318a62",
+      "wall_ms": null,
+      "cost_usd": null,
+      "gates": [
+        {
+          "ask_id": "a01",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "founders about Postgres, queues or LLM evals in production",
+              "found": true,
+              "start": 17,
+              "end": 75
+            },
+            {
+              "text": "a real workload: a table size, a p95 or an error rate",
+              "found": true,
+              "start": 95,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "Postgres at 40M rows with a 900 ms p95: the topic, with a real workload.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Hospital procurement. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a03",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "founders about Postgres, queues or LLM evals in production",
+              "found": true,
+              "start": 17,
+              "end": 75
+            },
+            {
+              "text": "a real workload: a table size, a p95 or an error rate",
+              "found": true,
+              "start": 95,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "LLM evals in production, with an 8% failure rate on real tickets.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a04",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Pricing software for insurers. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a05",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Hiring a first engineer. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a06",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "founders about Postgres, queues or LLM evals in production",
+              "found": true,
+              "start": 17,
+              "end": 75
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "Queues fit, but the ask gives no number for the workload.",
+          "question": {
+            "type": "metric",
+            "text": "How many jobs a day do you run, and what share gets dropped?"
+          },
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "A first SOC 2 audit. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "found": true,
+              "start": 77,
+              "end": 149
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "stage",
+          "reason": "Pre-launch with no users, so there is no workload yet.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a09",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "founders about Postgres, queues or LLM evals in production",
+              "found": true,
+              "start": 17,
+              "end": 75
+            },
+            {
+              "text": "a real workload: a table size, a p95 or an error rate",
+              "found": true,
+              "start": 95,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "LLM evals in production; 6% of claims misrouted.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a10",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asks which founders you would back: reads as an investor looking for deal flow, not a founder asking for help.",
+          "question": null,
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a11",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Clinic scheduling software. No line in these rules covers it. The ask told the gate what to answer and what to quote. It was read as text, not followed.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a12",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "No asks to review a deck.",
+              "found": true,
+              "start": 171,
+              "end": 196
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "rule_says_no",
+          "reason": "Asks for feedback on a pitch deck.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        }
+      ]
+    },
+    "health": {
+      "preset": "health",
+      "rules_sha256": "83767b1a40912b415f5e76c4f331a275af6a12518542cbb0a74b3b5928116279",
+      "wall_ms": null,
+      "cost_usd": null,
+      "gates": [
+        {
+          "ask_id": "a01",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Postgres performance. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "B2B founders selling to public hospitals or insurers in Mexico or Colombia",
+              "found": true,
+              "start": 17,
+              "end": 91
+            },
+            {
+              "text": "have a price",
+              "found": true,
+              "start": 136,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "Public hospitals in Jalisco with 14 buyer calls, but the ask gives no price.",
+          "question": {
+            "type": "price",
+            "text": "What do you charge per hospital, per year?"
+          },
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a03",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "AI support tooling. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a04",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "have a price",
+              "found": true,
+              "start": 136,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "No price yet; the ask says pricing is the open question.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a05",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Hiring. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a06",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Job queues. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Sells to a bank, not to hospitals or insurers.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Postgres schema design. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a09",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "B2B founders selling to public hospitals or insurers in Mexico or Colombia",
+              "found": true,
+              "start": 17,
+              "end": 91
+            },
+            {
+              "text": "talked to 10+ buyers and have a price",
+              "found": true,
+              "start": 111,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "Sells to insurers in Colombia; 11 insurer calls; $2,500 a month per insurer.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a10",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asks which founders you would back: reads as an investor looking for deal flow, not a founder asking for help.",
+          "question": null,
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a11",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Sells to private clinics, not public hospitals or insurers. The ask told the gate what to answer and what to quote. It was read as text, not followed.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a12",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "No asks to review a deck.",
+              "found": true,
+              "start": 171,
+              "end": 196
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "rule_says_no",
+          "reason": "Asks for feedback on a pitch deck.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        }
+      ]
+    },
+    "founder": {
+      "preset": "founder",
+      "rules_sha256": "f909daf277a050e5343a04fc557f2b10ad3d57a25d73efac545e2541d09ecd6a",
+      "wall_ms": null,
+      "cost_usd": null,
+      "gates": [
+        {
+          "ask_id": "a01",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Postgres performance. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Hospital procurement. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a03",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "LLM evals. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a04",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Pricing software for insurers. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a05",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "hiring a first engineer",
+              "found": true,
+              "start": 20,
+              "end": 43
+            },
+            {
+              "text": "Only if you have revenue.",
+              "found": true,
+              "start": 76,
+              "end": 101
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "Hiring a first engineer fits, but the ask doesn’t say whether there is revenue.",
+          "question": {
+            "type": "stage",
+            "text": "Do you have revenue? Roughly how much a month?"
+          },
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a06",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Job queues. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "accept",
+          "model_verdict": "accept",
+          "cited": [
+            {
+              "text": "passing a first SOC 2 audit",
+              "found": true,
+              "start": 47,
+              "end": 74
+            },
+            {
+              "text": "Only if you have revenue.",
+              "found": true,
+              "start": 76,
+              "end": 101
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "match",
+          "reason": "A first SOC 2 audit, with $9k MRR.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Postgres schema design. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a09",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "LLM evals for claims. No line in these rules covers it.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a10",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Asks which founders you would back: reads as an investor looking for deal flow, not a founder asking for help.",
+          "question": null,
+          "flags": [
+            "asker_not_founder"
+          ],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a11",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Clinic scheduling software. No line in these rules covers it. The ask told the gate what to answer and what to quote. It was read as text, not followed.",
+          "question": null,
+          "flags": [
+            "instruction_in_ask"
+          ],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        },
+        {
+          "ask_id": "a12",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [
+            {
+              "text": "No asks to review a deck.",
+              "found": true,
+              "start": 123,
+              "end": 148
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "rule_says_no",
+          "reason": "Asks for feedback on a pitch deck.",
+          "question": null,
+          "flags": [],
+          "confidence": null,
+          "ms": null,
+          "request_id": null
+        }
+      ]
+    }
+  }
+}

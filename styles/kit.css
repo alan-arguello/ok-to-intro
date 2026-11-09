@@ -1,0 +1,4 @@
+/* /kit only (foundation-owned): the section spacing and grid from prototype/kit.html. */
+.kit-sec { margin-top: 40px; }
+.kit-sec > .h2 { margin-bottom: 12px; }
+.kit-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
