@@ -1,0 +1,17 @@
+{
+  "description": "OK to Intro: at most 3 lines at session start when something waits on you (an offer, a question on your ask, a check-in); silent otherwise.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/pending.sh\" https://ok-to-intro.vercel.app/api/hook",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}

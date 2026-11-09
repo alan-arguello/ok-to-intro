@@ -1,0 +1,26 @@
+/* OK to Intro · S6 /agents (prototype b.css “S6 · agents”), ported with the ag- prefix.
+   Colours only through tokens.css variables. The kit's Tabs wrap each panel in its own role=tabpanel div,
+   so `.ag-panel` sits inside the panel; its margin collapses through it exactly as in the prototype. */
+
+.ag-sec > .h2 + * { margin-top: var(--s3); }
+.ag-panel { display: grid; gap: var(--s2); margin-top: var(--s3); }
+.ag-panel[hidden] { display: none; }
+.ag-panel .help code, .ag-tool code { font-size: .95em; }
+.ag-more { margin-top: var(--s1); }
+.ag-more > .stack { margin-top: var(--s2); }
+.ag-get .row__body { margin-top: 2px; font-size: var(--fs-sm); color: var(--ink-2); }
+.ag-get .row__name { font-size: var(--fs-ui); }
+.ag-demo-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s2) var(--s3); }
+.ag-tr .ln { min-height: 1.65em; }
+.ag-tr .ag-r { padding-left: calc(2ch + 2ch); text-indent: -2ch; }
+.ag-tr .ag-u { color: var(--trace-text); font-weight: 500; }
+.ag-tool .row__line1 { gap: 6px 10px; }
+.ag-tool__name { font: 500 14px/1.4 var(--font-mono); }
+.ag-tool__what { margin-top: 4px; font-size: var(--fs-sm); line-height: 1.45; }
+.ag-tool__note { margin-top: 2px; font-size: var(--fs-meta); color: var(--ink-2); }
+.ag-tool .disclosure { margin-top: 2px; }
+.ag-tool .disclosure > .stack { margin-top: var(--s1); margin-bottom: var(--s2); }
+.ag-cap { font: 500 var(--fs-meta)/1.4 var(--font-sans); color: var(--ink-2); }
+.ag-hook .row { font-size: var(--fs-ui); }
+.ag-hook-tr { margin-top: var(--s3); }
+.ag-hook-cap { margin-top: var(--s2); }

@@ -1,0 +1,27 @@
+{
+  "name": "ok-to-intro",
+  "version": "0.1.0",
+  "description": "Ask a network for 20 minutes with one specific person from Claude Code, and answer what waits on you. Each member’s gate checks every ask against rules that member wrote. An MCP server, a /ask skill and a session hook.",
+  "author": {
+    "name": "Alan Arguello"
+  },
+  "homepage": "https://ok-to-intro.vercel.app/agents",
+  "repository": "https://github.com/alan-arguello/ok-to-intro",
+  "license": "MIT",
+  "keywords": [
+    "intros",
+    "networking",
+    "founders",
+    "consent",
+    "mcp"
+  ],
+  "userConfig": {
+    "token": {
+      "type": "string",
+      "title": "OK to Intro token",
+      "description": "Optional. Create one under Your gate at https://ok-to-intro.vercel.app/me#token (shown once). Without it, try_rules and draft_ask work, and send_ask and answer_question run on the SAMPLE network.",
+      "sensitive": true,
+      "default": ""
+    }
+  }
+}

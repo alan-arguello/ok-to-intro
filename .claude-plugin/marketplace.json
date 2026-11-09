@@ -1,0 +1,30 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ok-to-intro",
+  "description": "OK to Intro: consent-first intros from Claude Code.",
+  "owner": {
+    "name": "Alan Arguello"
+  },
+  "plugins": [
+    {
+      "name": "ok-to-intro",
+      "source": "./plugins/ok-to-intro",
+      "description": "Ask a network for 20 minutes with one specific person from Claude Code, and answer what waits on you. Each member’s gate checks every ask against rules that member wrote. An MCP server, a /ask skill and a session hook.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Alan Arguello"
+      },
+      "category": "productivity",
+      "homepage": "https://ok-to-intro.vercel.app/agents",
+      "repository": "https://github.com/alan-arguello/ok-to-intro",
+      "license": "MIT",
+      "keywords": [
+        "intros",
+        "networking",
+        "founders",
+        "consent",
+        "mcp"
+      ]
+    }
+  ]
+}
