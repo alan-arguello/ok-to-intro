@@ -1,0 +1,18 @@
+/* Personal gates: the /rules “Make this your gate” section, /g/<slug> and its private inbox. */
+.gate-make { margin-top: var(--s6); }
+.gate-make > * + * { margin-top: var(--s4); }
+.gate-copy { display: flex; gap: var(--s2); align-items: stretch; }
+.gate-copy .input { flex: 1 1 auto; min-width: 0; font-family: var(--font-mono); font-size: 16px; }
+.gate-copy .btn { flex: 0 0 auto; }
+.gate-url { font-family: var(--font-mono); font-size: var(--fs-meta); color: var(--ink-2); overflow-wrap: anywhere; }
+.gate-main { padding-bottom: var(--s10); }
+.gate-main > * + * { margin-top: var(--s5); }
+.gate-form > * + * { margin-top: var(--s4); }
+.gate-result > * + * { margin-top: var(--s3); }
+.gate-result q { quotes: "“" "”"; }
+.gate-inbox > * + * { margin-top: var(--s4); }
+.gate-items > * + * { margin-top: var(--s3); }
+.gate-item__text { margin-top: var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.5; }
+.gate-filtered .row > * + * { margin-top: 4px; }
+.gate-filtered .row p { overflow-wrap: anywhere; }
+.gate-danger { padding-top: var(--s5); border-top: 1px solid var(--line-soft); }

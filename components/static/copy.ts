@@ -74,6 +74,11 @@ export const PRIVACY_ROWS = {
   processors:
     'Supabase (database and email sign-in), Anthropic (gate and compiler calls; it deletes API inputs and outputs within 30 days by default, longer only for content its safety review flags), Resend (email), Vercel (hosting; our code never logs request bodies).',
   never: 'Gmail, Calendar, Notion, or any community data.',
+  gates: [
+    'A personal gate stores its owner’s name, headline, rules and monthly cap, and every ask sent to it: the asker’s name, email, text and the verdict.',
+    'Only the holder of the private inbox link can read them; we keep a hash of that link’s key, never the key.',
+    'Deleting the gate deletes all of it, asks included.',
+  ],
   delete:
     'A member deletes everything from their own page, with one button and one confirm. It deletes the account, rules, cap, asks, offers, check-ins and tokens now, and cancels emails still scheduled to them. Intros already sent stay in inboxes; counts stay, without the name. An export (JSON) downloads the data first. This demo has no accounts, so there is nothing of yours to delete.',
   contactFallback: ' (a public issue: leave personal data out)',

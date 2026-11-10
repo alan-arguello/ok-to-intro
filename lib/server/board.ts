@@ -47,7 +47,7 @@ function logFailure(what: string, error: unknown): void {
  * - `db_down`: configured, but the database didn't answer or answered something that isn't a snapshot.
  */
 export async function getBoard(now: Date = new Date()): Promise<BoardResult> {
-  if (!flags.hasSupabaseAdmin) return { ok: false, reason: 'not_configured' };
+  if (!(flags.realNetwork && flags.hasResend)) return { ok: false, reason: 'not_configured' };
   const admin = getAdminClient();
   if (!admin.ok) return { ok: false, reason: 'not_configured' };
   const db = admin.client;
@@ -105,7 +105,7 @@ function count(v: unknown): number | null {
  * `since` is the first member's join date in Pacific time (“Nov 9”), or null before anyone joined.
  */
 export async function getRealLine(): Promise<RealLineResult> {
-  if (!flags.hasSupabaseAdmin) return { ok: false, reason: 'not_configured' };
+  if (!(flags.realNetwork && flags.hasResend)) return { ok: false, reason: 'not_configured' };
   const admin = getAdminClient();
   if (!admin.ok) return { ok: false, reason: 'not_configured' };
   try {

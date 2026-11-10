@@ -1,5 +1,5 @@
 /**
- * Database types for supabase-js, written by hand to match supabase/migrations/0001_init.sql (the Supabase CLI
+ * Database types for supabase-js, written by hand to match supabase/migrations/0001_init.sql (and later migrations) (the Supabase CLI
  * isn't part of this build). If a later migration changes a table, update this file in the same change.
  * Column comments live in the migration; JSON columns are typed in lib/types.ts.
  */
@@ -324,6 +324,32 @@ export type PrefilterRow = {
   skip: 'self' | 'paused' | 'at_cap' | 'repeat_pair' | null;
 };
 
+export type PersonalGateRow = {
+  id: string;
+  slug: string;
+  name: string;
+  headline: string | null;
+  rules: string;
+  cap: number;
+  owner_token_hash: string;
+  created_at: string;
+};
+
+export type PersonalGateVerdict = 'accept' | 'decline' | 'ask_back' | 'over_cap';
+
+export type PersonalGateAskRow = {
+  id: string;
+  gate_id: string;
+  asker_name: string;
+  asker_email: string;
+  text: string;
+  verdict: PersonalGateVerdict;
+  cited: Json;
+  reason: string | null;
+  question: string | null;
+  created_at: string;
+};
+
 export type Database = {
   public: {
     Tables: {
@@ -351,6 +377,9 @@ export type Database = {
       model_usage: Table<ModelUsageRow, 'day', 'usd' | 'calls' | 'updated_at'>;
       app_state: Table<AppStateRow, 'key', 'value' | 'updated_at'>;
       hook_seen: Table<HookSeenRow, 'member_id' | 'item', 'shown' | 'last_shown_at'>;
+      /** 0004_personal_gates.sql */
+      personal_gates: Table<PersonalGateRow, 'slug' | 'name' | 'rules' | 'owner_token_hash', 'id' | 'headline' | 'cap' | 'created_at'>;
+      personal_gate_asks: Table<PersonalGateAskRow, 'gate_id' | 'asker_name' | 'asker_email' | 'text' | 'verdict', 'id' | 'cited' | 'reason' | 'question' | 'created_at'>;
     };
     Views: { [_ in never]: never };
     Functions: {

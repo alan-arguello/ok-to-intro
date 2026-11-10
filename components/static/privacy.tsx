@@ -105,6 +105,9 @@ export function PrivacyContent() {
         <Row id="priv-nostore" title="What we don’t store" code={PRIVACY_CODE.noStore}>
           {PRIVACY_ROWS.noStore}
         </Row>
+        <Row id="priv-gates" title="Personal gates" code={['lib/server/personal-gates.ts']}>
+          {PRIVACY_ROWS.gates.join(' ')}
+        </Row>
         <Row id="priv-proc" title="Processors">
           {PRIVACY_ROWS.processors}
         </Row>

@@ -1,7 +1,7 @@
 import { OG_IMAGE, OG_IMAGE_ALT } from '@/components/static/share';
 import type { Metadata } from 'next';
 import { Playground } from '@/components/playground/playground';
-import { hasAnthropic } from '@/lib/env';
+import { flags, hasAnthropic } from '@/lib/env';
 import { qaEnabled } from '@/lib/qa';
 import { PRODUCT_NAME, ROUTES } from '@/lib/site';
 import '@/styles/playground.css';
@@ -25,5 +25,5 @@ export const metadata: Metadata = {
 };
 
 export default function RulesPage() {
-  return <Playground qa={qaEnabled()} liveConfigured={hasAnthropic} />;
+  return <Playground qa={qaEnabled()} liveConfigured={hasAnthropic} gatesConfigured={flags.hasSupabaseAdmin} />;
 }

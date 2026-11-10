@@ -39,6 +39,8 @@ const nextConfig: NextConfig = {
       { source: '/c/:path*', headers: noIndexPrivate },
       { source: '/pause/:path*', headers: noIndexPrivate },
       { source: '/me/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
+      { source: '/g/:slug', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
+      { source: '/g/:slug/inbox', headers: noIndexPrivate },
       { source: '/kit', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
     ];
   },

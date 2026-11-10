@@ -26,6 +26,9 @@ export const RATE_LIMITS: Readonly<Record<RateBucket, { limit: number; window_s:
   sample_send: { limit: 20, window_s: 600 },
   mcp: { limit: 60, window_s: 600 },
   pages: { limit: 120, window_s: 60 },
+  // Personal gates (/g). Not in rate_limits' bucket check, so the shared counter errors and the in-memory limiter decides.
+  gate_create: { limit: 5, window_s: 3600 },
+  gate_ask: { limit: 6, window_s: 600 },
 };
 
 /** The Postgres counter gets this long before the in-memory limiter decides instead. */

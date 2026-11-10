@@ -776,7 +776,7 @@ export interface NotConfigured {
   missing: string[];
 }
 
-export type RateBucket = 'try' | 'compile' | 'send' | 'sample_send' | 'mcp' | 'pages';
+export type RateBucket = 'try' | 'compile' | 'send' | 'sample_send' | 'mcp' | 'pages' | 'gate_create' | 'gate_ask';
 
 export type RateLimitResult = { ok: true; remaining: number } | { ok: false; retry_at: string; limit: number; window_s: number };
 

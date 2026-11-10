@@ -16,6 +16,7 @@ import type { TryEvent } from '@/lib/types';
 import { BACK_TO_ASK, H1, LEDE } from './copy';
 import { isPhone, scrollToId } from './dom';
 import { PlaygroundEngine, type EngineDeps } from './engine';
+import { MakeGate, SavedGateLink } from '@/components/gates/make-gate';
 import { ListSection } from './list';
 import { Rail } from './rail';
 import { browserStorage } from './store';
@@ -32,9 +33,11 @@ export interface PlaygroundProps {
   qa: boolean;
   /** Whether this instance has a model key (lib/env). Without one the first paint already knows live checks are off. */
   liveConfigured: boolean;
+  /** Whether personal gates can be saved on this instance (service-role database configured). */
+  gatesConfigured?: boolean;
 }
 
-export function Playground({ qa, liveConfigured }: PlaygroundProps) {
+export function Playground({ qa, liveConfigured, gatesConfigured = false }: PlaygroundProps) {
   const [engine] = useState(() => new PlaygroundEngine(DEPS, { health: liveConfigured ? 'unknown' : 'off' }));
   const s = useSyncExternalStore(engine.subscribe, engine.getState, engine.getInitial);
 
@@ -103,6 +106,10 @@ export function Playground({ qa, liveConfigured }: PlaygroundProps) {
         <Rail s={s} actions={actions} />
         <ListSection s={s} actions={actions} />
       </div>
+
+      {s.run && s.phase === 'done' ? <MakeGate rules={s.rules} cap={s.cap} configured={gatesConfigured} /> : null}
+
+      <SavedGateLink />
 
       <p className="small pg-back">
         <Link className="link" href="/" onClick={() => engine.save()}>
