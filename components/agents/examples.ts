@@ -255,7 +255,7 @@ function askTranscript(): Transcript {
   const send = exampleSampleSend('sa_health', SENT_AT);
   const q = send.question_list[0];
   const rows: TranscriptRow[] = [
-    row('U', '/ask need someone who has closed a first enterprise deal through procurement'),
+    row('U', '/ask need an intro to a head of procurement at a hospital system'),
     row('B'),
     row('C', 'I read README.md and notes/pipeline.md (not .env or keys).'),
     row('B'),
@@ -418,12 +418,12 @@ export function toolExamples(): Record<ToolName, string[]> {
           { id: 'a_91xQ2k', subject: OFFER_SAMPLE.subject, outcome: 'offered', status: `offered · reply by Thu Nov 12, 21:04 PT` },
           {
             id: 'a_7c2dWe',
-            subject: 'First SOC 2 in 60 days, 20 min?',
+            subject: 'First SOC 2 in 60 days: your auditor’s name',
             outcome: 'question',
             status: 'a gate has a question for you',
             question: { id: 'q_8kM3', type: 'deal_size', text: SAMPLE_NETWORK_ASKS.founder.ask_back[0]?.[1].text ?? 'How large is the bank contract, per year?' },
           },
-          { id: 'a_3k9pZr', subject: 'Churn after month 3, 20 min?', outcome: 'intro', status: 'intro made · Sun Nov 8, 16:30 PT' },
+          { id: 'a_3k9pZr', subject: 'Churn after month 3: a 20-minute call', outcome: 'intro', status: 'intro made · Sun Nov 8, 16:30 PT' },
         ],
         { example: true },
       ),

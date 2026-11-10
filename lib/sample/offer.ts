@@ -24,11 +24,11 @@ export const OFFER_SAMPLE = {
   token: 'sample',
   member: { name: 'Priya Shah', first: 'Priya', scheduling: 'cal.com/priya-shah/20min', cap: 2, used_before: 0 },
   asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', email: 'maya@oakline.example' },
-  subject: 'Enterprise deals stuck 5 months, 20 min?',
-  title: 'Enterprise deals stuck 5 months',
+  subject: 'Intro to a hospital procurement lead',
+  title: 'Intro to a hospital procurement lead',
   facts: [
     ['Problem', '2 enterprise deals have sat in procurement for 5 months'],
-    ['Needs', '20 minutes with someone who has closed a first enterprise deal through procurement'],
+    ['Needs', 'An intro to a head of procurement at a hospital system'],
     ['Tried', '14 buyer calls; 2 deals reached procurement'],
     ['By', 'Nov 20'],
     ['Offers', 'Our procurement checklist'],
@@ -60,8 +60,8 @@ export const OFFER_SAMPLE = {
 } as const;
 
 export const INTRO_SAMPLE = {
-  subject: 'Intro: Maya Bennett (Oakline Health) and Priya Shah (first enterprise customers)',
-  member_line: 'Closed the first 20 enterprise customers at a healthcare software company.',
+  subject: 'Intro: Maya Bennett (Oakline Health) and Priya Shah (hospital procurement)',
+  member_line: 'Ran procurement at a hospital system before selling software to them.',
   asker_line: 'Oakline Health (Seed, Chicago)',
   sent: 'Mon Nov 9, 21:16',
   checkin1: 'Tue Nov 10',

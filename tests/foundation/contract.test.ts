@@ -23,7 +23,7 @@ describe('askFacts: one card everywhere (ux-spec Revision 3)', () => {
 describe('assembleAskText: the ask members read', () => {
   it('appends only the parts the founder added, in a fixed order', () => {
     const sa = SAMPLE_NETWORK_ASKS.engineer;
-    const parts = { challenge: 'x', tried: 'y', needs: 'someone who has cut early churn in a B2B product', by: 'Nov 21', offers: 'our cancellation interview notes' };
+    const parts = { challenge: 'x', tried: 'y', needs: '20 minutes with someone who has cut early churn in a B2B product', by: 'Nov 21', offers: 'our cancellation interview notes' };
     expect(assembleAskText(sa.partial, parts, ['needs', 'by', 'offers'])).toBe(
       `${sa.partial} Need 20 minutes with someone who has cut early churn in a B2B product, before Nov 21. Offer: our cancellation interview notes.`,
     );
@@ -78,7 +78,7 @@ describe('suggestRuleEdit: templated, additive, never copies the ask', () => {
 
   it('never names a company and never copies 6+ words of the ask', () => {
     expect(suggestRuleEdit('not_my_area', { rules: health, matchedLine: null, topic: 'Oakline Health deals', askText: a02.text, companies: ['Oakline Health'] })).toBeNull();
-    expect(sharesWords('No asks about a first enterprise deal through procurement.', a02.text)).toBe(true);
+    expect(sharesWords('No asks for an intro to a head of procurement at a hospital.', a02.text)).toBe(true);
     expect(topicPhrase('Enterprise sales, US')).toBe('enterprise sales');
     expect(topicPhrase('First SOC 2 audit')).toBe('first SOC 2 audit');
   });

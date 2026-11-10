@@ -24,7 +24,7 @@ const RULES = 'Happy to talk about churn and retention in B2B software.';
 
 async function gatingAsk(id: string, asker: string, members: string[]) {
   await net.db.pg.query(
-    `insert into public.asks (id, asker_id, raw, compiled, subject, status, sent_at) values ($1, $2, 'raw', '{"parts":{},"subject":"s","text":"t","price":null,"topic":null}'::jsonb, 'Churn after month 3, 20 min?', 'gating', now())`,
+    `insert into public.asks (id, asker_id, raw, compiled, subject, status, sent_at) values ($1, $2, 'raw', '{"parts":{},"subject":"s","text":"t","price":null,"topic":null}'::jsonb, 'Churn after month 3: a 20-minute call', 'gating', now())`,
     [id, asker],
   );
   for (const [i, m] of members.entries()) await net.db.pg.query(`insert into public.ask_members (ask_id, member_id, position) values ($1, $2, $3)`, [id, m, i]);

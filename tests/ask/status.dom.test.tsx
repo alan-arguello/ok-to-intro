@@ -50,7 +50,7 @@ afterEach(() => {
 describe('/ask/sa_… (SAMPLE, lives in this tab)', () => {
   it('the server sends a shell, never someone’s state', () => {
     const html = renderToString(<SampleStatus id="sa_eng" qaState={null} live={LIVE_OFF} />);
-    expect(html).toContain('Churn after month 3, 20 min?');
+    expect(html).toContain('Churn after month 3: a 20-minute call');
     expect(html).not.toContain('Offered');
   });
 

@@ -15,7 +15,7 @@ import { ASKS, type RowGate } from './model';
 
 const EXTRA_LINE = 'No asks about crypto.';
 const DECLINE_ALL_RULES = 'Happy to talk about robotics hardware.\nNo fundraising asks.\nNo asks to review a deck.';
-const ACCEPT_ALL_RULES = 'Happy to talk to any founder who asks for 20 minutes.';
+const ACCEPT_ALL_RULES = 'Happy to help any founder who asks.';
 /** 1,040 characters: the Engineer preset plus nine lines (too-long). */
 const LONG_RULES = [
   'Happy to talk to founders about churn, activation or support load.',
@@ -28,7 +28,7 @@ const LONG_RULES = [
   'No asks to join an advisory board, no recruiting asks and no requests to try a product.',
   'Prefer asks that name a deadline in the next 30 days and offer something back, even a write-up.',
   'No cold sales pitches for observability, hosting or security tools, even when they are framed as a question.',
-  'Happy to talk with founders anywhere in North America, in English or Spanish, at most 20 minutes per call.',
+  'Happy to talk with founders anywhere in North America, in English or Spanish, at most 3 calls every month.',
   'No asks about pricing, go-to-market or hiring; those go to other people in the network who know them better.',
   'No asks that open with praise and skip the problem.',
 ].join('\n');
@@ -95,9 +95,9 @@ function acceptAll(): GateMap {
       ...blank(a.id, i),
       verdict: 'accept',
       model_verdict: 'accept',
-      cited: [{ text: 'any founder who asks for 20 minutes', found: false }],
+      cited: [{ text: 'any founder who asks', found: false }],
       reason_code: 'match',
-      reason: 'Asks for 20 minutes, which this line accepts from any founder.',
+      reason: 'A founder asking for help, which this line accepts from any founder.',
     };
   });
   return out;

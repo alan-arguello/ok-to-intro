@@ -15,7 +15,7 @@ import { answerAsk, draftAsk, myAsks, pendingForMe, recordOutcome, respond, send
 export const SERVER_VERSION = '0.1.0';
 
 export const SERVER_INSTRUCTIONS = [
-  `${PRODUCT_NAME}: a founder asks a network for 20 minutes with one specific person. Each member wrote rules for what they agree to be asked and a monthly cap; a small model (their gate) checks every ask against those rules and must quote the line it used, code checks the quote, and Postgres holds the cap. At most one person sees an ask at a time, and names are exchanged only after that person says OK.`,
+  `${PRODUCT_NAME}: a founder asks a network for one specific piece of help (a call, an intro, an answer or an action) from one specific person. Each member wrote rules for what they agree to be asked and a monthly cap; a small model (their gate) checks every ask against those rules and must quote the line it used, code checks the quote, and Postgres holds the cap. At most one person sees an ask at a time, and names are exchanged only after that person says OK.`,
   '',
   'How to use these tools:',
   '- Every result is a plain-text receipt. Show it to the user as written, including the quoted lines.',
@@ -92,9 +92,9 @@ export const SCHEMAS = {
 
 export const DESCRIPTIONS: Readonly<Record<ToolName, string>> = {
   try_rules:
-    'Test rules for who may ask you for a 20-minute call: runs them against 12 fictional SAMPLE asks (4 of them traps: wrong stage, an investor posing as a founder, a prompt injection, polite spam) and returns each verdict with the line of your rules the gate quoted, checked by code, and your monthly cap applied. Open, no account; the rules are never stored.',
+    'Test rules for what you agree to be asked: runs them against 12 fictional SAMPLE asks (4 of them traps: wrong stage, an investor posing as a founder, a prompt injection, polite spam) and returns each verdict with the line of your rules the gate quoted, checked by code, and your monthly cap applied. Open, no account; the rules are never stored.',
   draft_ask:
-    'Draft an ask for one specific person (20 minutes): checks the text for 5 parts (what is blocked, what was tried, who could unblock it, by when, what is offered back) and marks each found, suggested or missing; refuses vague asks and asks about YC applications. Never invents facts: fill missing parts only with the user’s answers or facts from files the user can check, cited in sources. Call again with draft_id and answers. Nothing is sent.',
+    'Draft an ask for one specific person (a call, an intro, an answer or an action): checks the text for 5 parts (what is blocked, what was tried, who could unblock it, by when, what is offered back) and marks each found, suggested or missing; refuses vague asks and asks about YC applications. Never invents facts: fill missing parts only with the user’s answers or facts from files the user can check, cited in sources. Call again with draft_id and answers. Nothing is sent.',
   send_ask:
     'Send an approved draft: each member’s gate checks it against the rules that member wrote; at most one person is offered it at a time, and the asker learns who only if they say OK. Without a token it goes to the SAMPLE network (40 fictional members, nobody emailed); with the user’s token, network real sends to people who joined. Call only after the user saw the exact ask from draft_ask and said yes.',
   answer_question:

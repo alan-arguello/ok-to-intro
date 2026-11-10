@@ -1,21 +1,21 @@
 {
   "source": "model",
-  "recorded_at": "2026-11-10T01:13:23.102Z",
+  "recorded_at": "2026-11-10T01:27:44.470Z",
   "model": "claude-haiku-5-5",
-  "rubric_hash": "92d4c165b59960a203ed302a111712733b885ef31dddd60799a55e8cb418470b",
+  "rubric_hash": "bbb7bae00accfdcae8577e404788a326868f56721b4c965bd69933c7d6e6d7ed",
   "note": "Recorded with the production gate by npm run record:presets: the 39 sample members × the 3 sample asks (members the SQL prefilter skips are never gated).",
   "runs": {
     "sa_eng": {
       "sample_ask_id": "sa_eng",
       "based_on": "a01",
-      "wall_ms": 2816,
+      "wall_ms": 2870,
       "members": [
         {
           "label": "m-7f2a",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Churn after month 3, with 31 of 120 accounts lost: the topic, with real usage at a B2B seed company.",
+          "reason": "Churn after month 3 with 31 of 120 accounts lost is squarely churn and retention in B2B software; a 20-minute call fits.",
           "cited": [
             {
               "text": "Happy to talk about churn and retention in B2B software.",
@@ -26,15 +26,15 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1578
+          "confidence": 0.93,
+          "ms": 1073
         },
         {
           "label": "m-19b4",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Early churn after onboarding is the topic, and the ask states real numbers: 31 of 120 accounts lost last quarter.",
+          "reason": "Early churn after month 3 with 31 of 120 accounts lost: the topic, with real numbers.",
           "cited": [
             {
               "text": "Happy to talk about onboarding and early churn.",
@@ -52,14 +52,14 @@
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1703
+          "ms": 977
         },
         {
           "label": "m-c3d0",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Churn after month 3, with 31 of 120 accounts lost: the topic, with real usage.",
+          "reason": "Churn after month 3 with 31 of 120 accounts lost: the stated topic, with real usage data and a founder asking for a short call.",
           "cited": [
             {
               "text": "Happy to talk about churn, activation or support load.",
@@ -70,8 +70,8 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 999
+          "confidence": 0.93,
+          "ms": 1125
         },
         {
           "label": "m-08e1",
@@ -102,24 +102,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Early churn after month 3 is not covered by the member’s topic line on support load and help centers.",
+          "reason": "Churn after month 3 is not support load or help centers; no rule line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1001
+          "ms": 1559
         },
         {
           "label": "m-2b6d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 with 120 accounts is about retention, not activation after signup; no rules line covers this topic.",
+          "reason": "Rules cover only activation after signup; this ask is about churn after month 3, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1592
+          "confidence": 0.85,
+          "ms": 1061
         },
         {
           "label": "m-91c8",
@@ -138,36 +138,36 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 at a seed B2B company is not covered by the member’s only topic, pivoting after a year of flat revenue.",
+          "reason": "Churn after month 3 is not the topic of the member’s rule, which covers deciding whether to pivot after flat revenue. No line covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1080
+          "confidence": 0.9,
+          "ms": 1038
         },
         {
           "label": "m-a7f0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not first enterprise customers; no rules line covers this ask’s topic.",
+          "reason": "Churn after month 3 is not first enterprise customers; no rule line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1301
+          "confidence": 0.9,
+          "ms": 1295
         },
         {
           "label": "m-3c5b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product: no rules line covers this topic. The member only takes enterprise procurement and security reviews, with a price.",
+          "reason": "The rules cover enterprise procurement and security reviews, not early churn in a B2B product, so no rule covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1039
+          "ms": 1296
         },
         {
           "label": "m-f19d",
@@ -185,8 +185,8 @@
           "label": "m-4e82",
           "state": "ask_back",
           "na": null,
-          "reason_code": "proof",
-          "reason": "B2B churn problem with real usage (120 accounts), but the ask does not state the founder is in Canada or has 10+ customer calls.",
+          "reason_code": "region",
+          "reason": "B2B churn topic with real usage (120 accounts), but the ask does not state the company is in Canada, which the rule requires.",
           "cited": [
             {
               "text": "B2B founders in Canada with 10+ customer calls.",
@@ -197,23 +197,23 @@
           ],
           "question": {
             "type": "region",
-            "text": "Is your company based in Canada, and have you done at least 10 customer calls?"
+            "text": "Is your company based in Canada?"
           },
           "flags": [],
-          "confidence": 0.7,
-          "ms": 1112
+          "confidence": 0.8,
+          "ms": 1813
         },
         {
           "label": "m-b0a6",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Early churn in a B2B product is outside the member’s stated topic, which covers long sales cycles with hospital groups and health systems.",
+          "reason": "Churn after month 3 in a B2B product is not covered by the member’s rule on long sales cycles with hospital groups and health systems.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 985
+          "ms": 1127
         },
         {
           "label": "m-8d27",
@@ -232,31 +232,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 falls outside the member’s only stated topic, pricing per seat versus usage, so no rule covers this ask.",
-          "cited": [
-            {
-              "text": "Pricing: per seat versus usage.",
-              "found": true,
-              "start": 0,
-              "end": 31
-            }
-          ],
+          "reason": "Member’s rules cover only pricing (per seat versus usage); churn reduction is not covered, so this ask is declined.",
+          "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 989
+          "ms": 1064
         },
         {
           "label": "m-d6e9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not about raising prices on existing customers, and no rules line covers this topic.",
+          "reason": "Churn after month 3 is not the topic of the member’s rules, which only cover raising prices on existing customers with signed contracts.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 958
+          "ms": 927
         },
         {
           "label": "m-7c1a",
@@ -275,91 +268,84 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product is outside the only topic in your rules, cross-border payments and payouts.",
+          "reason": "Churn after month 3 in a B2B product is outside the member’s only stated topic, cross-border payments and payouts.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1064
+          "confidence": 0.97,
+          "ms": 1115
         },
         {
           "label": "m-a3b8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product is not fintech compliance; no rules line covers this topic.",
+          "reason": "Churn after month 3 in a B2B product is not fintech compliance; no rule line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1227
+          "confidence": 0.93,
+          "ms": 1554
         },
         {
           "label": "m-5f0e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product is outside the member’s only topic: a Delaware flip for a company founded abroad.",
+          "reason": "The member’s rules only cover a Delaware flip for a company founded abroad; churn help is not covered by any line.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1126
+          "ms": 1293
         },
         {
           "label": "m-c8d4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 with 31 of 120 accounts lost: a founder with paying customers, but the topic is not a cofounder split, which is the only thing this member accepts.",
-          "cited": [
-            {
-              "text": "Founders with paying customers, on a cofounder split.",
-              "found": true,
-              "start": 0,
-              "end": 53
-            }
-          ],
+          "reason": "Member’s rules only cover cofounder split conversations with founders who have paying customers; churn reduction advice is not covered.",
+          "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 1335
+          "ms": 1368
         },
         {
           "label": "m-1a7b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 with 31 of 120 accounts lost: no rule covers this topic; the member’s rules only cover hiring a first salesperson.",
+          "reason": "Churn after month 3 is not covered by the member’s only rule, which covers hiring a first salesperson; no rule applies.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1987
+          "ms": 2475
         },
         {
           "label": "m-9e2c",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 with 31 of 120 accounts lost: no rules line covers this topic. The member’s rules only cover hiring and comp for seed-stage teams.",
+          "reason": "Early churn in a B2B product is not covered by the member’s rules, which only cover hiring and comp for seed-stage teams.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1857
+          "ms": 1838
         },
         {
           "label": "m-4b6f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not hiring a first senior engineer, and no rule line covers this topic.",
+          "reason": "Churn after month 3 is not covered by the member’s only topic line, which covers hiring a first senior engineer.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 2183
+          "confidence": 0.9,
+          "ms": 1937
         },
         {
           "label": "m-e0d3",
@@ -378,98 +364,91 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not a SOC 2 audit; no rules line covers this ask’s topic, so the member’s rules do not let it through.",
+          "reason": "Churn after month 3 is not the first SOC 2 audit topic; no rules line covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1998
+          "confidence": 0.95,
+          "ms": 2342
         },
         {
           "label": "m-3f9a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not a security review topic in this member’s rules, so no line covers the ask.",
+          "reason": "Churn after month 3 is outside the member’s stated topic of security reviews for B2B startups; no rule covers it.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1987
+          "confidence": 0.95,
+          "ms": 1992
         },
         {
           "label": "m-b7c2",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is outside the member’s stated topics: their rules only cover SOC 2 and ISO 27001, so no line covers this ask.",
+          "reason": "Ask is about churn reduction; the member’s rules only cover SOC 2 and ISO 27001 and no line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2003
+          "ms": 2164
         },
         {
           "label": "m-0c5d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s rules cover only seed round processes; churn reduction advice is not covered by any rule line.",
+          "reason": "Churn after month 3 is not about running a seed round process, and no member rule covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1987
+          "ms": 2114
         },
         {
           "label": "m-d2a9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The rules only cover devtools; this ask is about B2B churn in a product that is not stated to be devtools, so no rule covers it.",
+          "reason": "The member’s only rule covers devtools; churn reduction in a B2B product is not devtools, so no rule covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 2166
+          "confidence": 0.85,
+          "ms": 2027
         },
         {
           "label": "m-8f6b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not pricing, and the member’s rules cover pricing only, so no topic line covers this ask.",
+          "reason": "Churn-reduction advice is not covered by the member’s rules, which only cover pricing talks and exclude deal-flow asks.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 2135
+          "ms": 2120
         },
         {
           "label": "m-1e4d",
-          "state": "accept",
+          "state": "decline",
           "na": null,
-          "reason_code": "match",
-          "reason": "Churn after month 3, with 31 of 120 accounts lost: the topic, with real usage at 120 accounts; a B2B SaaS company at seed stage.",
-          "cited": [
-            {
-              "text": "First customers for B2B SaaS.",
-              "found": true,
-              "start": 0,
-              "end": 29
-            }
-          ],
+          "reason_code": "no_rule",
+          "reason": "Member’s rules cover first customers for B2B SaaS only; this ask is about churn after month 3, which no rule covers.",
+          "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.8,
-          "ms": 2136
+          "ms": 2342
         },
         {
           "label": "m-7a0f",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Churn after month 3 with 31 of 120 accounts lost: this is retention, the topic the member opted into.",
+          "reason": "Churn after month 3 with 31 of 120 accounts lost: the retention topic, with real usage data and a stated need for a short call.",
           "cited": [
             {
               "text": "Consumer growth and retention.",
@@ -481,110 +460,117 @@
           "question": null,
           "flags": [],
           "confidence": 0.8,
-          "ms": 2258
+          "ms": 2342
         },
         {
           "label": "m-c5e8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product is not paid acquisition for consumer apps; no rule line covers this topic.",
+          "reason": "Rules cover paid acquisition for consumer apps only; this ask is about B2B churn retention, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2543
+          "ms": 2226
         },
         {
           "label": "m-3b2e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product: no rule line covers this topic, so the gate cannot let it through.",
+          "reason": "The member’s rules cover only marketplace cold start (supply and demand); churn in a B2B product is not covered by any rule.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2508
+          "ms": 2513
         },
         {
           "label": "m-f6c1",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 is not about expanding from the US to Europe, and no rule line covers this topic.",
+          "reason": "Churn after month 3 is not covered by the member’s only rule, which concerns expanding from the US to Europe; the ask is off-topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2667
+          "confidence": 0.95,
+          "ms": 2603
         },
         {
           "label": "m-9d7a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product is not covered by the member’s only rule, which concerns entering the US market from India.",
+          "reason": "Member’s rules cover only entering the US market from India; this ask about B2B customer churn is not covered by any rule.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2816
+          "ms": 2665
         },
         {
           "label": "m-5c3f",
           "state": "decline",
           "na": null,
-          "reason_code": "no_rule",
-          "reason": "Churn after month 3 in a B2B product: the rules only cover Southeast Asia go-to-market, and the ask states no region, so no line covers this topic.",
-          "cited": [],
+          "reason_code": "topic",
+          "reason": "Churn after month 3 is outside the member’s stated topic, Southeast Asia go-to-market, and nothing in the ask concerns that region or GTM.",
+          "cited": [
+            {
+              "text": "Southeast Asia go-to-market.",
+              "found": true,
+              "start": 0,
+              "end": 28
+            }
+          ],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 2711
+          "confidence": 0.9,
+          "ms": 2870
         }
       ]
     },
     "sa_health": {
       "sample_ask_id": "sa_health",
       "based_on": "a02",
-      "wall_ms": 2840,
+      "wall_ms": 3138,
       "members": [
         {
           "label": "m-7f2a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Stuck enterprise sales through procurement is not churn or retention; no rule line covers this topic.",
+          "reason": "Ask is for a hospital procurement intro about enterprise deal delays; the member’s only topic is churn and retention in B2B software, which does not cover it.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1363
+          "ms": 1572
         },
         {
           "label": "m-19b4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Stuck enterprise procurement deals are a sales-process topic; the member’s rules cover only onboarding and early churn, so no line applies.",
+          "reason": "Ask is for a hospital procurement intro about enterprise deals; the rules only cover onboarding and early churn, so no line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1646
+          "ms": 1170
         },
         {
           "label": "m-c3d0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement and sales-cycle help is not a topic your rules cover; only churn, activation and support load are.",
+          "reason": "Ask wants an intro to a hospital procurement lead on enterprise sales; the rules only cover churn, activation or support load.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 913
+          "ms": 1052
         },
         {
           "label": "m-08e1",
@@ -615,31 +601,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement and deal closing is not support load or help centers; no rule covers this topic.",
+          "reason": "Ask is for a hospital procurement intro on enterprise deals; member’s only topic is support load and help centers, which does not cover it.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 991
+          "ms": 1419
         },
         {
           "label": "m-2b6d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement deals are not the activation-after-signup topic in the member’s rules, so no line covers this ask.",
-          "cited": [
-            {
-              "text": "Activation after signup. Only if you have users.",
-              "found": true,
-              "start": 0,
-              "end": 48
-            }
-          ],
+          "reason": "Member’s rules only cover activation after signup; this ask seeks a hospital procurement intro, which no rule covers.",
+          "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 931
+          "confidence": 0.9,
+          "ms": 1167
         },
         {
           "label": "m-91c8",
@@ -658,19 +637,19 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement and deal closing is not the topic in these rules, which cover whether to pivot after a year of flat revenue.",
+          "reason": "Member’s rules cover only deciding whether to pivot after a year of flat revenue; a hospital procurement intro is outside that topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1071
+          "ms": 1047
         },
         {
           "label": "m-a7f0",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Founder with first enterprise customers stuck in hospital procurement; the topic line plainly covers this ask.",
+          "reason": "Founder with first enterprise deals stuck in hospital procurement for 5 months; needs an intro to a procurement head, which matches the topic.",
           "cited": [
             {
               "text": "Happy to talk to founders landing their first enterprise customers.",
@@ -681,21 +660,21 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 953
+          "confidence": 0.85,
+          "ms": 1573
         },
         {
           "label": "m-3c5b",
-          "state": "accept",
+          "state": "ask_back",
           "na": null,
-          "reason_code": "match",
-          "reason": "Stuck enterprise procurement for hospital deals; the ask states the price needed for the rule, though a price is not explicitly given.",
+          "reason_code": "proof",
+          "reason": "Enterprise procurement topic matches, but the ask gives no price for the staffing software, so the price condition is not met.",
           "cited": [
             {
-              "text": "Enterprise procurement and security reviews.",
+              "text": "Enterprise procurement and security reviews",
               "found": true,
               "start": 0,
-              "end": 44
+              "end": 43
             },
             {
               "text": "Only with a price.",
@@ -704,10 +683,13 @@
               "end": 63
             }
           ],
-          "question": null,
+          "question": {
+            "type": "price",
+            "text": "What is the price of your staffing software per hospital customer?"
+          },
           "flags": [],
-          "confidence": 0.5,
-          "ms": 1695
+          "confidence": 0.85,
+          "ms": 1625
         },
         {
           "label": "m-f19d",
@@ -723,10 +705,10 @@
         },
         {
           "label": "m-4e82",
-          "state": "accept",
+          "state": "ask_back",
           "na": null,
-          "reason_code": "match",
-          "reason": "Founder selling B2B software to hospital groups, with 14 buyer calls and a procurement blocker; topic and 10+ calls condition are met, region not stated.",
+          "reason_code": "region",
+          "reason": "B2B founder with 14 buyer calls matches the topic and call count, but the ask does not state the company is based in Canada.",
           "cited": [
             {
               "text": "B2B founders in Canada with 10+ customer calls.",
@@ -735,17 +717,20 @@
               "end": 47
             }
           ],
-          "question": null,
+          "question": {
+            "type": "region",
+            "text": "Is your company based in Canada?"
+          },
           "flags": [],
-          "confidence": 0.6,
-          "ms": 1266
+          "confidence": 0.8,
+          "ms": 1071
         },
         {
           "label": "m-b0a6",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Stuck enterprise procurement at hospital groups, with 2 deals at 5 months: this is the long sales cycle topic with hospital groups.",
+          "reason": "Two enterprise deals stalled in hospital procurement for 5 months: a long sales cycle with a hospital system, matching the topic.",
           "cited": [
             {
               "text": "Long sales cycles with hospital groups and health systems.",
@@ -756,8 +741,8 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1393
+          "confidence": 0.85,
+          "ms": 1615
         },
         {
           "label": "m-8d27",
@@ -776,24 +761,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement and deal-closing is not covered by the member’s rules, which only cover pricing per seat versus usage.",
+          "reason": "Your rules only cover pricing (per seat versus usage); this ask is an intro to a hospital procurement lead, which no line covers.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 904
+          "confidence": 0.95,
+          "ms": 1570
         },
         {
           "label": "m-d6e9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s only rule covers raising prices on existing customers; this ask is about enterprise procurement and closing deals, which no rule covers.",
+          "reason": "Ask is for a hospital procurement intro, which no rule of the member covers; the only line is about raising prices on existing customers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1668
+          "ms": 1054
         },
         {
           "label": "m-7c1a",
@@ -812,91 +797,91 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise sales through procurement for staffing software is not covered by the member’s only topic, cross-border payments and payouts.",
+          "reason": "Hospital procurement intro for staffing software; the member’s only rule covers cross-border payments and payouts, which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1467
+          "ms": 1401
         },
         {
           "label": "m-a3b8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise sales procurement for staffing software is not fintech compliance; no rules line covers this topic.",
+          "reason": "Ask wants a hospital procurement intro for staffing software; the member’s only topic line covers fintech compliance, so no rule covers it.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 923
+          "confidence": 0.9,
+          "ms": 1150
         },
         {
           "label": "m-5f0e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s only rule covers Delaware flips for companies founded abroad; enterprise procurement for hospital software is not covered.",
+          "reason": "Member’s rules cover only a Delaware flip for a company founded abroad; a hospital procurement intro is outside them.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 934
+          "ms": 1050
         },
         {
           "label": "m-c8d4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The ask is about enterprise procurement deals, which the member’s rules do not cover; only cofounder-split topics are listed.",
-          "cited": [
-            {
-              "text": "Founders with paying customers, on a cofounder split.",
-              "found": true,
-              "start": 0,
-              "end": 53
-            }
-          ],
+          "reason": "Member’s rules cover only founders with paying customers and cofounder splits; this ask is a hospital procurement intro, which no rule covers.",
+          "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1039
+          "confidence": 0.9,
+          "ms": 1667
         },
         {
           "label": "m-1a7b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s only rule covers hiring a first salesperson; this ask seeks help closing enterprise procurement deals, which no rule covers.",
-          "cited": [],
+          "reason": "The ask seeks a hospital procurement intro for stuck enterprise deals; the member’s only rule covers hiring a first salesperson, which this does not match.",
+          "cited": [
+            {
+              "text": "Hiring a first salesperson.",
+              "found": true,
+              "start": 0,
+              "end": 27
+            }
+          ],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2063
+          "ms": 2200
         },
         {
           "label": "m-9e2c",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise sales through procurement is outside this member’s rules, which cover only hiring and comp for seed-stage teams.",
+          "reason": "Ask is for a hospital procurement intro on enterprise sales; the member’s rules cover only hiring and comp for seed-stage teams.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1867
+          "ms": 2090
         },
         {
           "label": "m-4b6f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The rules cover only hiring a first senior engineer; this ask is about enterprise sales through procurement, which no rules line covers.",
+          "reason": "Ask is for a hospital procurement intro about enterprise sales; the member’s only rule covers hiring a first senior engineer, which does not match.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1965
+          "ms": 2093
         },
         {
           "label": "m-e0d3",
@@ -915,86 +900,79 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about enterprise procurement for a staffing product; the member’s only topic is a first SOC 2 audit, so no rule covers it.",
+          "reason": "Ask is for a hospital procurement intro about stuck enterprise deals; the member’s only rule covers SOC 2 audits, which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2033
+          "ms": 2214
         },
         {
           "label": "m-3f9a",
           "state": "decline",
           "na": null,
-          "reason_code": "topic",
-          "reason": "Ask is about enterprise procurement and deal closing for staffing software, not security reviews, so the member’s only topic does not cover it.",
-          "cited": [
-            {
-              "text": "Security reviews for B2B startups.",
-              "found": true,
-              "start": 0,
-              "end": 34
-            }
-          ],
+          "reason_code": "no_rule",
+          "reason": "Ask is for a procurement intro for a staffing software sale; the member’s rules only cover security reviews for B2B startups.",
+          "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2127
+          "confidence": 0.9,
+          "ms": 2284
         },
         {
           "label": "m-b7c2",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement and deal-closing help is not covered by the member’s only rule, which concerns SOC 2 and ISO 27001 compliance.",
+          "reason": "Ask is for a hospital procurement intro about stalled enterprise deals; the member’s only rule covers SOC 2 and ISO 27001 and does not cover this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1867
+          "ms": 2091
         },
         {
           "label": "m-0c5d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only seed round processes; enterprise procurement and sales help is not a covered topic.",
+          "reason": "Member’s rules cover only running a seed round process; a hospital procurement intro for staffing software is outside that topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1965
+          "confidence": 0.9,
+          "ms": 2139
         },
         {
           "label": "m-d2a9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s only rule covers devtools; this ask is enterprise sales for hospital staffing software, which no rule covers.",
+          "reason": "Member’s rules only cover devtools; a hospital procurement intro for staffing software is outside any listed topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2027
+          "ms": 2091
         },
         {
           "label": "m-8f6b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Stuck enterprise procurement deals are not covered by the member’s rules, which only list pricing talks and no deal-flow asks.",
+          "reason": "Ask wants a procurement intro for a hospital deal; the member’s rules only cover pricing talks and exclude deal-flow asks, so no rule covers it.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.6,
-          "ms": 2058
+          "confidence": 0.8,
+          "ms": 3138
         },
         {
           "label": "m-1e4d",
-          "state": "decline",
+          "state": "accept",
           "na": null,
-          "reason_code": "no_rule",
-          "reason": "Stuck enterprise deals in procurement for a B2B SaaS seller are about first customers, which the rules cover; the topic matches, so this is a decline only if a condition fails, and none is stated against it.",
+          "reason_code": "match",
+          "reason": "Founder selling B2B SaaS seeking first enterprise customers; stuck in hospital procurement with 2 deals; needs a procurement intro.",
           "cited": [
             {
               "text": "First customers for B2B SaaS.",
@@ -1005,82 +983,89 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.4,
-          "ms": 2513
+          "confidence": 0.85,
+          "ms": 2401
         },
         {
           "label": "m-7a0f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Stuck enterprise procurement deals for staffing software: the member’s only topic is consumer growth and retention, which this ask does not cover.",
+          "reason": "Enterprise hospital procurement intro is not a consumer growth or retention topic; no rules line covers it.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.92,
-          "ms": 2439
+          "confidence": 0.9,
+          "ms": 2428
         },
         {
           "label": "m-c5e8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement for staffing software is outside the only topic covering this member: paid acquisition for consumer apps.",
+          "reason": "Hospital procurement intro for enterprise staffing software: no rules line covers this topic; the member only lists paid acquisition for consumer apps.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2452
+          "ms": 2523
         },
         {
           "label": "m-3b2e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement and deal closing is not a topic in the member’s rules, which only cover marketplace cold start: supply and demand.",
-          "cited": [],
+          "reason": "Rules cover only marketplace cold start (supply and demand); a hospital procurement intro for an enterprise deal is outside that topic.",
+          "cited": [
+            {
+              "text": "Marketplace cold start: supply and demand.",
+              "found": true,
+              "start": 0,
+              "end": 42
+            }
+          ],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2531
+          "confidence": 0.8,
+          "ms": 3010
         },
         {
           "label": "m-f6c1",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement for a US hospital staffing product is not about expanding from the US to Europe, so no rule covers this ask.",
-          "cited": [
-            {
-              "text": "Expanding from the US to Europe.",
-              "found": true,
-              "start": 0,
-              "end": 32
-            }
-          ],
+          "reason": "Member’s rules only cover expanding from the US to Europe; this ask is for a hospital procurement intro, which no rule covers.",
+          "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2650
+          "ms": 2625
         },
         {
           "label": "m-9d7a",
           "state": "decline",
           "na": null,
-          "reason_code": "no_rule",
-          "reason": "The member’s rules only cover entering the US market from India; this ask about enterprise procurement is outside that topic.",
-          "cited": [],
+          "reason_code": "topic",
+          "reason": "The member’s only rule covers entering the US market from India; this ask is an intro to a hospital procurement lead, which is outside that topic.",
+          "cited": [
+            {
+              "text": "Entering the US market from India.",
+              "found": true,
+              "start": 0,
+              "end": 34
+            }
+          ],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2840
+          "ms": 2636
         },
         {
           "label": "m-5c3f",
           "state": "decline",
           "na": null,
-          "reason_code": "topic",
-          "reason": "Ask is about enterprise procurement for US-style hospital groups; the member’s only rule covers Southeast Asia go-to-market, which this ask does not state.",
+          "reason_code": "region",
+          "reason": "Hospital procurement intro for a staffing software founder; member’s only rule covers Southeast Asia go-to-market, and the ask states no Southeast Asia region.",
           "cited": [
             {
               "text": "Southeast Asia go-to-market.",
@@ -1092,50 +1077,50 @@
           "question": null,
           "flags": [],
           "confidence": 0.8,
-          "ms": 2840
+          "ms": 2819
         }
       ]
     },
     "sa_founder": {
       "sample_ask_id": "sa_founder",
       "based_on": "a07",
-      "wall_ms": 2741,
+      "wall_ms": 3957,
       "members": [
         {
           "label": "m-7f2a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about SOC 2 compliance and audit evidence, not churn or retention in B2B software; no rule line covers this topic.",
+          "reason": "Ask is for a SOC 2 auditor referral; the member’s only topic is churn and retention in B2B software, which this does not cover.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1574
+          "confidence": 0.95,
+          "ms": 1638
         },
         {
           "label": "m-19b4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "No rules line covers SOC 2 compliance or security audits; the member’s rules only address onboarding and early churn.",
+          "reason": "No rule covers an auditor referral for SOC 2 compliance; the member’s rules only cover onboarding and early churn.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1304
+          "ms": 1173
         },
         {
           "label": "m-c3d0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about SOC 2 audit evidence, which no rules line covers; churn, activation and support load are the only listed topics.",
+          "reason": "Ask is for a SOC 2 auditor name; no rules line covers compliance or auditor referrals, so it falls outside the churn, activation and support topics.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1094
+          "ms": 1448
         },
         {
           "label": "m-08e1",
@@ -1166,24 +1151,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover support load and help centers only; a first SOC 2 audit for a payouts API is not covered.",
+          "reason": "Asks for a SOC 2 auditor name; no member rule covers compliance or audit referrals, only support load and help centers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1045
+          "ms": 1057
         },
         {
           "label": "m-2b6d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover activation after signup, not SOC 2 compliance help, so no rule lets this ask through.",
+          "reason": "Member’s only rule covers activation after signup for companies with users; this ask seeks an auditor name for SOC 2, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1319
+          "ms": 1651
         },
         {
           "label": "m-91c8",
@@ -1202,31 +1187,31 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Asks for SOC 2 compliance help for a payments company; no rule covers this topic, which is not about pivoting after flat revenue.",
+          "reason": "No rules line covers asking for an auditor referral for SOC 2; the member’s only stated topic is deciding whether to pivot after flat revenue.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1119
+          "ms": 1207
         },
         {
           "label": "m-a7f0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The rules cover founders landing first enterprise customers; this ask is about a first SOC 2 audit and the member’s rules don’t cover it.",
+          "reason": "Ask wants an auditor name for a SOC 2; the member’s rule covers only helping founders land first enterprise customers, not compliance vendors.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.7,
-          "ms": 1123
+          "confidence": 0.8,
+          "ms": 1060
         },
         {
           "label": "m-3c5b",
           "state": "ask_back",
           "na": null,
           "reason_code": "proof",
-          "reason": "SOC 2 for a bank customer is a security review topic. Pricing is not stated, so one question on the deal price is needed.",
+          "reason": "Asks for a SOC 2 auditor name for a bank deal, which fits the security review topic, but no price is stated for the deal.",
           "cited": [
             {
               "text": "Enterprise procurement and security reviews.",
@@ -1243,11 +1228,11 @@
           ],
           "question": {
             "type": "price",
-            "text": "What is the annual contract value of the bank deal that requires SOC 2 Type I?"
+            "text": "What is the annual contract value of the bank deal that requires SOC 2?"
           },
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1247
+          "confidence": 0.7,
+          "ms": 1936
         },
         {
           "label": "m-f19d",
@@ -1266,24 +1251,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover B2B founders in Canada with 10+ customer calls; this ask is about SOC 2 compliance help and does not match that topic.",
+          "reason": "The rules cover B2B founders in Canada with 10+ customer calls; this asks for an auditor name for SOC 2, a topic no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1046
+          "confidence": 0.85,
+          "ms": 1126
         },
         {
           "label": "m-b0a6",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about SOC 2 compliance for a payouts startup; no rules line covers this topic, which is about long sales cycles with hospital groups and health systems.",
+          "reason": "Ask wants a SOC 2 auditor referral for a payments startup; no member rule covers compliance or audit referrals.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1668
+          "ms": 1054
         },
         {
           "label": "m-8d27",
@@ -1302,24 +1287,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover pricing (per seat versus usage); this ask is about SOC 2 compliance, which no rules line covers.",
+          "reason": "Asks for an auditor name for a SOC 2 audit; the member’s rules only cover pricing (per seat versus usage), which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1087
+          "ms": 1056
         },
         {
           "label": "m-d6e9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Your rules only cover raising prices on existing customers; this ask is about SOC 2 compliance help, which no line covers.",
+          "reason": "No rule covers an auditor referral for SOC 2 compliance; the member’s only rule concerns raising prices on existing customers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1100
+          "ms": 890
         },
         {
           "label": "m-7c1a",
@@ -1338,19 +1323,19 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Needs a first SOC 2 audit guide; the member’s rules only cover cross-border payments and payouts, so no line covers this topic.",
+          "reason": "No rule covers an auditor referral for SOC 2 compliance; the only topic is cross-border payments and payouts.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1332
+          "ms": 1053
         },
         {
           "label": "m-a3b8",
           "state": "decline",
           "na": null,
           "reason_code": "topic",
-          "reason": "A SOC 2 audit for a payouts API is compliance-adjacent, but the rules cover fintech compliance; this ask is a security audit readiness question, so it does not clearly match.",
+          "reason": "Ask wants an auditor name for SOC 2 evidence; payouts startup is fintech but the ask is audit recommendations, which the member’s topic line does not cover clearly.",
           "cited": [
             {
               "text": "Happy to talk about fintech compliance.",
@@ -1362,67 +1347,67 @@
           "question": null,
           "flags": [],
           "confidence": 0.55,
-          "ms": 1341
+          "ms": 1196
         },
         {
           "label": "m-5f0e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs a first SOC 2 audit help; the member’s only rule covers a Delaware flip for a company founded abroad, which this ask does not touch.",
+          "reason": "The member’s only rule covers Delaware flips for companies founded abroad; this ask seeks an auditor name for a first SOC 2, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1189
+          "confidence": 0.95,
+          "ms": 1620
         },
         {
           "label": "m-c8d4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Asks for SOC 2 compliance help; the member’s rules only cover founders with paying customers on a cofounder split, and no line covers compliance advice.",
+          "reason": "The member’s rules only cover founders with paying customers on a cofounder split; no line covers asking for an auditor name for SOC 2.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1408
+          "confidence": 0.8,
+          "ms": 1354
         },
         {
           "label": "m-1a7b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s only rule covers hiring a first salesperson; this ask is about passing a first SOC 2 audit, which no rule covers.",
+          "reason": "Ask wants an auditor referral for SOC 2; the member’s only rule covers hiring a first salesperson, so no line applies.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1986
+          "confidence": 0.95,
+          "ms": 1856
         },
         {
           "label": "m-9e2c",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Your rules cover hiring and comp for seed-stage teams; this ask is about SOC 2 compliance evidence, which no line covers.",
+          "reason": "The member’s rules cover only hiring and compensation for seed-stage teams; this ask is about SOC 2 audit and auditor referrals, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1939
+          "ms": 2300
         },
         {
           "label": "m-4b6f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask needs someone who passed a first SOC 2; member’s rules only cover hiring a first senior engineer, so no line covers this topic.",
+          "reason": "The ask wants a SOC 2 auditor name, which no rule covers; the only rule is about hiring a first senior engineer.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2003
+          "confidence": 0.95,
+          "ms": 1967
         },
         {
           "label": "m-e0d3",
@@ -1438,10 +1423,10 @@
         },
         {
           "label": "m-6a8e",
-          "state": "accept",
+          "state": "decline",
           "na": null,
-          "reason_code": "match",
-          "reason": "Blocked on a first SOC 2 audit for a bank customer, needing someone who passed one at a small startup: the topic exactly.",
+          "reason_code": "topic",
+          "reason": "Topic matches a first SOC 2 audit, but the ask wants an auditor’s name, a referral, not a conversation about the audit itself.",
           "cited": [
             {
               "text": "Happy to talk about a first SOC 2 audit.",
@@ -1452,15 +1437,15 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.93,
-          "ms": 2092
+          "confidence": 0.5,
+          "ms": 2269
         },
         {
           "label": "m-3f9a",
-          "state": "accept",
+          "state": "decline",
           "na": null,
-          "reason_code": "match",
-          "reason": "SOC 2 Type I readiness for a B2B payouts startup with paying customers and a bank deal: squarely a security review topic.",
+          "reason_code": "topic",
+          "reason": "Ask wants an auditor name for a first SOC 2, a compliance-vendor referral; the member’s rules cover security reviews, not auditor referrals.",
           "cited": [
             {
               "text": "Security reviews for B2B startups.",
@@ -1471,15 +1456,15 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 2147
+          "confidence": 0.45,
+          "ms": 2239
         },
         {
           "label": "m-b7c2",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Founder needs SOC 2 help and a bank customer is explicitly requiring it, so the customer-asking condition is met.",
+          "reason": "Founder needs SOC 2 Type I for a bank customer who is asking for it; the topic and the customer-request condition are both met.",
           "cited": [
             {
               "text": "SOC 2 and ISO 27001. Only with a customer asking for it.",
@@ -1490,128 +1475,128 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2156
+          "confidence": 0.85,
+          "ms": 2098
         },
         {
           "label": "m-0c5d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover running a seed round process; SOC 2 compliance help is not covered by any rule line.",
+          "reason": "Member’s rules only cover running a seed round process; the ask wants an auditor name for SOC 2, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2364
+          "ms": 2152
         },
         {
           "label": "m-d2a9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s rules cover only devtools; this ask is a payments API for marketplaces seeking SOC 2 help, which no rules line covers.",
+          "reason": "Ask wants an auditor name for SOC 2, which no rule covers; the member’s only topic is devtools.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2197
+          "confidence": 0.85,
+          "ms": 2208
         },
         {
           "label": "m-8f6b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs SOC 2 audit help, which no rules line covers; the rules only mention pricing and exclude deal-flow asks.",
+          "reason": "Ask wants an auditor name for SOC 2; member’s only topic line is pricing, and no rule covers this request.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2234
+          "ms": 2127
         },
         {
           "label": "m-1e4d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s only topic is first customers for B2B SaaS; this ask seeks SOC 2 audit help, which no rule covers.",
+          "reason": "Asks for an auditor referral for SOC 2 compliance; the member’s only rule covers first customers for B2B SaaS, which this does not match.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2414
+          "confidence": 0.8,
+          "ms": 2385
         },
         {
           "label": "m-7a0f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Payouts API seeking a first SOC 2 audit guide: no member rule covers compliance or security audits, only consumer growth and retention.",
+          "reason": "Asks for an auditor referral for SOC 2 compliance; no rule line covers compliance or auditor introductions, only consumer growth and retention.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2422
+          "ms": 2409
         },
         {
           "label": "m-c5e8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about SOC 2 compliance for a payouts API; no member rule covers this, and the rules only cover paid acquisition for consumer apps.",
+          "reason": "Ask is for a SOC 2 auditor referral; the member’s only rule covers paid acquisition for consumer apps, which this does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2327
+          "ms": 3460
         },
         {
           "label": "m-3b2e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover marketplace cold start (supply and demand) only; a SOC 2 compliance audit question is outside that topic.",
+          "reason": "Ask is for a SOC 2 auditor name; the member’s rules only cover marketplace cold start (supply and demand), which this does not match.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2677
+          "ms": 3957
         },
         {
           "label": "m-f6c1",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover expanding from the US to Europe; this ask is about passing a first SOC 2 audit, which no rule covers.",
+          "reason": "The member’s rules only cover expanding from the US to Europe; this ask about a SOC 2 auditor name is outside any listed topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2325
+          "ms": 2693
         },
         {
           "label": "m-9d7a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover entering the US market from India; this ask is about SOC 2 compliance for a payments startup, which no rule covers.",
+          "reason": "Member’s rules only cover entering the US market from India; this ask is about SOC 2 auditors, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2690
+          "confidence": 0.95,
+          "ms": 2621
         },
         {
           "label": "m-5c3f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only Southeast Asia go-to-market; this SOC 2 compliance ask is outside that topic and region.",
+          "reason": "Member’s rules cover only Southeast Asia go-to-market; this ask is about SOC 2 auditors, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2741
+          "ms": 2777
         }
       ]
     }

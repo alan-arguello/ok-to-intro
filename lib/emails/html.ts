@@ -115,7 +115,7 @@ export function factsTable(facts: readonly Fact[], pad = 9, margin = '0 0 20px')
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:${margin}">${rows}</table>`;
 }
 
-/** Plain-text facts, labels padded so the values line up (`Needs:   20 minutes with …`). */
+/** Plain-text facts, labels padded so the values line up (`Needs:   An intro to …`). */
 export function textFacts(facts: readonly Fact[]): string[] {
   return factsInOrder(facts).map(([k, v]) => `${`${k}:`.padEnd(8, ' ')} ${v}`);
 }

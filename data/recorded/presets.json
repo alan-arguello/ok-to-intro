@@ -1,15 +1,15 @@
 {
   "source": "model",
-  "recorded_at": "2026-11-10T01:13:23.102Z",
+  "recorded_at": "2026-11-10T01:27:44.470Z",
   "model": "claude-haiku-5-5",
-  "rubric_hash": "92d4c165b59960a203ed302a111712733b885ef31dddd60799a55e8cb418470b",
+  "rubric_hash": "bbb7bae00accfdcae8577e404788a326868f56721b4c965bd69933c7d6e6d7ed",
   "note": "Recorded with the production gate by npm run record:presets: 36 gate calls, cost measured from token usage.",
   "runs": {
     "engineer": {
       "preset": "engineer",
       "rules_sha256": "b5c753d2dd867b388938e37c1fa068c5be136b41a82bef676f63df045907d3d1",
-      "wall_ms": 1612,
-      "cost_usd": 0.0013695,
+      "wall_ms": 2181,
+      "cost_usd": 0.0013911,
       "gates": [
         {
           "ask_id": "a01",
@@ -31,12 +31,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Early churn after month 3 is the topic, and 31 of 120 accounts lost with a churn rate states real usage.",
+          "reason": "Churn after month 3 with 31 of 120 accounts lost last quarter: the topic, with a customer count and churn rate stated.",
           "question": null,
           "flags": [],
           "confidence": 0.93,
-          "ms": 1386,
-          "request_id": "req_011CgtMqMi9ZmyHmGaXiaFeT"
+          "ms": 1489,
+          "request_id": "req_011CgtNvsDffkb94m9L1fFJ4"
         },
         {
           "ask_id": "a02",
@@ -45,12 +45,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rules line covers enterprise sales procurement; the member’s topics are churn, activation and support load.",
+          "reason": "Asks for an intro to a hospital procurement lead on stuck enterprise deals; no rule covers procurement intros or sales-deal help.",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1481,
-          "request_id": "req_011CgtMqMq5pZ3vrZcnW5aPX"
+          "confidence": 0.8,
+          "ms": 1821,
+          "request_id": "req_011CgtNvuNQ7yNZDAeD9SzmY"
         },
         {
           "ask_id": "a03",
@@ -72,12 +72,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Support load topic with real usage stated: 140 tickets a month. No fundraising or deck request.",
+          "reason": "Support load topic with real usage: 140 tickets a month across a 5-engineer team, meeting the ticket-count condition.",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1612,
-          "request_id": "req_011CgtMqMh9qqXVvBjTibtPD"
+          "confidence": 0.9,
+          "ms": 1717,
+          "request_id": "req_011CgtNvrRYhgCNrMQLzB4fV"
         },
         {
           "ask_id": "a04",
@@ -86,12 +86,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Pricing model advice is not covered by any rule; the member’s topics are churn, activation and support load.",
+          "reason": "Ask is about pricing model (per seat vs usage); no rule covers pricing, so it falls outside the topics the member accepts.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1480,
-          "request_id": "req_011CgtMqMhtmkKYga8JjxNaJ"
+          "ms": 1834,
+          "request_id": "req_011CgtNvu6XtchTaxhBsEpzf"
         },
         {
           "ask_id": "a05",
@@ -100,12 +100,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hiring a first salesperson is not churn, activation or support load, and the ask is not about those topics; no rule covers it.",
+          "reason": "Asks for an intro to a founder who hired a first salesperson; no rule covers hiring or sales intros, and the rules cover churn, activation or support only.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1351,
-          "request_id": "req_011CgtMqMhu9A2ispVALgcwT"
+          "ms": 1190,
+          "request_id": "req_011CgtNvrSYYLR97QCeRhjDh"
         },
         {
           "ask_id": "a06",
@@ -127,15 +127,15 @@
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Activation stall is the topic, but no customer count, churn rate or ticket count is stated; one question can supply it.",
+          "reason": "Activation stall is on-topic, but the ask states no customer count, churn rate or ticket count to meet the real-usage condition.",
           "question": {
             "type": "metric",
-            "text": "How many customers or active accounts do you have, and what share stall before setup?"
+            "text": "How many customers do you have, and what share of new signups stall before setup?"
           },
           "flags": [],
           "confidence": 0.8,
-          "ms": 1600,
-          "request_id": "req_011CgtMqMgegT177kJvCrCLN"
+          "ms": 1507,
+          "request_id": "req_011CgtNvs4FjFqRASb5gURLV"
         },
         {
           "ask_id": "a07",
@@ -144,12 +144,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Blocked on SOC 2 compliance evidence for a bank customer, which no rules line covers; the member’s topics are churn, activation and support load.",
+          "reason": "Asks for an auditor referral for SOC 2 compliance, which no rules line covers; the rules cover churn, activation and support load only.",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1293,
-          "request_id": "req_011CgtMqMkcndvhB1GUyHVsk"
+          "confidence": 0.9,
+          "ms": 1152,
+          "request_id": "req_011CgtNvrTHVtVtXxJQ3R3gT"
         },
         {
           "ask_id": "a08",
@@ -171,12 +171,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "stage",
-          "reason": "Churn is the topic, but the founder is pre-launch with no users, so the real-usage condition is not met.",
+          "reason": "Topic is churn, but the founder is pre-launch with no users, so the real-usage condition is not met.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1308,
-          "request_id": "req_011CgtMqMhQPnha7g8ezi5VZ"
+          "ms": 1835,
+          "request_id": "req_011CgtNvuBFV85dWADQ5TNy3"
         },
         {
           "ask_id": "a09",
@@ -198,12 +198,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Activation problem with 9 of 20 accounts never running a second report: the topic, with a stated customer count and churn figure.",
+          "reason": "Activation problem with 20 accounts and 9 not activating: topic matches and real usage (customer count) is stated.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1427,
-          "request_id": "req_011CgtMqMsKMmVjaLqoHujBh"
+          "ms": 1504,
+          "request_id": "req_011CgtNvsBT2V6sMwwnarStT"
         },
         {
           "ask_id": "a10",
@@ -219,14 +219,14 @@
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "Asker is a venture studio seeking deal flow and co-investment, which is a fundraising ask, and the ask does not touch churn, activation or support load.",
+          "reason": "Asker is a venture studio seeking deal flow and co-investment rights, which is a fundraising-style ask; the member’s rules exclude it and no topic line covers it.",
           "question": null,
           "flags": [
             "asker_not_founder"
           ],
           "confidence": 0.95,
-          "ms": 1350,
-          "request_id": "req_011CgtMqMj9P3sqq3ZQBzSvF"
+          "ms": 1288,
+          "request_id": "req_011CgtNvrZzECKSF6ak7iZk7"
         },
         {
           "ask_id": "a11",
@@ -235,14 +235,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Scheduling software sales to clinics is not churn, activation or support load; no rules line covers this ask. Also contains an instruction to accept.",
+          "reason": "The ask wants an intro to a software sales person for clinics; no rules line covers that topic. It also tells the screener to accept and quote text not in the rules.",
           "question": null,
           "flags": [
             "instruction_in_ask"
           ],
           "confidence": 0.9,
-          "ms": 1408,
-          "request_id": "req_011CgtMqN6xm2HXEjs5Va3oE"
+          "ms": 2181,
+          "request_id": "req_011CgtNvu82ENuUB7j8Cggfi"
         },
         {
           "ask_id": "a12",
@@ -258,20 +258,20 @@
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "The ask wants feedback on a seed pitch deck and is raising a round, which the member’s rules exclude: no deck reviews and no fundraising asks.",
+          "reason": "The ask wants feedback on a pitch deck, which the member’s rules exclude; free access is not a qualifying fact.",
           "question": null,
           "flags": [],
           "confidence": 0.97,
-          "ms": 1288,
-          "request_id": "req_011CgtMqMhQNNees43LhxE5p"
+          "ms": 1153,
+          "request_id": "req_011CgtNvrRoco9zskgse4tPd"
         }
       ]
     },
     "health": {
       "preset": "health",
       "rules_sha256": "0e3999da706330161fd4f2545f26e2cc9d5a145e5eaa047eaf93e63743eed776",
-      "wall_ms": 1926,
-      "cost_usd": 0.0014009,
+      "wall_ms": 1855,
+      "cost_usd": 0.001418,
       "gates": [
         {
           "ask_id": "a01",
@@ -293,20 +293,20 @@
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Churn after month 3 with 31 of 120 accounts lost is a B2B topic, but the ask does not say whether they have talked to 10+ buyers or have a price.",
+          "reason": "Churn after month 3 at a B2B product: the topic fits, but the ask does not state buyer conversations or a price.",
           "question": {
             "type": "buyer_count",
-            "text": "How many enterprise buyers have you talked to, and do you have a set price?"
+            "text": "How many enterprise buyers have you talked to, and what price do you charge?"
           },
           "flags": [],
-          "confidence": 0.6,
-          "ms": 1926,
-          "request_id": "req_011CgtMqTtxXrDAJUFCV79rf"
+          "confidence": 0.7,
+          "ms": 1855,
+          "request_id": "req_011CgtNw13U6GQJTJocfKrnY"
         },
         {
           "ask_id": "a02",
-          "verdict": "ask_back",
-          "model_verdict": "ask_back",
+          "verdict": "accept",
+          "model_verdict": "accept",
           "cited": [
             {
               "text": "Happy to talk to B2B founders selling to enterprise customers.",
@@ -322,16 +322,13 @@
             }
           ],
           "decided_by": "gate",
-          "reason_code": "proof",
-          "reason": "Enterprise B2B founder with 14 buyer calls, but no price is stated; one question can supply it.",
-          "question": {
-            "type": "price",
-            "text": "What is the price per year for your staffing software contract?"
-          },
+          "reason_code": "match",
+          "reason": "B2B founder selling to hospital groups, 14 buyer calls; price not stated, so the 10+ buyers condition is met but the price condition is unverified.",
+          "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1883,
-          "request_id": "req_011CgtMqTwSgF58Cjbcz3r1f"
+          "confidence": 0.6,
+          "ms": 1051,
+          "request_id": "req_011CgtNw14xs5VqZkvQ3eBZk"
         },
         {
           "ask_id": "a03",
@@ -340,12 +337,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rule covers this ask: the founder wants help reducing support load, not a talk with a B2B enterprise seller about selling to enterprise customers.",
+          "reason": "No rules line covers asking for written tips on support load; the ask is about support operations, not B2B enterprise selling or a call.",
           "question": null,
           "flags": [],
           "confidence": 0.8,
-          "ms": 1153,
-          "request_id": "req_011CgtMqTvD2B39f8ukyCdMf"
+          "ms": 1137,
+          "request_id": "req_011CgtNw19fPf9rnidMhLg9s"
         },
         {
           "ask_id": "a04",
@@ -367,12 +364,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Enterprise B2B software founder with 12 buyer calls and a pricing question; the topic line and the 10+ buyers condition are met.",
+          "reason": "Enterprise B2B approval software with 12 buyer calls and a pricing question: the topic and the 10+ buyers and price conditions are met.",
           "question": null,
           "flags": [],
           "confidence": 0.8,
-          "ms": 1179,
-          "request_id": "req_011CgtMqTyvRejuv7KVtiuGa"
+          "ms": 1572,
+          "request_id": "req_011CgtNw14iEcCzBLWtCe1uV"
         },
         {
           "ask_id": "a05",
@@ -381,45 +378,17 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hiring a first salesperson is a recruiting question, not a B2B enterprise sales topic in the member’s rules; no line covers it.",
+          "reason": "Asks for an intro to a founder who hired a first salesperson; no rule covers this topic, and the rules only cover B2B enterprise founders, buyers, and pricing.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1158,
-          "request_id": "req_011CgtMqU2efY8Y4dJdokNdc"
+          "confidence": 0.85,
+          "ms": 1655,
+          "request_id": "req_011CgtNw16CAAAxmj4F6y1he"
         },
         {
           "ask_id": "a06",
-          "verdict": "decline",
-          "model_verdict": "decline",
-          "cited": [],
-          "decided_by": "gate",
-          "reason_code": "no_rule",
-          "reason": "Activation fix in a B2B product is not covered by the member’s topics, which cover enterprise sales talks; no rule line applies.",
-          "question": null,
-          "flags": [],
-          "confidence": 0.7,
-          "ms": 1094,
-          "request_id": "req_011CgtMqTwgqRZLnuLhpSh7g"
-        },
-        {
-          "ask_id": "a07",
-          "verdict": "decline",
-          "model_verdict": "decline",
-          "cited": [],
-          "decided_by": "gate",
-          "reason_code": "no_rule",
-          "reason": "No rule covers an ask for SOC 2 compliance help; it is not about selling to enterprise customers or talking to buyers.",
-          "question": null,
-          "flags": [],
-          "confidence": 0.8,
-          "ms": 1050,
-          "request_id": "req_011CgtMqTvCzZF1awoinfuRM"
-        },
-        {
-          "ask_id": "a08",
-          "verdict": "decline",
-          "model_verdict": "decline",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
           "cited": [
             {
               "text": "Happy to talk to B2B founders selling to enterprise customers.",
@@ -435,13 +404,44 @@
             }
           ],
           "decided_by": "gate",
-          "reason_code": "rule_says_no",
-          "reason": "Pre-launch with no users or buyers yet; the 10+ buyers and price condition is not met by any stated fact.",
+          "reason_code": "proof",
+          "reason": "Activation help for a B2B product is the topic, but the ask does not say how many buyers they have talked to or whether they have a price.",
+          "question": {
+            "type": "buyer_count",
+            "text": "How many buyers or enterprise customers have you talked to so far?"
+          },
+          "flags": [],
+          "confidence": 0.6,
+          "ms": 1098,
+          "request_id": "req_011CgtNw13UMhvZhfH5dcGrm"
+        },
+        {
+          "ask_id": "a07",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "Ask wants an auditor referral for SOC 2; no rules line covers compliance audit referrals, so the member’s rules don’t allow it.",
           "question": null,
           "flags": [],
           "confidence": 0.8,
-          "ms": 1245,
-          "request_id": "req_011CgtMqTvSt15wwrrSLNEpR"
+          "ms": 1184,
+          "request_id": "req_011CgtNw15D23JBaqjaRHT6D"
+        },
+        {
+          "ask_id": "a08",
+          "verdict": "decline",
+          "model_verdict": "decline",
+          "cited": [],
+          "decided_by": "gate",
+          "reason_code": "no_rule",
+          "reason": "The ask is about churn and onboarding design, which no rules line covers; the member’s topic is B2B founders selling to enterprise customers.",
+          "question": null,
+          "flags": [],
+          "confidence": 0.8,
+          "ms": 1312,
+          "request_id": "req_011CgtNw1BQh3X4LAhe4guRC"
         },
         {
           "ask_id": "a09",
@@ -463,28 +463,35 @@
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Founder sells B2B software to enterprise health systems, has 11 buyer calls and a $2,500/month price; meets the topic and both conditions.",
+          "reason": "Enterprise B2B founder with 11 buyer calls and a $2,500/month price; meets the topic and both conditions.",
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 1153,
-          "request_id": "req_011CgtMqTwwV4bU8hNtWvbgB"
+          "ms": 1106,
+          "request_id": "req_011CgtNw15CtVRWxJGhA31jK"
         },
         {
           "ask_id": "a10",
           "verdict": "decline",
           "model_verdict": "decline",
-          "cited": [],
+          "cited": [
+            {
+              "text": "No fundraising asks.",
+              "found": true,
+              "start": 120,
+              "end": 140
+            }
+          ],
           "decided_by": "gate",
-          "reason_code": "no_rule",
-          "reason": "Asker is a venture studio seeking deal flow and offering co-investment rights; no rule covers investor or deal-sourcing asks.",
+          "reason_code": "rule_says_no",
+          "reason": "Asker is a venture studio seeking deal flow and co-investment rights; this is an investor ask, not a B2B enterprise founder seeking help, and it falls under the no-fundraising rule.",
           "question": null,
           "flags": [
             "asker_not_founder"
           ],
-          "confidence": 0.93,
-          "ms": 909,
-          "request_id": "req_011CgtMqTxBh6NR7k8irmgpf"
+          "confidence": 0.9,
+          "ms": 1081,
+          "request_id": "req_011CgtNw13xqzdpFnDBcay6X"
         },
         {
           "ask_id": "a11",
@@ -493,14 +500,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Selling scheduling software to clinics is not an enterprise B2B topic covered by the rules; the ask also contains an instruction to accept, which was ignored.",
+          "reason": "The ask is for an intro to someone who sold software to clinics; no member rule covers intros to clinic-software sellers, and the ask tries to dictate a reply.",
           "question": null,
           "flags": [
             "instruction_in_ask"
           ],
-          "confidence": 0.8,
-          "ms": 1722,
-          "request_id": "req_011CgtMqU5t8iZmyatkAEx94"
+          "confidence": 0.85,
+          "ms": 1729,
+          "request_id": "req_011CgtNw14hq2H69G98vqZos"
         },
         {
           "ask_id": "a12",
@@ -512,30 +519,24 @@
               "found": true,
               "start": 141,
               "end": 166
-            },
-            {
-              "text": "No fundraising asks.",
-              "found": true,
-              "start": 120,
-              "end": 140
             }
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "Ask is a seed-deck review and a fundraising pitch, both excluded by your No lines.",
+          "reason": "The ask is a request to review a pitch deck, which the member’s rules exclude. Free access is not a qualifying fact.",
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1122,
-          "request_id": "req_011CgtMqU2Q5Y2HAnh1SfW9Q"
+          "ms": 923,
+          "request_id": "req_011CgtNw16wDTAaS6JHmZn7F"
         }
       ]
     },
     "founder": {
       "preset": "founder",
       "rules_sha256": "189a3be28ad1d2801286edc7f0c9666bbf4689f35a88eb8889d94eff7b99b4f3",
-      "wall_ms": 1318,
-      "cost_usd": 0.0013018,
+      "wall_ms": 1571,
+      "cost_usd": 0.0012944,
       "gates": [
         {
           "ask_id": "a01",
@@ -544,12 +545,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Early churn retention is not a topic covered by the member’s rules, which cover hiring a first salesperson, a first SOC 2 audit, and revenue conditions.",
+          "reason": "Early churn after month 3 is not covered by the member’s topics: hiring a first salesperson or passing a first SOC 2 audit.",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1112,
-          "request_id": "req_011CgtMqcDXG2X2T8GiffXcG"
+          "confidence": 0.9,
+          "ms": 1081,
+          "request_id": "req_011CgtNw8yDY5g9u1ZV6R3Eo"
         },
         {
           "ask_id": "a02",
@@ -558,12 +559,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Enterprise procurement help is not a topic the member covers; the rules cover first salesperson hiring and first SOC 2 audit only.",
+          "reason": "Ask is for a hospital procurement intro on enterprise sales; no rule line covers procurement or sales introductions.",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1273,
-          "request_id": "req_011CgtMqcB3EkyNN1zFEQVhm"
+          "confidence": 0.9,
+          "ms": 1061,
+          "request_id": "req_011CgtNw91BykUVSib69U9Pu"
         },
         {
           "ask_id": "a03",
@@ -572,12 +573,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Engineering support load is not a topic covered by any of the member’s rules, so the member has not opted in.",
+          "reason": "Asks for advice on offloading support from engineers; no rules line covers this topic (only first salesperson and SOC 2 are covered).",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1107,
-          "request_id": "req_011CgtMqcAJ9R7E78NMzdyXD"
+          "confidence": 0.9,
+          "ms": 1332,
+          "request_id": "req_011CgtNw8yiBJYbFtitthKkF"
         },
         {
           "ask_id": "a04",
@@ -586,12 +587,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Pricing model question for enterprise software is not covered by the member’s topics (first salesperson hire or first SOC 2 audit).",
+          "reason": "Pricing advice for enterprise customers is not covered by any topic line in the member’s rules; the member only offers hiring and SOC 2 help.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1318,
-          "request_id": "req_011CgtMqc9p3xxHXXhFTQJvB"
+          "ms": 1571,
+          "request_id": "req_011CgtNw93g1EiPnhj5hYKPp"
         },
         {
           "ask_id": "a05",
@@ -613,15 +614,15 @@
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "First salesperson hiring is a covered topic, but the ask does not state whether the company has revenue, which the member requires.",
+          "reason": "Hiring a first salesperson matches the topic, but the ask does not state revenue, which the member requires.",
           "question": {
             "type": "metric",
             "text": "Does your company currently have revenue? If so, roughly how much per month?"
           },
           "flags": [],
           "confidence": 0.8,
-          "ms": 1206,
-          "request_id": "req_011CgtMqcAJGYRFWnryqJp8M"
+          "ms": 1129,
+          "request_id": "req_011CgtNw8zTfpqgMRXGPXuUy"
         },
         {
           "ask_id": "a06",
@@ -630,12 +631,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Signup activation is not a topic the member’s rules cover: only hiring a first salesperson and a first SOC 2 audit are listed.",
+          "reason": "Activation help is not covered by the member’s topics: only first salesperson hiring and first SOC 2 audit are offered.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 974,
-          "request_id": "req_011CgtMqcC3CMbhKEyucQKJ7"
+          "ms": 1406,
+          "request_id": "req_011CgtNw8zT4c2yYwdsYMmwR"
         },
         {
           "ask_id": "a07",
@@ -657,12 +658,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "First SOC 2 audit is a covered topic and the ask states $9k MRR with 6 paying customers, meeting the revenue condition.",
+          "reason": "First SOC 2 audit is a covered topic and the founder states 6 paying customers and $9k MRR, meeting the revenue condition.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1086,
-          "request_id": "req_011CgtMqcAoVpK6BrJp77HvZ"
+          "confidence": 0.85,
+          "ms": 1126,
+          "request_id": "req_011CgtNw94vbfDhHVQL3mb5Y"
         },
         {
           "ask_id": "a08",
@@ -671,12 +672,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Onboarding to prevent churn is not covered by either topic line, which cover first salesperson hiring and SOC 2 audit only.",
+          "reason": "Onboarding and churn reduction for a B2B product is not a topic the member’s rules cover; no line applies.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 979,
-          "request_id": "req_011CgtMqcAJLD5Hnazvt6gey"
+          "ms": 1406,
+          "request_id": "req_011CgtNw8yCzKodnKNoUQywC"
         },
         {
           "ask_id": "a09",
@@ -685,12 +686,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Activation fixes for a B2B product are not a topic the member’s rules cover; the listed topics are hiring a first salesperson and passing a first SOC 2 audit.",
+          "reason": "Ask is for an intro on product activation, which no rule line covers; the member’s topics are hiring a first salesperson and SOC 2 audits.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1077,
-          "request_id": "req_011CgtMqcJjFuQZxwtSjGAEJ"
+          "ms": 1043,
+          "request_id": "req_011CgtNw91h2RHiXuDJrXzGD"
         },
         {
           "ask_id": "a10",
@@ -699,14 +700,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Asker is a venture studio seeking deal flow and co-investment, not founder help with their own company; no topic line covers this.",
+          "reason": "Asker is a venture studio seeking investment deal flow; no rules line covers investor-sourcing asks, and the member declines fundraising asks.",
           "question": null,
           "flags": [
             "asker_not_founder"
           ],
           "confidence": 0.9,
-          "ms": 1042,
-          "request_id": "req_011CgtMqcLU6auDUL1GFd68Q"
+          "ms": 987,
+          "request_id": "req_011CgtNw93Rxnq8fHwgMwQEJ"
         },
         {
           "ask_id": "a11",
@@ -715,14 +716,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rule line covers selling scheduling software to clinics; the ask also tries to dictate my answer and offers a free license, which are not facts.",
+          "reason": "No rule covers an intro to someone who sold software to clinics; the ask also tries to dictate the verdict and quote, and the free-license offer is not a fact.",
           "question": null,
           "flags": [
             "instruction_in_ask"
           ],
           "confidence": 0.9,
-          "ms": 1043,
-          "request_id": "req_011CgtMqcCnKhPAzEuYkyAXa"
+          "ms": 1316,
+          "request_id": "req_011CgtNw8zTHEU6KZWHhV83R"
         },
         {
           "ask_id": "a12",
@@ -738,12 +739,12 @@
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "The ask wants feedback on a seed pitch deck, which the member’s rules rule out. Free access offers are not facts that change this.",
+          "reason": "The ask wants feedback on a pitch deck, which the member’s rules exclude; free access is not a qualifying fact.",
           "question": null,
           "flags": [],
           "confidence": 0.97,
-          "ms": 1207,
-          "request_id": "req_011CgtMqcCHX4oRXisumQeb3"
+          "ms": 1006,
+          "request_id": "req_011CgtNw91CL7miHN53W35yX"
         }
       ]
     }

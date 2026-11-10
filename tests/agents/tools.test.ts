@@ -80,8 +80,8 @@ vi.mock('@/lib/server/asks', async (orig) => ({
   listMyAsks: async () => ({
     ok: true,
     items: [
-      { id: 'a_91xQ2k', subject: 'Enterprise deals stuck 5 months, 20 min?', network: 'real', outcome: 'offered', status_line: 'offered · reply by Thu Nov 12, 21:04 PT', created_at: '2026-11-10T05:04:00Z' },
-      { id: 'a_7c2dWe', subject: 'First SOC 2 in 60 days, 20 min?', network: 'real', outcome: 'question', status_line: 'a gate has a question for you', created_at: '2026-11-09T05:04:00Z' },
+      { id: 'a_91xQ2k', subject: 'Intro to a hospital procurement lead', network: 'real', outcome: 'offered', status_line: 'offered · reply by Thu Nov 12, 21:04 PT', created_at: '2026-11-10T05:04:00Z' },
+      { id: 'a_7c2dWe', subject: 'First SOC 2 in 60 days: your auditor’s name', network: 'real', outcome: 'question', status_line: 'a gate has a question for you', created_at: '2026-11-09T05:04:00Z' },
     ],
   }),
   getAskerView: async (id: string) => {
@@ -114,7 +114,7 @@ vi.mock('@/lib/server/offers', async (orig) => ({
       offers: [
         {
           offer_id: 'o_3Fp9kL',
-          title: 'Enterprise deals stuck 5 months',
+          title: 'Intro to a hospital procurement lead',
           asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
           matched: 'B2B founders selling to enterprise customers',
           facts: [['Problem', 'Committees stall'], ['Price', '$18k a year per customer']],
@@ -184,14 +184,14 @@ function compileEvents(): CompileEvent[] {
   const parts = [
     { key: 'challenge', state: 'found', text: 'Customers churn after month 3: 31 of 120 accounts left last quarter', source: [{ text: 'x', found: true, start: 0, end: 67 }], question: null },
     { key: 'tried', state: 'found', text: 'a day-60 check-in call', source: [{ text: 'a day-60 check-in call', found: true, start: 109, end: 131 }], question: null },
-    { key: 'needs', state: 'suggested', text: 'someone who has cut early churn in a B2B product', source: [{ text: 'no change at all', found: true, start: 133, end: 149 }], question: null },
+    { key: 'needs', state: 'suggested', text: '20 minutes with someone who has cut early churn in a B2B product', source: [{ text: 'no change at all', found: true, start: 133, end: 149 }], question: null },
     { key: 'by', state: 'missing', text: '', source: [], question: 'By when do you need this?' },
     { key: 'offers', state: 'missing', text: '', source: [], question: 'What can you give the person in return?' },
   ] as const;
   return [
     { event: 'plan', data: { draft_id: 'd_7Kx2Pq', words: 20, network: 'sample' } },
     ...parts.map((part, i) => ({ event: 'part' as const, data: { i, part: { ...part, source: [...part.source] } } })),
-    { event: 'done', data: { draft_id: 'd_7Kx2Pq', subject: 'Churn after month 3, 20 min?', topic: 'Churn', parts: parts.map((p) => ({ ...p, source: [...p.source] })), ms: 900 } },
+    { event: 'done', data: { draft_id: 'd_7Kx2Pq', subject: 'Churn after month 3: a 20-minute call', topic: 'Churn', parts: parts.map((p) => ({ ...p, source: [...p.source] })), ms: 900 } },
   ];
 }
 
@@ -199,8 +199,8 @@ const offer = (over: Partial<OfferView> = {}): OfferView => ({
   offer_id: 'o_3Fp9kL',
   state: 'ok',
   sample: false,
-  title: 'Enterprise deals stuck 5 months',
-  subject: 'Enterprise deals stuck 5 months, 20 min?',
+  title: 'Intro to a hospital procurement lead',
+  subject: 'Intro to a hospital procurement lead',
   asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
   matched: { text: 'enterprise customers', start: 0, end: 20, line: 'Happy to talk to B2B founders selling to enterprise customers.' },
   rules_version: 3,
@@ -269,7 +269,7 @@ describe('draft_ask', () => {
     expect(first.isError).toBe(false);
     expect(first.text).toContain('ok-to-intro · draft d_7Kx2Pq · 3 of 5 parts · not sent');
     expect(first.text).toContain('tried       found      “a day-60 check-in call” (docs/churn.md line 12)');
-    expect(first.text).toContain('needs       suggested  someone who has cut early churn in a B2B product (from “no change at all”)');
+    expect(first.text).toContain('needs       suggested  20 minutes with someone who has cut early churn in a B2B product (from “no change at all”)');
     const second = await draftAsk({ draft_id: 'd_7Kx2Pq', answers: { by: 'Nov 21', offers: 'our cancellation interview notes' }, sources: [{ text: 'Nov 21', from: 'ROADMAP.md line 3' }] }, anon);
     expect(second.text.split('\n')[0]).toBe('ok-to-intro · draft d_7Kx2Pq · 5 of 5 parts · ready, not sent');
     expect(second.text).toContain('network   SAMPLE · 40 fictional members (no token: SAMPLE only)');
@@ -393,7 +393,7 @@ describe('answers, offers, rules and check-ins', () => {
   it('my_asks lists the asks and the open question’s id', async () => {
     const res = await myAsks(withToken);
     expect(res.text).toContain('ok-to-intro · my_asks · 2 open · 0 closed');
-    expect(res.text).toContain('a_7c2dWe  First SOC 2 in 60 days · question q_8kM3 for you (deal size)');
+    expect(res.text).toContain('a_7c2dWe  First SOC 2 in 60 days: your auditor’s name · question q_8kM3 for you (deal size)');
   });
 
   it('pending_for_me fences the asker’s text as data', async () => {

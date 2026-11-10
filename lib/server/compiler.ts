@@ -134,20 +134,16 @@ function clip(value: string, max: number): string {
 const FILLER_END = /(\s+(at|the|a|an|of|for|to|in|on|with|and|or|is|are|from|by))+$/i;
 
 /**
- * The subject members see in their inbox (≤ 45 characters, one line, “…, 20 min?”). The model's when it fits;
+ * The subject members see in their inbox (≤ 45 characters, one line, no fixed suffix). The model's when it fits;
  * otherwise derived from the challenge the way the prototype did.
  */
 export function normalizeSubject(raw: unknown, challenge: string | null): string {
   const s = typeof raw === 'string' ? curly(raw.replace(/\s+/g, ' ').trim().replace(/^["“”']+|["“”']+$/g, '')) : '';
-  if (s && s.length <= SUBJECT_MAX) {
-    if (/,\s*20 min\?$/i.test(s)) return s;
-    const withSuffix = `${stripEnd(s)}, 20 min?`;
-    return withSuffix.length <= SUBJECT_MAX ? withSuffix : s;
-  }
+  if (s && s.length <= SUBJECT_MAX) return s;
   let t = String(challenge || s || 'Your ask').replace(/^(our|we|my|i)\s+/i, '');
-  if (t.length > 36) t = t.slice(0, 37).replace(/\s+\S*$/, '');
+  if (t.length > SUBJECT_MAX) t = t.slice(0, SUBJECT_MAX + 1).replace(/\s+\S*$/, '');
   t = t.replace(FILLER_END, '').replace(/[,;:.\s]+$/, '');
-  return `${upper1(t || 'Your ask')}, 20 min?`;
+  return upper1(t || 'Your ask');
 }
 
 /** The board's coarse topic: ≤ 80 characters, no line breaks; null when empty. */

@@ -113,7 +113,7 @@ describe('/ask compose', () => {
       ['By when do you need this?', 'Dec 4'],
       ['What can you give the person in return?', 'our 3DS failure logs'],
     ]) fireEvent.change(screen.getByLabelText(label!), { target: { value } });
-    expect((screen.getByLabelText('Subject, as members see it in their inbox') as HTMLInputElement).value).toBe('Checkout drops 4% of card payments, 20 min?');
+    expect((screen.getByLabelText('Subject, as members see it in their inbox') as HTMLInputElement).value).toBe('Checkout drops 4% of card payments at 3DS');
     expect(document.getElementById('ask-send')!.getAttribute('aria-disabled')).toBe('true');
     expect(document.getElementById('ask-actions-meta')!.textContent).toMatch(/^Live checks are off on this instance \(no model API key is set\), so only the 3 sample asks can go to the sample network\./);
   });

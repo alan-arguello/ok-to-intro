@@ -261,7 +261,7 @@ export interface OfferCardModel {
   from: string;
   /** The member's own words at the offsets code found, or null. */
   matched: string | null;
-  /** Problem, Needs (“20 minutes with …”), Tried, By, Offers, Price. */
+  /** Problem, Needs (as the founder wrote it), Tried, By, Offers, Price. */
   facts: Fact[];
   /** First name of the asker, or “the founder” on SAMPLE loops. */
   who: string;

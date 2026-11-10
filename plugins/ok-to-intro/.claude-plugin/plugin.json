@@ -1,7 +1,7 @@
 {
   "name": "ok-to-intro",
   "version": "0.1.0",
-  "description": "Ask a network for 20 minutes with one specific person from Claude Code, and answer what waits on you. Each member’s gate checks every ask against rules that member wrote. An MCP server, a /ask skill and a session hook.",
+  "description": "Ask a network for help from one specific person from Claude Code, and answer what waits on you. Each member’s gate checks every ask against rules that member wrote. An MCP server, a /ask skill and a session hook.",
   "author": {
     "name": "Alan Arguello"
   },

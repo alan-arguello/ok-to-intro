@@ -290,7 +290,7 @@ export function KitDemo() {
                 </ButtonLink>
               }
             >
-              Enterprise deals stuck 5 months · 61 h left
+              Intro to a hospital procurement lead · 61 h left
             </Notice>
             <Diff
               label="Suggested change to your rules"

@@ -23,7 +23,7 @@
       "id": "h01",
       "case_type": "fits | wrong_stage | investor | injection | polite_spam | other",
       "rules": "Happy to talk to …\nOnly if …\nNo …",
-      "ask": { "text": "The ask as members read it", "subject": "Optional, ≤ 45 characters, 20 min?" },
+      "ask": { "text": "The ask as members read it", "subject": "Optional, ≤ 45 characters" },
       "expected": "accept | decline | ask_back",
       "notes": "Optional"
     }

@@ -259,7 +259,7 @@ describe('join, settings, turning on, delete', () => {
 
   it('saves settings and makes a rules version only when the text changed', async () => {
     const id = await db.createMember(email('settings'), { rules: HEALTH });
-    const base = { name: 'Priya Shah', one_line: 'Closed the first 20 enterprise customers at a healthcare software company.', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', scheduling_url: 'https://cal.com/priya-shah/20min', cap: 3, show_matched: true, rules: HEALTH };
+    const base = { name: 'Priya Shah', one_line: 'Ran procurement at a hospital system before selling software to them.', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', scheduling_url: 'https://cal.com/priya-shah/20min', cap: 3, show_matched: true, rules: HEALTH };
     const a = await saveMemberSettings(id, base);
     expect(a).toMatchObject({ ok: true, version: 1, rules_changed: false, status: 'on' });
     const b = await saveMemberSettings(id, { ...base, rules: `${HEALTH}\nNo asks about hiring.` });
@@ -328,7 +328,7 @@ describe('the monthly ledger', () => {
     const asker = await db.createMember(email('asker'), { rules: ENGINEER });
     const id = await db.createMember(email('ledger'), { rules: HEALTH });
     const month = capMonth(new Date());
-    await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L1x', $1, 'raw', '{}'::jsonb, 'Enterprise deals stuck 5 months', 'open')`, [asker]);
+    await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L1x', $1, 'raw', '{}'::jsonb, 'Intro to a hospital procurement lead', 'open')`, [asker]);
     await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L2x', $1, 'raw', '{}'::jsonb, 'Old ask', 'closed')`, [asker]);
     await db.pg.query(`insert into public.ask_members (ask_id, member_id, position) values ('a_L1x', $1, 0), ('a_L2x', $1, 0)`, [id]);
     await db.pg.query(

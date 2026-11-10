@@ -18,13 +18,13 @@ describe('text helpers', () => {
     expect(plural(2, 'person', 'people')).toBe('2 people');
     expect(traceTime(0)).toBe('+0 ms     ');
     expect(traceTime(1290)).toBe('+1290 ms  ');
-    expect(bareSubject('Enterprise deals stuck 5 months, 20 min?')).toBe('Enterprise deals stuck 5 months');
+    expect(bareSubject('Intro to a hospital procurement lead')).toBe('Intro to a hospital procurement lead');
   });
 
-  it('reads Needs the same everywhere: “20 minutes with …”', () => {
-    expect(needsLine('Someone who has cut early churn in a B2B product')).toBe('20 minutes with someone who has cut early churn in a B2B product');
-    expect(needsLine('A founder who hired a first salesperson')).toBe('20 minutes with a founder who hired a first salesperson');
-    expect(needsLine('CTO who made a first hire')).toBe('20 minutes with CTO who made a first hire');
+  it('reads Needs as the founder wrote it, with a capital and no prefix', () => {
+    expect(needsLine('an intro to a head of procurement at a hospital system')).toBe('An intro to a head of procurement at a hospital system');
+    expect(needsLine('A founder who hired a first salesperson')).toBe('A founder who hired a first salesperson');
+    expect(needsLine('  two lines on how you priced usage ')).toBe('Two lines on how you priced usage');
     expect(needsLine('20 minutes with someone')).toBe('20 minutes with someone');
     expect(needsLine('')).toBe('');
   });

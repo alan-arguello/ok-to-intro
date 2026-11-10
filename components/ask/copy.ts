@@ -14,12 +14,12 @@ export const STATUS_DESCRIPTION = 'Where your ask stands: who it was offered to,
 export const HOME_TITLE = 'What do you need from the network?';
 export const HOME_LEDE = ASK_LEDE;
 export const HOME_DESCRIPTION =
-  'Write one specific ask for a 20-minute call. It is checked for 5 parts, then against each member’s own rules; at most one person sees it at a time.';
+  'Write one specific ask: a short call, an intro, a quick answer or one concrete action. It is checked for 5 parts, then against each member’s own rules; at most one person sees it at a time.';
 /** The second card under the composer: the member's side, on /rules. */
 export const OTHER_SIDE_LINK = 'On the other side? See what would reach you →';
 export const OTHER_SIDE_NOTE = 'Write what you’d agree to help with; 12 asks from other founders are checked against it.';
 export const COMPOSER_LABEL = 'What do you need?';
-export const ASK_PLACEHOLDER = 'We sell X to Y. We tried Z. Need 20 minutes with someone who has done W, before [date]. In return: …';
+export const ASK_PLACEHOLDER = 'We sell X to Y. We tried Z. Need [a call, an intro or an answer] from someone who has done W, before [date]. In return: …';
 
 /** The 5 parts: row labels and the question a missing part asks (prototype LBL / QUESTION). */
 export const PART_LABEL: Record<PartKey, string> = {

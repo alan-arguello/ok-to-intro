@@ -34,8 +34,8 @@ function offerInput(over: Partial<OfferEmailInput> = {}): OfferEmailInput {
     cap: 2,
     nth: 1,
     asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
-    subject: 'Enterprise deals stuck 5 months, 20 min?',
-    title: 'Enterprise deals stuck 5 months',
+    subject: 'Intro to a hospital procurement lead',
+    title: 'Intro to a hospital procurement lead',
     matched: OFFER_SAMPLE.matched,
     facts: [...OFFER_SAMPLE.facts].reverse(),
     reply_by_label: 'Thu Nov 12, 21:04 PT',
@@ -123,7 +123,7 @@ describe('offer email', () => {
   it('reads in the spec order: cap line, title, from, matched rule, facts, three buttons, the two notes', () => {
     const order = [
       '>An ask matched your rules. It’s 1 of your 2 this month.<',
-      '>Enterprise deals stuck 5 months</h1>',
+      '>Intro to a hospital procurement lead</h1>',
       '>From Maya Bennett, Oakline Health (Seed, Chicago)<',
       'Matched your rule: <span style="background:#fbe9b7;color:#16140f;padding:0 2px">“B2B founders selling to enterprise customers”</span>',
       '>Problem</td>',
@@ -138,10 +138,10 @@ describe('offer email', () => {
     expect(order.every((v, i) => v >= 0 && (i === 0 || v > (order[i - 1] as number)))).toBe(true);
   });
 
-  it('puts Problem first and Needs reads “20 minutes with …” (Revision 3)', () => {
+  it('puts Problem first and Needs reads as the founder wrote it', () => {
     const labels = [...m.html.matchAll(/text-transform:uppercase;color:#5f5a50">(\w+)<\/td>/g)].map((x) => x[1]);
     expect(labels).toEqual(['Problem', 'Needs', 'Tried', 'By', 'Offers', 'Price']);
-    expect(m.text).toMatch(/^Needs:\s+20 minutes with someone/m);
+    expect(m.text).toMatch(/^Needs:\s+An intro to a head of procurement/m);
     expect(m.text.indexOf('Problem:')).toBeLessThan(m.text.indexOf('Needs:'));
   });
 
@@ -160,7 +160,7 @@ describe('offer email', () => {
     // The quote is cut at a word so the cap and the reply-by day survive an inbox's preview length.
     expect(m.preheader).toBe('Matched your rule “B2B founders selling to enterprise…” · 1 of your 2 this month · reply by Thu');
     expect(m.preheader.length).toBeLessThanOrEqual(105);
-    expect(m.subject).toBe('Enterprise deals stuck 5 months, 20 min?');
+    expect(m.subject).toBe('Intro to a hospital procurement lead');
   });
 
   it('escapes everything the asker wrote', () => {
@@ -191,8 +191,8 @@ describe('offer email', () => {
 
 describe('intro email', () => {
   const input = {
-    member_context: 'first enterprise customers',
-    member: { name: 'Priya Shah', first: 'Priya', one_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: 'https://cal.com/priya-shah/20min', email: 'priya@example.com' },
+    member_context: 'hospital procurement',
+    member: { name: 'Priya Shah', first: 'Priya', one_line: 'Ran procurement at a hospital system before selling software to them.', scheduling_url: 'https://cal.com/priya-shah/20min', email: 'priya@example.com' },
     asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', email: 'maya@oakline.example' },
     facts: [...OFFER_SAMPLE.facts],
     matched_line: OFFER_SAMPLE.matched,
@@ -203,16 +203,16 @@ describe('intro email', () => {
 
   it('opens with both names and one-liners, quotes the approved facts and the scheduling link', () => {
     const m = introEmail(input);
-    expect(m.subject).toBe('Intro: Maya Bennett (Oakline Health) and Priya Shah (first enterprise customers)');
+    expect(m.subject).toBe('Intro: Maya Bennett (Oakline Health) and Priya Shah (hospital procurement)');
     expect(introSubject({ ...input, member_context: null })).toBe('Intro: Maya Bennett (Oakline Health) and Priya Shah');
     expect(m.text.split('\n').slice(0, 4)).toEqual([
-      'Priya Shah · Closed the first 20 enterprise customers at a healthcare software company.',
+      'Priya Shah · Ran procurement at a hospital system before selling software to them.',
       'Maya Bennett · Oakline Health (Seed, Chicago)',
       '',
       'Maya, Priya: you both said yes, so here is the intro.',
     ]);
     expect(m.text).toContain('The ask Maya approved:\nProblem:');
-    expect(m.text).toContain('Priya’s link for 20 minutes: https://cal.com/priya-shah/20min');
+    expect(m.text).toContain('Priya’s scheduling link: https://cal.com/priya-shah/20min');
     expect(m.html).toContain('<a href="https://cal.com/priya-shah/20min"');
     expect(m.text).toContain('Priya’s rules include “B2B founders selling to enterprise customers”.');
     expect(m.text).toContain('Reply all to pick a time. We’re not on this thread. Tomorrow we’ll ask each of you one question, and Maya one more in two weeks. That’s all.');
@@ -229,7 +229,7 @@ describe('intro email', () => {
 
   it('names the asker without empty parentheses when the profile is partial', () => {
     const m = introEmail({ ...input, asker: { ...input.asker, company: '', stage: 'Seed', city: '' } });
-    expect(m.subject).toBe('Intro: Maya Bennett and Priya Shah (first enterprise customers)');
+    expect(m.subject).toBe('Intro: Maya Bennett and Priya Shah (hospital procurement)');
     expect(m.text.split('\n')[1]).toBe('Maya Bennett · Seed');
     expect(htmlText(m.html)).not.toMatch(/\(\s*,|,\s*\)|\(\s*\)/);
   });
@@ -237,7 +237,7 @@ describe('intro email', () => {
   it('keeps the matched rule private unless the member turned it on, and drops a missing link', () => {
     const m = introEmail({ ...input, matched_line: null, member: { ...input.member, scheduling_url: null } });
     expect(m.text).not.toContain('rules include');
-    expect(m.text).not.toContain('link for 20 minutes');
+    expect(m.text).not.toContain('scheduling link:');
     expect(m.preheader).toBe('Reply all to pick a time.');
   });
 });
@@ -259,7 +259,7 @@ describe('check-in emails', () => {
   it('+1 day, member: its own question, the member footer and the one-click pause header', () => {
     const m = checkinEmail({ kind: 'd1', role: 'member', to_first: 'Priya', other_name: 'Maya Bennett', other_first: 'Maya', checkin_url: 'https://oki.example/c/c88Ma4Rt9BbCdEfGhIjKlM', footer: member });
     expect(m.subject).toBe('Did you and Maya talk?');
-    expect(m.text.startsWith('Was the call with Maya worth your 20 minutes?')).toBe(true);
+    expect(m.text.startsWith('Was the call with Maya worth your time?')).toBe(true);
     expect(m.headers['List-Unsubscribe-Post']).toBe('List-Unsubscribe=One-Click');
   });
 
@@ -273,8 +273,8 @@ describe('check-in emails', () => {
 
 describe('question, outcome note, withdrawn and the sign-in code', () => {
   it('question: one gate or several, a button to the ask', () => {
-    const one = questionEmail({ asker_first: 'Maya', ask_subject: 'Enterprise deals stuck 5 months, 20 min?', question: { type: 'price', text: 'What do you charge per customer, per year?' }, gates: 1, ask_url: 'https://oki.example/ask/a_91xQ2', footer: asker });
-    expect(one.subject).toBe('One question about your ask: Enterprise deals stuck 5 months');
+    const one = questionEmail({ asker_first: 'Maya', ask_subject: 'Intro to a hospital procurement lead', question: { type: 'price', text: 'What do you charge per customer, per year?' }, gates: 1, ask_url: 'https://oki.example/ask/a_91xQ2', footer: asker });
+    expect(one.subject).toBe('One question about your ask: Intro to a hospital procurement lead');
     expect(one.text).toContain('A member’s gate has one question before deciding: “What do you charge per customer, per year?” Your answer goes only to the gate that asked, and it reruns once.');
     expect(one.text).toContain('Answer it:\nhttps://oki.example/ask/a_91xQ2#question');
     const two = questionEmail({ asker_first: 'Maya', ask_subject: 'X', question: { type: 'price', text: 'Q?' }, gates: 2, ask_url: 'https://oki.example/ask/a_1', footer: asker });
@@ -284,14 +284,14 @@ describe('question, outcome note, withdrawn and the sign-in code', () => {
   it('outcome note', () => {
     const m = outcomeNoteEmail({ member_first: 'Priya', asker_first: 'Maya', outcome: 'customer', reported_on: 'Nov 23', footer: member });
     expect(m.subject).toBe('What came of your intro to Maya');
-    expect(m.text.split('\n')[0]).toBe('Maya reported a customer from your intro (Nov 23). Thanks for the 20 minutes.');
+    expect(m.text.split('\n')[0]).toBe('Maya reported a customer from your intro (Nov 23). Thanks for your time.');
     expect(m.preheader).toBe('Maya reported a customer.');
   });
 
   it('withdrawn: nothing to do, and it still counted', () => {
-    const m = withdrawnEmail({ member_first: 'Priya', asker_first: 'Maya', title: 'Enterprise deals stuck 5 months', withdrawn_on: 'Tue Nov 10', cap: 2, nth: 1, footer: member });
-    expect(m.subject).toBe('No longer needed: Enterprise deals stuck 5 months');
-    expect(m.text.split('\n')[0]).toBe('Maya withdrew the ask “Enterprise deals stuck 5 months” on Tue Nov 10. Nothing to do. It still counted as 1 of your 2 this month.');
+    const m = withdrawnEmail({ member_first: 'Priya', asker_first: 'Maya', title: 'Intro to a hospital procurement lead', withdrawn_on: 'Tue Nov 10', cap: 2, nth: 1, footer: member });
+    expect(m.subject).toBe('No longer needed: Intro to a hospital procurement lead');
+    expect(m.text.split('\n')[0]).toBe('Maya withdrew the ask “Intro to a hospital procurement lead” on Tue Nov 10. Nothing to do. It still counted as 1 of your 2 this month.');
   });
 
   it('code: the code in the subject and the first line; the Supabase template keeps {{ .Token }}', () => {
@@ -306,8 +306,8 @@ describe('question, outcome note, withdrawn and the sign-in code', () => {
 describe('SAMPLE emails from the visitor’s loop', () => {
   const loop: SampleLoop = {
     askId: 'sa_eng',
-    subject: 'Churn after month 3, 20 min?',
-    parts: { challenge: '31 of 120 accounts left last quarter, most after month 3', tried: 'A check-in call at day 60 and an annual discount', needs: 'Someone who has cut early churn in a B2B product', by: 'Nov 21', offers: 'Our cancellation interview notes' },
+    subject: 'Churn after month 3: a 20-minute call',
+    parts: { challenge: '31 of 120 accounts left last quarter, most after month 3', tried: 'A check-in call at day 60 and an annual discount', needs: '20 minutes with someone who has cut early churn in a B2B product', by: 'Nov 21', offers: 'Our cancellation interview notes' },
     price: null,
     asker: { name: 'Sample founder', first: 'the founder', company: 'Tidewell Data', stage: 'Seed', city: 'San Francisco' },
     member: { you: false, name: 'Hannah Kim', first: 'Hannah', line: 'Ran customer success at a B2B software company in San Francisco.', scheduling: 'https://cal.com/hannah-kim/20min' },
@@ -332,7 +332,7 @@ describe('SAMPLE emails from the visitor’s loop', () => {
   it('when the visitor’s own gate held it, the intro says you and has no link yet', () => {
     const e = buildSampleEmail('intro', { loop: { ...loop, member: { you: true, name: 'You', first: 'you', line: 'the member whose gate accepted (your one line goes here when you join)', scheduling: null } }, tz: 'America/Los_Angeles' });
     expect(e.message.subject).toBe('Intro: Sample founder (Tidewell Data) and you');
-    expect(e.message.text).toContain('Your link for 20 minutes: the scheduling link you add when you join.');
+    expect(e.message.text).toContain('Your scheduling link: the one you add when you join.');
   });
 
   it('the offer email keeps the loop’s ask id in every button', () => {

@@ -101,7 +101,7 @@ vi.mock('@/lib/server/offers', () => ({
   listPendingForMember: async () => ({
     ok: true,
     pending: {
-      offers: [{ offer_id: 'o_3Fp9kL', title: 'Enterprise deals stuck 5 months', asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' }, matched: null, facts: [], ask_text: '', expires_at: '2026-11-12T05:04:00.000Z' }],
+      offers: [{ offer_id: 'o_3Fp9kL', title: 'Intro to a hospital procurement lead', asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' }, matched: null, facts: [], ask_text: '', expires_at: '2026-11-12T05:04:00.000Z' }],
       questions: [],
       checkins: [],
       cap: { cap: 2, used: 1, month: '2026-11-01' },
@@ -205,7 +205,7 @@ describe('/me loader', () => {
       { text: 'No fundraising asks.', tally: '1 kept out' },
     ]);
     expect(i.ledger?.quotes).toEqual(['Postgres']);
-    expect(i.pending).toEqual({ title: 'Enterprise deals stuck 5 months', from: 'Maya Bennett', hoursLeft: 58, href: '/o/o_3Fp9kL' });
+    expect(i.pending).toEqual({ title: 'Intro to a hospital procurement lead', from: 'Maya Bennett', hoursLeft: 58, href: '/o/o_3Fp9kL' });
     expect(i.token).toEqual({ state: 'active', created: { iso: '2026-11-09T12:00:00.000Z', label: 'Nov 9', fmt: 'day' }, lastUsed: { iso: '2026-11-09T17:04:00.000Z', label: '09:04', fmt: 'last' } });
     expect(i.asks).toEqual({ state: 'ok', example: false, items: [{ id: 'a_91xQ2k', subject: 'Churn after month 3', outcome: 'offered', created: { iso: '2026-11-09T05:04:00.000Z', label: 'Nov 8', fmt: 'day' }, href: '/ask/a_91xQ2k' }] });
   });

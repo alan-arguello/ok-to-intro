@@ -23,7 +23,7 @@ export interface HowStep {
 }
 
 export const HOW_STEPS: readonly HowStep[] = [
-  { name: 'The ask', line: 'A founder writes one specific ask for a 20-minute call.', by: ['Founder'] },
+  { name: 'The ask', line: 'A founder writes one specific ask: a call, an intro, an answer or an action.', by: ['Founder'] },
   {
     name: 'The check',
     line: 'A model checks it for 5 parts: the challenge, what they tried, who they need, a deadline and an offer back. Vague asks are refused.',

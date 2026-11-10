@@ -106,7 +106,7 @@ describe('the /agents examples are receipts that keep the contract', () => {
 
   it('label a model recording as recorded, never as written by hand', () => {
     const tryText = examples.try_rules[0] as string;
-    expect(tryText.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 17:13 · claude-haiku-5-5');
+    expect(tryText.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 17:27 · claude-haiku-5-5');
     expect(tryText).toContain('Recorded run, replayed from a file');
     expect(tryText).not.toContain(AUTHORED_LABEL);
     expect(tryText).not.toMatch(/example verdicts|written by hand|\blive\b/);

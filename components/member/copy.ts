@@ -350,7 +350,7 @@ export function tokenLine(createdDay: string, lastUsed: string | null): string {
   return `Token created ${createdDay} · ${lastUsed ? `last used ${lastUsed} from Claude Code` : 'not used yet'}`;
 }
 
-/** “1 ask is waiting on you · Enterprise deals stuck 5 months · from Maya Bennett · 61 h left”. */
+/** “1 ask is waiting on you · Intro to a hospital procurement lead · from Maya Bennett · 61 h left”. */
 export function pendingParts(title: string, from: string, hoursLeft: number): { head: string; rest: string } {
   return { head: '1 ask is waiting on you', rest: ` · ${title} · from ${from} · ${hoursLeft} h left` };
 }

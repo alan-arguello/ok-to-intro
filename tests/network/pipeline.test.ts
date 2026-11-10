@@ -69,7 +69,7 @@ beforeAll(async () => {
   __setEmailTransportForTests(mail.transport);
   const mayaId = await net.member('maya@oakline.example', { name: 'Maya Bennett', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', rules: 'Happy to talk about procurement checklists.' });
   maya = { id: mayaId, email: 'maya@oakline.example' };
-  ids.priya = await net.member('priya@example.com', { name: 'Priya Shah', rules: RULES.priya, one_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: 'https://cal.com/priya-shah/20min', show_matched: true });
+  ids.priya = await net.member('priya@example.com', { name: 'Priya Shah', rules: RULES.priya, one_line: 'Ran procurement at a hospital system before selling software to them.', scheduling_url: 'https://cal.com/priya-shah/20min', show_matched: true });
   ids.ingrid = await net.member('ingrid@example.com', { name: 'Ingrid Larsen', rules: RULES.ingrid });
   ids.larsen = await net.member('q@example.com', { name: 'Quinn Rogers', rules: RULES.larsen, cap: 3 });
   ids.marcus = await net.member('marcus@example.com', { name: 'Marcus Reed', rules: RULES.marcus });
@@ -216,7 +216,7 @@ describe('the offer page and its actions', () => {
     if (!res.found) return;
     expect(res.offer.matched).toEqual({ text: 'B2B founders selling to hospital groups in the US', start: 17, end: 66, line: RULES.priya });
     expect(res.offer.facts.map(([k]) => k)).toEqual(['Problem', 'Needs', 'Tried', 'By', 'Offers']);
-    expect(res.offer).toMatchObject({ state: 'pending', nth: 1, cap: 2, title: 'Enterprise deals stuck 5 months', member_first: 'Priya', asker: { first: 'Maya', company: 'Oakline Health' } });
+    expect(res.offer).toMatchObject({ state: 'pending', nth: 1, cap: 2, title: 'Intro to a hospital procurement lead', member_first: 'Priya', asker: { first: 'Maya', company: 'Oakline Health' } });
     expect(JSON.stringify(res.offer)).not.toContain(ids.priya);
     expect(await memberForOffer({ token: ids.priyaToken })).toEqual({ member_id: ids.priya });
     expect(await getOffer({ token: 'A'.repeat(22) })).toEqual({ found: false, reason: 'invalid' });
@@ -272,12 +272,12 @@ describe('the offer page and its actions', () => {
   it('listMyAsks and the hook data use the same serializer', async () => {
     const list = await listMyAsks(maya);
     expect(list.ok).toBe(true);
-    if (list.ok) expect(list.items.find((i) => i.id === ids.ask)).toMatchObject({ network: 'real', subject: 'Enterprise deals stuck 5 months, 20 min?' });
+    if (list.ok) expect(list.items.find((i) => i.id === ids.ask)).toMatchObject({ network: 'real', subject: 'Intro to a hospital procurement lead' });
     const pending = await listPendingForMember(ids.ingrid);
     expect(pending.ok).toBe(true);
     if (pending.ok) {
       expect(pending.pending.offers).toHaveLength(1);
-      expect(pending.pending.offers[0]).toMatchObject({ title: 'Enterprise deals stuck 5 months', matched: 'Long sales cycles with hospital groups and health systems' });
+      expect(pending.pending.offers[0]).toMatchObject({ title: 'Intro to a hospital procurement lead', matched: 'Long sales cycles with hospital groups and health systems' });
       expect(pending.pending.cap).toMatchObject({ cap: 2, used: 2 });
     }
     const asker = await listPendingForMember(maya.id);
@@ -357,7 +357,7 @@ describe('the offer page and its actions', () => {
     const token = d1.text.match(/\/c\/([A-Za-z0-9_-]{22})/)![1]!;
     const view = await getCheckin({ token });
     if (!view.found) throw new Error('no check-in');
-    expect(view.checkin).toMatchObject({ kind: 'd1', role: 'asker', other_name: 'Quinn Rogers', other_first: 'Quinn', answer: null, intro_subject: 'Enterprise deals stuck 5 months' });
+    expect(view.checkin).toMatchObject({ kind: 'd1', role: 'asker', other_name: 'Quinn Rogers', other_first: 'Quinn', answer: null, intro_subject: 'Intro to a hospital procurement lead' });
     expect(await saveCheckin({ token }, { kind: 'd1', rating: 4 }, 'k1')).toMatchObject({ ok: true, repeated: false, checkin: { answer: { kind: 'd1', rating: 4 } } });
     expect(await saveCheckin({ token }, { kind: 'd1', rating: 4 }, 'k1')).toMatchObject({ ok: true, repeated: true });
     expect(await saveCheckin({ token }, { kind: 'd14', outcome: 'customer', note: null }, 'k2')).toMatchObject({ ok: false, reason: 'bad_input' });

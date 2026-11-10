@@ -29,7 +29,7 @@ function view(over: Partial<CheckinView> = {}): CheckinView {
     sample: false,
     other_name: 'Priya Shah',
     other_first: 'Priya',
-    intro_subject: 'Enterprise deals stuck 5 months, 20 min?',
+    intro_subject: 'Intro to a hospital procurement lead',
     intro_made_at: '2026-11-09T21:16:00-08:00',
     answer: null,
     answered_at: null,
@@ -70,7 +70,7 @@ describe('values, answers and labels', () => {
     expect(answerText('d1', 'notyet')).toBe('we haven’t talked yet');
     expect(answerText('d14', 'customer')).toBe('A customer');
     expect(checkinQuestion('d1', 'asker', 'Priya')).toBe('How useful was the call with Priya?');
-    expect(checkinQuestion('d1', 'member', 'Maya')).toBe('Was the call with Maya worth your 20 minutes?');
+    expect(checkinQuestion('d1', 'member', 'Maya')).toBe('Was the call with Maya worth your time?');
     expect(checkinQuestion('d14', 'asker', 'Priya')).toBe('What came of the intro to Priya?');
   });
 });

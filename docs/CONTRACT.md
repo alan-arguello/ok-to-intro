@@ -268,7 +268,7 @@ OK in ink with a white label). The offer email sets `List-Unsubscribe: <unsubscr
 - `lib/oti/storage.ts`: `readStore/writeStore/clearStore` and the four shapes (§storage below).
 - `lib/oti/copy.ts`: strings two or more owners print (banner copy, failure rows, privacy lines, labels,
   `AUTHORED_FANOUT_LABEL`, `SUGGESTED_EDIT_UNTESTED`, `REAL_ASK_COPY`).
-- `lib/oti/ask.ts`: `askFacts(parts, price?)` (the card's facts in order, Needs as “20 minutes with …”: use it for
+- `lib/oti/ask.ts`: `askFacts(parts, price?)` (the card's facts in order, Needs as the founder wrote it: use it for
   the S2 preview, /o, the offer and intro emails and MCP receipts), `assembleAskText(raw, parts, added)` (the ask
   members read), `validateAsk(raw, compiled)` (server-side guard on every create/send path), `isYcApplicationAsk`,
   `YC_APPLICATION_REFUSAL`, limits `PART_MAX` 200, `ASK_FINAL_MAX` 900.

@@ -61,7 +61,7 @@ export const EXAMPLE_BOARD = {
 export const EXAMPLE_ME = {
   name: 'Priya Shah',
   email: 'priya@example.com',
-  oneLine: 'Closed the first 20 enterprise customers at a healthcare software company.',
+  oneLine: 'Ran procurement at a hospital system before selling software to them.',
   presetRules: 'health',
   cap: 2,
   used: 1,
@@ -75,5 +75,5 @@ export const EXAMPLE_ME = {
   ledger: { reached_gate: 23, reached_you: 1, stopped: 22 },
   lineTallies: ['1 let in · 1 question', '1 let in · 1 question · 3 kept out', 'not used this month', '2 kept out'],
   noLine: 16,
-  pending: { title: 'Enterprise deals stuck 5 months', from: 'Maya Bennett', hours_left: 61 },
+  pending: { title: 'Intro to a hospital procurement lead', from: 'Maya Bennett', hours_left: 61 },
 } as const;

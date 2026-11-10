@@ -233,7 +233,7 @@ export type CompileEvent =
  * Asks
  * ========================================================================== */
 
-/** The five parts as the founder approved them (plain text; `needs` without the “20 minutes with” prefix). */
+/** The five parts as the founder approved them (plain text; `needs` as the founder wrote it: a call, an intro, an answer or an action). */
 export interface AskParts {
   challenge: string;
   tried: string;
@@ -245,7 +245,7 @@ export interface AskParts {
 /** What the asker approved on /ask. Stored in `asks.compiled`. */
 export interface CompiledAsk {
   parts: AskParts;
-  /** ≤ 45 characters, e.g. “Enterprise deals stuck 5 months, 20 min?”. */
+  /** ≤ 45 characters, e.g. “Intro to a hospital procurement lead”. */
   subject: string;
   /** The ask as members will see it (the founder's text, possibly with the parts they added). */
   text: string;
@@ -705,7 +705,7 @@ export interface OfferEmailInput {
 export interface IntroEmailInput {
   /**
    * Optional lower-case phrase after the member's name in the subject: “Intro: Maya Bennett (Oakline Health) and
-   * Priya Shah (first enterprise customers)”. Null drops the parenthetical (“… and Priya Shah”). R builds the subject.
+   * Priya Shah (hospital procurement)”. Null drops the parenthetical (“… and Priya Shah”). R builds the subject.
    */
   member_context: string | null;
   member: { name: string; first: string; one_line: string; scheduling_url: string | null; email: string };

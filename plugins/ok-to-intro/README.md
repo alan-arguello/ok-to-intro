@@ -1,6 +1,6 @@
 # OK to Intro for Claude Code
 
-Ask a network for 20 minutes with one specific person, and answer what waits on you, without leaving Claude Code.
+Ask a network for help from one specific person, and answer what waits on you, without leaving Claude Code.
 
 ```
 claude plugin install ok-to-intro --marketplace alan-arguello/ok-to-intro

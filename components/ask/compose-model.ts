@@ -280,14 +280,14 @@ export function partValues(parts: readonly PartRow[]): AskParts {
 
 /**
  * A subject from the founder's own challenge when no compiler wrote one (port of the prototype's rule): drop a
- * leading “our/we/my/I”, cut on a word boundary to fit “, 20 min?” in 45 characters, never end on a filler word.
+ * leading “our/we/my/I”, cut on a word boundary to fit 45 characters, never end on a filler word.
  */
 export function subjectFromChallenge(challenge: string): string {
   let t = String(challenge || '').trim().replace(/^(our|we|my|i)\s+/i, '');
   if (!t) return '';
-  if (t.length > 36) t = t.slice(0, 37).replace(/\s+\S*$/, '');
+  if (t.length > SUBJECT_MAX) t = t.slice(0, SUBJECT_MAX + 1).replace(/\s+\S*$/, '');
   t = t.replace(/(\s+(at|the|a|an|of|for|to|in|on|with|and|or|is|are|from|by))+$/i, '').replace(/[,;:.\s]+$/, '');
-  const s = `${upper1(t)}, 20 min?`;
+  const s = upper1(t);
   return s.length <= SUBJECT_MAX ? s : s.slice(0, SUBJECT_MAX);
 }
 

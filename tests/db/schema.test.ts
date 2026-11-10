@@ -14,7 +14,7 @@ afterAll(async () => db?.close());
 
 async function newAsk(id: string, asker: string) {
   await db.asService((tx) =>
-    tx.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ($1, $2, 'raw ask text', '{}'::jsonb, 'Enterprise deals stuck 5 months, 20 min?', 'gating')`, [id, asker]),
+    tx.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ($1, $2, 'raw ask text', '{}'::jsonb, 'Intro to a hospital procurement lead', 'gating')`, [id, asker]),
   );
 }
 async function addToNetwork(askId: string, members: string[]) {

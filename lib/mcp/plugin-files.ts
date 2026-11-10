@@ -26,7 +26,7 @@ export const PLUGIN_FILE_PATHS = {
 } as const;
 
 const DESCRIPTION =
-  'Ask a network for 20 minutes with one specific person from Claude Code, and answer what waits on you. Each member’s gate checks every ask against rules that member wrote. An MCP server, a /ask skill and a session hook.';
+  'Ask a network for help from one specific person from Claude Code, and answer what waits on you. Each member’s gate checks every ask against rules that member wrote. An MCP server, a /ask skill and a session hook.';
 
 /** The origin, normalised: scheme and host only, no trailing slash. */
 export function originOf(siteUrl: string): string {

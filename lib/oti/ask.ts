@@ -1,6 +1,6 @@
 /**
  * One ask, shown the same way everywhere (ux-spec Revision 3): the card opens with Problem, and Needs reads
- * “20 minutes with …” on the S2 preview, the S4 page, the offer and intro emails, and MCP receipts.
+ * as the founder wrote them on the S2 preview, the S4 page, the offer and intro emails, and MCP receipts.
  * Also the code checks every path that creates or sends an ask runs, whatever the client sent (the compiler is the
  * UX; these are the guard). Pure; safe in client and server code.
  */

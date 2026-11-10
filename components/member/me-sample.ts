@@ -78,7 +78,7 @@ export function sampleMe(state: QaState<'me'>, nowMs: number): MeInitial {
           state: 'ok',
           example: true,
           items: [
-            { id: 'sa_health', subject: 'Enterprise deals stuck 5 months', outcome: 'offered', created: { iso: null, label: 'Nov 9', fmt: 'day' }, href: '/ask/sa_health' },
+            { id: 'sa_health', subject: 'Intro to a hospital procurement lead', outcome: 'offered', created: { iso: null, label: 'Nov 9', fmt: 'day' }, href: '/ask/sa_health' },
             { id: 'sa_founder', subject: 'First SOC 2 in 60 days', outcome: 'question', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_founder' },
             { id: 'sa_eng', subject: 'Churn after month 3', outcome: 'intro', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_eng' },
           ],

@@ -255,7 +255,7 @@ function loopIntro(loop: SampleLoop, tz?: string): SampleEmail {
   const message = renderIntro(input, {
     askerRef: loop.asker.first,
     greeting: 'and',
-    noLinkLine: m.you ? 'Your link for 20 minutes: the scheduling link you add when you join.' : null,
+    noLinkLine: m.you ? 'Your scheduling link: the one you add when you join.' : null,
     privateRuleLine: 'The rule that matched stays private unless the member turns it on.',
     subject: `Intro: ${loop.asker.name} (${loop.asker.company}) and ${m.you ? 'you' : m.name}`,
   });

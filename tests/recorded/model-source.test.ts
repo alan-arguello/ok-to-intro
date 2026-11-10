@@ -36,13 +36,13 @@ describe('the recorded presets (S1 playground)', () => {
     expect(PRESET_RECORDINGS.source).toBe('model');
     const pr = presetRun('engineer');
     const label = recordedLabel(PRESET_RECORDINGS, { gates: pr.gates.length, wall_ms: pr.wall_ms, cost_usd: pr.cost_usd });
-    expect(label).toBe('Recorded run · Nov 9, 17:13 · claude-haiku-5-5 · 12 gates in 1.6 s · $0.001');
+    expect(label).toBe('Recorded run · Nov 9, 17:27 · claude-haiku-5-5 · 12 gates in 2.2 s · $0.001');
     expect(label).not.toBe(AUTHORED_LABEL);
   });
 
   it('rows show their recorded latency and say model, never hand-written', () => {
     expect(run.source).toBe('recorded');
-    expect(latencyText(map.a01)).toBe('1.4 s · recorded');
+    expect(latencyText(map.a01)).toBe('1.5 s · recorded');
     expect(chainText(map.a01, 2)).toBe('model accept → code 2 of 2 quotes found → cap 1 of 2');
     for (const d of Object.values(map)) {
       expect(latencyText(d)).toMatch(/^\d+(\.\d)? s · recorded$|^\d+ ms · recorded$/);
@@ -139,7 +139,7 @@ describe('MCP on a model recording', () => {
   it('try_rules on a preset says recorded, with date and model, and no hand-written copy', async () => {
     const { text, isError } = await callTool('try_rules', { rules: ENGINEER });
     expect(isError).toBe(false);
-    expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 17:13 · claude-haiku-5-5');
+    expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 17:27 · claude-haiku-5-5');
     expect(text).toContain('Recorded run, replayed from a file');
     expect(text).not.toMatch(HAND_WRITTEN);
   });

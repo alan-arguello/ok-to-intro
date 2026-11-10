@@ -226,7 +226,7 @@ export function resolvedCount(parts: readonly DraftPart[]): number {
   return draftResolved(partViews(parts));
 }
 
-/** The part values (`needs` without “20 minutes with”, as CompiledAsk stores it). */
+/** The part values (`needs` as CompiledAsk stores it). */
 export function partValues(parts: readonly DraftPart[]): AskParts {
   const v: AskParts = { challenge: '', tried: '', needs: '', by: '', offers: '' };
   for (const p of parts) if (p.state !== 'missing' || p.added) v[p.key] = p.text.replace(/\s+/g, ' ').trim();

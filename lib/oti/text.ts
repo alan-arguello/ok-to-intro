@@ -69,7 +69,7 @@ export function stripEnd(s: string): string {
   return String(s || '').replace(/[.;!?\s]+$/, '');
 }
 
-/** “Enterprise deals stuck 5 months, 20 min?” → “Enterprise deals stuck 5 months”. */
+/** The subject as a title. Subjects no longer carry a suffix; an older “…, 20 min?” is still dropped. */
 export function bareSubject(subject: string): string {
   return String(subject || '').replace(/,\s*20 min\?\s*$/, '');
 }
@@ -78,13 +78,13 @@ export function bareSubject(subject: string): string {
 export const SUBJECT_MAX = 45;
 
 /**
- * Needs reads the same everywhere (ux-spec Revision 3): “20 minutes with …”.
- * needsLine('Someone who has cut early churn in a B2B product') → “20 minutes with someone who has cut early churn in a B2B product”.
+ * Needs reads the same everywhere: what the founder wrote (a call, an intro, an answer or an action), with a capital.
+ * Nothing is prefixed: needsLine('an intro to a head of procurement') → “An intro to a head of procurement”.
  */
 export function needsLine(needs: string): string {
   const n = String(needs || '').trim();
   if (!n) return '';
-  return /^20 minutes/i.test(n) ? upper1(n) : `20 minutes with ${lower1(n)}`;
+  return upper1(n);
 }
 
 /** A random-looking but deterministic 4-hex id (FNV-1a), e.g. run ids `r_8f2a` in recorded traces. */

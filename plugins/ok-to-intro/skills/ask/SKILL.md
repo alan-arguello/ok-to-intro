@@ -7,7 +7,7 @@ allowed-tools: mcp__plugin_ok-to-intro_ok-to-intro__try_rules, mcp__plugin_ok-to
 
 # /ask · OK to Intro
 
-OK to Intro sends a founder’s ask for 20 minutes with one specific person. Each member wrote rules for what they agree to be asked; their gate checks every ask against those rules and quotes the line it used. At most one person sees an ask at a time, and the asker learns who only if that person says OK. The tools come from the `ok-to-intro` MCP server.
+OK to Intro sends a founder’s ask (a call, an intro, an answer or an action) to one specific person at a time. Each member wrote rules for what they agree to be asked; their gate checks every ask against those rules and quotes the line it used. At most one person sees an ask at a time, and the asker learns who only if that person says OK. The tools come from the `ok-to-intro` MCP server.
 
 ## What the user wants
 

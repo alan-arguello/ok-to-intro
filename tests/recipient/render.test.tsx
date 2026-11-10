@@ -53,7 +53,7 @@ describe('/o: the decision', () => {
   it('open: the card in spec order, then OK to intro · Answer in 2 lines · No, in the row and the phone bar', () => {
     const html = render(offerModel('open'));
     const t = text(html);
-    expect(t).toContain('Enterprise deals stuck 5 months');
+    expect(t).toContain('Intro to a hospital procurement lead');
     expect(t).toContain('Maya Bennett · Oakline Health · Seed · Chicago');
     expect(t).toContain('Matched your rule: “B2B founders selling to enterprise customers”');
     expect(t).toContain('Maya sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer.');
@@ -203,7 +203,7 @@ describe('/c: the check-in', () => {
       ui,
       source: { kind: 'none' },
       other: ui.role === 'member' ? { name: 'Maya Bennett', first: 'Maya' } : { name: 'Priya Shah', first: 'Priya' },
-      subject: 'Enterprise deals stuck 5 months',
+      subject: 'Intro to a hospital procurement lead',
       introMade: { iso: '2026-11-09T21:16:00-08:00', text: 'Nov 9' },
       d14: { iso: '2026-11-23T10:00:00-08:00', text: 'Nov 23' },
       reminder: { iso: '2026-11-13T10:00:00-08:00', text: 'Nov 13' },
@@ -230,7 +230,7 @@ describe('/c: the check-in', () => {
   });
 
   it('member, +14 days and the won’t-happen reasons', () => {
-    expect(text(renderCk(ck('member-d1')))).toContain('Was the call with Maya worth your 20 minutes?');
+    expect(text(renderCk(ck('member-d1')))).toContain('Was the call with Maya worth your time?');
     const d14 = renderCk(ck('d14-preselected'));
     expect(text(d14)).toContain('What came of the intro to Priya? Unblocked A customer A hire An investor Nothing yet Anything to add? (optional, one line)');
     expect(d14).toMatch(/class="ck-choice"[^>]*>A customer/);

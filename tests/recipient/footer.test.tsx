@@ -52,7 +52,7 @@ describe('small helpers', () => {
   it('a SAMPLE loop never makes the visitor “the other person” in a check-in', () => {
     const loop: SampleLoop = {
       askId: 'sa_eng',
-      subject: 'Churn after month 3, 20 min?',
+      subject: 'Churn after month 3: a 20-minute call',
       parts: { challenge: '31 of 120 accounts left last quarter, most after month 3', tried: 'Monthly partitions', needs: 'someone who has cut early churn in a B2B product', by: 'Nov 21', offers: 'Our cancellation interview notes' },
       price: null,
       asker: { name: 'Sample founder', first: 'the founder', company: 'Tidewell Data', stage: 'Seed', city: 'San Francisco' },

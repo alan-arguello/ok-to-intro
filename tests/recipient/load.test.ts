@@ -104,7 +104,7 @@ describe('/o: resolving the link', () => {
     expect(offers.getOffer).toHaveBeenCalledWith({ token: TOKEN }, expect.any(Date));
     expect(m.mode).toBe('real');
     expect(m.ui.view).toBe('open');
-    expect(m.card).toMatchObject({ title: 'Enterprise deals stuck 5 months', from: 'Maya Bennett · Oakline Health · Seed · Chicago', matched: OFFER_SAMPLE.matched, who: 'Maya', cap: 2, nth: 1 });
+    expect(m.card).toMatchObject({ title: 'Intro to a hospital procurement lead', from: 'Maya Bennett · Oakline Health · Seed · Chicago', matched: OFFER_SAMPLE.matched, who: 'Maya', cap: 2, nth: 1 });
     expect(m.card?.facts[0]?.[0]).toBe('Problem');
     expect(m.hours).toBe(71);
     expect(m.forms?.csrf).toBe(csrfToken(`o:t:${TOKEN}`));
@@ -212,7 +212,7 @@ describe('/c: resolving the link and the check-in’s state', () => {
     const form = await loadCheckinPage(TOKEN, { v: '4' });
     expect(form.ui).toMatchObject({ view: 'form', kind: 'd1', role: 'asker', value: '4' });
     expect(form.other).toEqual({ name: 'Priya Shah', first: 'Priya' });
-    expect(form.subject).toBe('Enterprise deals stuck 5 months');
+    expect(form.subject).toBe('Intro to a hospital procurement lead');
     expect(form.introMade?.text).toBe('Nov 9');
     expect(form.forms?.csrf).toBe(csrfToken(`c:t:${TOKEN}`));
     checkins.getCheckin.mockResolvedValue({ found: true, checkin: checkin({ answer: { kind: 'd1', rating: 4 }, answered_at: '2026-11-10T10:00:00-08:00' }) });

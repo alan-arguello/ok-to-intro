@@ -69,7 +69,7 @@ describe('example compile results (the sample chips, hand-written)', () => {
     expect(sampleAnswers(sa)).toEqual({
       challenge: 'Customers churn after month 3: 31 of 120 accounts left last quarter',
       tried: 'a check-in call at day 60 and an annual discount',
-      needs: 'someone who has cut early churn in a B2B product',
+      needs: '20 minutes with someone who has cut early churn in a B2B product',
       by: 'Nov 21',
       offers: 'our cancellation interview notes',
     });
@@ -119,7 +119,7 @@ describe('the parts list', () => {
   it('Edit turns a suggestion into an input holding it; Use approves it', () => {
     const s = compiled('engineer');
     const edited = composeReducer(s, { type: 'partEdit', i: 2 });
-    expect(edited.parts?.[2]).toMatchObject({ state: 'editing', value: 'someone who has cut early churn in a B2B product' });
+    expect(edited.parts?.[2]).toMatchObject({ state: 'editing', value: '20 minutes with someone who has cut early churn in a B2B product' });
     expect(isResolved(edited.parts![2]!)).toBe(true);
     const cleared = composeReducer(edited, { type: 'partInput', i: 2, value: '  ' });
     expect(isResolved(cleared.parts![2]!)).toBe(false);
@@ -171,7 +171,7 @@ describe('the compose reducer', () => {
     expect(s.parts?.map((p) => p.state)).toEqual(['missing', 'found', 'missing', 'missing', 'missing']);
     expect(s.notes).toEqual([{ key: 'down', kind: 'down', until: null }]);
     s = composeReducer(s, { type: 'partInput', i: 0, value: 'Checkout drops 4% of card payments at 3DS' });
-    expect(s.subject).toBe('Checkout drops 4% of card payments, 20 min?');
+    expect(s.subject).toBe('Checkout drops 4% of card payments at 3DS');
     s = composeReducer(s, { type: 'subject', value: 'Card payments failing at 3DS, 20 min?' });
     s = composeReducer(s, { type: 'partInput', i: 0, value: 'Something else entirely' });
     expect(s.subject).toBe('Card payments failing at 3DS, 20 min?');
@@ -221,10 +221,10 @@ describe('the compose reducer', () => {
 
 describe('subjects written by code from the founder’s challenge', () => {
   it.each([
-    // Cut on a word boundary to fit “, 20 min?” in 45 characters (the prototype's rule); the founder can edit it.
-    ['Our customers churn after month 3 and 31 of 120 left last quarter', 'Customers churn after month 3 and 31, 20 min?'],
-    ['We need a first engineer', 'Need a first engineer, 20 min?'],
-    ['Checkout drops 4% of card payments at 3DS', 'Checkout drops 4% of card payments, 20 min?'],
+    // Cut on a word boundary to fit 45 characters (the prototype's rule); the founder can edit it.
+    ['Our customers churn after month 3 and 31 of 120 left last quarter', 'Customers churn after month 3 and 31 of 120'],
+    ['We need a first engineer', 'Need a first engineer'],
+    ['Checkout drops 4% of card payments at 3DS', 'Checkout drops 4% of card payments at 3DS'],
     ['', ''],
   ])('%s → %s', (challenge, subject) => {
     const s = subjectFromChallenge(challenge);

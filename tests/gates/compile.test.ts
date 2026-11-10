@@ -29,10 +29,10 @@ const GOOD = {
   decision: 'compile',
   challenge: { state: 'found', text: 'Customers churn after month 3: 31 of 120 accounts left last quarter', sources: ['Customers churn after month 3: 31 of 120 accounts left last quarter'] },
   tried: { state: 'found', text: 'a check-in call at day 60 and an annual discount', sources: ['a check-in call at day 60 and an annual discount'] },
-  needs: { state: 'suggested', text: 'someone who has cut early churn in a B2B product', sources: ['churn after month 3', '31 of 120 accounts'] },
+  needs: { state: 'suggested', text: '20 minutes with someone who has cut early churn in a B2B product', sources: ['churn after month 3', '31 of 120 accounts'] },
   by: { state: 'missing', text: '', sources: [] },
   offers: { state: 'missing', text: '', sources: [] },
-  subject: 'Churn after month 3, 20 min?',
+  subject: 'Churn after month 3: a 20-minute call',
   topic: 'Churn',
 };
 
@@ -151,7 +151,7 @@ describe('POST /api/compile live (fake streamed API)', () => {
     expect(parts.map((p) => p.part.state)).toEqual(['found', 'found', 'suggested', 'missing', 'missing']);
     for (const p of parts) for (const s of p.part.source) expect(PARTIAL.slice(s.start!, s.end!)).toBe(s.text);
     expect(parts[0]!.part.text).toBe('Customers churn after month 3: 31 of 120 accounts left last quarter');
-    expect(parts[2]!.part).toMatchObject({ key: 'needs', text: 'someone who has cut early churn in a B2B product' });
+    expect(parts[2]!.part).toMatchObject({ key: 'needs', text: '20 minutes with someone who has cut early churn in a B2B product' });
     expect(parts[2]!.part.source.map((s) => s.text)).toEqual(['churn after month 3', '31 of 120 accounts']);
     expect(parts[3]!.part).toEqual({ key: 'by', state: 'missing', text: '', source: [], question: PART_QUESTIONS.by });
     // The first part arrives while the model is still writing (it streams; it doesn't wait for done).
@@ -159,7 +159,7 @@ describe('POST /api/compile live (fake streamed API)', () => {
     const done = evs[evs.length - 1]!.data as { draft_id: string; subject: string; topic: string | null; parts: CompiledPart[]; ms: number };
     expect(done.draft_id).toBe((evs[0]!.data as { draft_id: string }).draft_id);
     expect(done.draft_id).toMatch(/^d_/);
-    expect(done).toMatchObject({ subject: 'Churn after month 3, 20 min?', topic: 'Churn' });
+    expect(done).toMatchObject({ subject: 'Churn after month 3: a 20-minute call', topic: 'Churn' });
     expect(done.parts.map((p) => p.key)).toEqual(['challenge', 'tried', 'needs', 'by', 'offers']);
   });
 
@@ -183,7 +183,7 @@ describe('POST /api/compile live (fake streamed API)', () => {
         tried: { state: 'found', text: 'a loyalty program and 14 buyer calls', sources: [] },
         by: { state: 'suggested', text: 'Nov 30', sources: ['no change'] },
         offers: { state: 'suggested', text: 'our cancellation interview notes', sources: ['no change'] },
-        needs: { state: 'suggested', text: 'someone who has cut early churn in a B2B product', sources: ['a consultant with 100 churn projects'] },
+        needs: { state: 'suggested', text: '20 minutes with someone who has cut early churn in a B2B product', sources: ['a consultant with 100 churn projects'] },
       }),
     );
     const evs = await events(await post({ text: PARTIAL, network: 'sample' }));
@@ -286,12 +286,12 @@ describe('part, subject and topic checks', () => {
   });
 
   it('normalizeSubject keeps the model’s subject when it fits and derives one from the challenge otherwise', () => {
-    expect(normalizeSubject('Churn after month 3, 20 min?', null)).toBe('Churn after month 3, 20 min?');
-    expect(normalizeSubject('Churn after month 3', null)).toBe('Churn after month 3, 20 min?');
+    expect(normalizeSubject('Churn after month 3: a 20-minute call', null)).toBe('Churn after month 3: a 20-minute call');
+    expect(normalizeSubject('Churn after month 3', null)).toBe('Churn after month 3');
     const derived = normalizeSubject('A subject that is far too long to fit in an inbox line, 20 min?', 'Our customers churn after month 3 and 31 of 120 accounts left last quarter');
     expect(derived.length).toBeLessThanOrEqual(45);
-    expect(derived).toMatch(/^Customers churn after month 3.*, 20 min\?$/);
-    expect(normalizeSubject('', null)).toBe('Your ask, 20 min?');
+    expect(derived).toMatch(/^Customers churn after month 3/);
+    expect(normalizeSubject('', null)).toBe('Your ask');
   });
 
   it('normalizeTopic is short and single-line, or null', () => {

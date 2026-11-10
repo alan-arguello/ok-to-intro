@@ -176,7 +176,7 @@ export function offerEmail(input: OfferEmailInput): EmailMessage {
  * S5 · the intro email (To and Reply-To: both people; the service is not in the thread)
  * ======================================================================== */
 
-/** “Intro: Maya Bennett (Oakline Health) and Priya Shah (first enterprise customers)” (the parenthetical is optional). */
+/** “Intro: Maya Bennett (Oakline Health) and Priya Shah (hospital procurement)” (the parenthetical is optional). */
 export function introSubject(input: Pick<IntroEmailInput, 'asker' | 'member' | 'member_context'>): string {
   const member = input.member_context ? `${input.member.name} (${input.member_context})` : input.member.name;
   const company = (input.asker.company ?? '').trim();
@@ -211,7 +211,7 @@ export function renderIntro(input: IntroEmailInput, wording: IntroWording = {}):
   const greet = wording.greeting === 'and' ? `${a.name} and ${m.first}: you both said yes, so here is the intro.` : `${a.first}, ${m.first}: you both said yes, so here is the intro.`;
   const askLabel = `The ask ${askerRef} approved:`;
   const scheduling = m.scheduling_url ? m.scheduling_url : null;
-  const linkLabel = `${possessive(m.first)} link for 20 minutes:`;
+  const linkLabel = `${possessive(m.first)} scheduling link:`;
   const ruleLine = input.matched_line ? `${possessive(m.first)} rules include ${q(input.matched_line)}.` : (wording.privateRuleLine ?? null);
   const close = `Reply all to pick a time. We’re not on this thread. Tomorrow we’ll ask each of you one question, and ${askerRef} one more in two weeks. That’s all.`;
   const preheader = scheduling ? `Reply all to pick a time. ${possessive(m.first)} link: ${displayUrl(scheduling)}` : 'Reply all to pick a time.';
@@ -303,7 +303,7 @@ const ONE_TAP = 'One tap opens a page where you confirm.';
 /** The question each check-in asks (also the /c page title). */
 export function checkinQuestion(kind: CheckinEmailInput['kind'], role: CheckinEmailInput['role'], otherFirst: string): string {
   if (kind === 'd14') return `What came of the intro to ${otherFirst}?`;
-  return role === 'member' ? `Was the call with ${otherFirst} worth your 20 minutes?` : `How useful was the call with ${otherFirst}?`;
+  return role === 'member' ? `Was the call with ${otherFirst} worth your time?` : `How useful was the call with ${otherFirst}?`;
 }
 
 export function checkinEmail(input: CheckinEmailInput): EmailMessage {
@@ -372,7 +372,7 @@ export function outcomeNoteEmail(input: OutcomeNoteEmailInput): EmailMessage {
   const said = OUTCOME_PHRASE[input.outcome](input.asker_first);
   const subject = `What came of your intro to ${input.asker_first}`;
   const preheader = `${said}.`;
-  const body = `${said} from your intro (${input.reported_on}). Thanks for the 20 minutes.`;
+  const body = `${said} from your intro (${input.reported_on}). Thanks for your time.`;
   const gate = absoluteUrl('/me');
   const rows = [
     cardRow(para(esc(body), { size: 16, line: 24, margin: '0' }), '24px 24px 16px'),

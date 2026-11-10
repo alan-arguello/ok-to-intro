@@ -163,7 +163,7 @@ describe('/me (SAMPLE preview, QA states only)', () => {
     expect(html(<MeView initial={sampleMe('paused', NOV9)} />)).toContain('Until Dec 1 · offers go to others');
     const pending = html(<MeView initial={sampleMe('offer-pending', NOV9)} />);
     expect(pending).toContain('1 ask is waiting on you');
-    expect(pending).toContain(' · Enterprise deals stuck 5 months · from Maya Bennett · 61 h left');
+    expect(pending).toContain(' · Intro to a hospital procurement lead · from Maya Bennett · 61 h left');
     expect(html(<MeView initial={sampleMe('empty-ledger', NOV9)} />)).toContain('Your gate checked 6 asks this month and declined all 6. None reached you.');
     const created = html(<MeView initial={sampleMe('token-created', NOV9)} />);
     expect(created).toContain(SAMPLE_TOKEN);

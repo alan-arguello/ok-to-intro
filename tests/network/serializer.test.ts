@@ -32,11 +32,11 @@ const COMPILED: CompiledAsk = {
   parts: {
     challenge: '2 enterprise deals have sat in procurement for 5 months',
     tried: '14 buyer calls; 2 deals reached procurement',
-    needs: 'someone who has closed a first enterprise deal through procurement',
+    needs: 'an intro to a head of procurement at a hospital system',
     by: 'Nov 20',
     offers: 'our procurement checklist',
   },
-  subject: 'Enterprise deals stuck 5 months, 20 min?',
+  subject: 'Intro to a hospital procurement lead',
   text: 'Selling staffing software to hospital groups, our first enterprise customers. 14 buyer calls; 2 deals have sat in procurement for 5 months.',
   price: null,
   topic: 'Enterprise sales, US',
@@ -232,11 +232,11 @@ describe('serializeForAsker: the fixtures', () => {
   it('intro made shows at once, with the name, the one line and the scheduling link', () => {
     const at = Date.parse('2026-11-10T11:16:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'ok', GATED, at)]);
-    snap.intro = { member_name: 'Priya Shah', member_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: 'https://cal.com/priya-shah/20min', sent_at: iso(at + 900), created_at: iso(at), member_id: SECRET.id(17), email: SECRET.email(17) };
+    snap.intro = { member_name: 'Priya Shah', member_line: 'Ran procurement at a hospital system before selling software to them.', scheduling_url: 'https://cal.com/priya-shah/20min', sent_at: iso(at + 900), created_at: iso(at), member_id: SECRET.id(17), email: SECRET.email(17) };
     const view = serializeForAsker(snap, new Date(at + 60_000));
     assertNoLeak(view);
     expect(view.outcome).toBe('intro');
-    expect(view.intro).toEqual({ member_name: 'Priya Shah', member_line: 'Closed the first 20 enterprise customers at a healthcare software company.', sent_at: iso(at + 900), scheduling_url: 'https://cal.com/priya-shah/20min' });
+    expect(view.intro).toEqual({ member_name: 'Priya Shah', member_line: 'Ran procurement at a hospital system before selling software to them.', sent_at: iso(at + 900), scheduling_url: 'https://cal.com/priya-shah/20min' });
     expect(view.cells.filter((c) => c === 'offered')).toEqual(['offered']);
     expect(view.cells.filter((c) => c === 'next')).toHaveLength(0);
   });
@@ -256,7 +256,7 @@ describe('serializeForAsker: the fixtures', () => {
   it('an OK whose intro email has not gone out yet reads as the offer still waiting: no intro, no name', () => {
     const okAt = Date.parse('2026-11-10T11:16:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'ok', GATED, okAt)]);
-    snap.intro = { member_name: 'Priya Shah', member_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: null, sent_at: null, created_at: iso(okAt) };
+    snap.intro = { member_name: 'Priya Shah', member_line: 'Ran procurement at a hospital system before selling software to them.', scheduling_url: null, sent_at: null, created_at: iso(okAt) };
     for (const at of [okAt + 1000, Date.parse('2026-11-10T21:00:01-08:00'), okAt + 80 * 3_600_000]) {
       const view = serializeForAsker(snap, new Date(at));
       assertNoLeak(view);

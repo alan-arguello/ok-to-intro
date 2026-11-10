@@ -37,8 +37,8 @@ function record(over: Partial<OfferView> = {}): OfferView {
     offer_id: 'o_3Fp9kL',
     state: 'pending',
     sample: false,
-    title: 'Enterprise deals stuck 5 months',
-    subject: 'Enterprise deals stuck 5 months, 20 min?',
+    title: 'Intro to a hospital procurement lead',
+    subject: 'Intro to a hospital procurement lead',
     asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
     matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to enterprise customers.' },
     rules_version: 3,
@@ -181,7 +181,7 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
     const loop = loopForAsk('sa_eng', NONE, NOW);
     expect(loop).not.toBeNull();
     const card = cardFromLoop(loop!);
-    expect(card.title).toBe('Churn after month 3');
+    expect(card.title).toBe('Churn after month 3: a 20-minute call');
     expect(card.from).toBe('Sample founder · Tidewell Data · Seed · San Francisco');
     expect(card.facts[0]?.[0]).toBe('Problem');
     expect(card.facts.find(([k]) => k === 'Needs')?.[1]).toBe('20 minutes with someone who has cut early churn in a B2B product');
