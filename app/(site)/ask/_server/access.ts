@@ -23,7 +23,7 @@ export function profileView(member: MemberProfile | null): AskerProfileView | nu
   return { name, first: name.split(/\s+/)[0] ?? name, company: member.company.trim(), stage: member.stage.trim(), city: member.city.trim() };
 }
 
-/** “Lucía Ferrer · Orvella Health · Seed · Guadalajara”. */
+/** “Maya Bennett · Oakline Health · Seed · Chicago”. */
 export function fromLine(p: AskerProfileView | null): string {
   return p ? [p.name, p.company, p.stage, p.city].filter(Boolean).join(' · ') : 'Your name and company, from your profile';
 }
@@ -56,7 +56,7 @@ export async function liveInfo(): Promise<LiveInfo> {
   try {
     const s = await getLiveState();
     const until = s.paused_until ? Date.parse(s.paused_until) : NaN;
-    return { state: s.state, until: Number.isNaN(until) ? null : new Date(until).toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Mexico_City' }) };
+    return { state: s.state, until: Number.isNaN(until) ? null : new Date(until).toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' }) };
   } catch {
     return { state: 'down', until: null };
   }

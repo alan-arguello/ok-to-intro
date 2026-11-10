@@ -36,7 +36,7 @@ export const capNote = (n: number) => `Cap changed to ${n}. Applied in code, no 
 export const capUsed = (used: number, cap: number, done: boolean) => (done ? `${used} of ${cap} used in this sample month` : `0 of ${cap} used`);
 
 export const ALL_DECLINED =
-  'None of these 12 fit your rules. They cover Postgres at scale, LLM evals, job queues, hospital procurement, insurer pricing, a first hire in LATAM and SOC 2.';
+  'None of these 12 fit your rules. They cover Postgres at scale, LLM evals, job queues, hospital procurement, insurer pricing, a first hire outside the Bay Area and SOC 2.';
 export const allAccepted = (cap: number) => `12 of 12 fit your rules. Your cap lets ${cap} through a month. Add a “No …” line?`;
 export const TRY_ENGINEER = 'Try the Engineer preset';
 export const WRITE_ASK = 'Write an ask your rules accept';

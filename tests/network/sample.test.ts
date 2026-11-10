@@ -16,7 +16,7 @@ vi.mock('@/lib/server/live', () => ({
 }));
 vi.mock('@/lib/server/ratelimit', () => ({
   clientKey: () => 'k',
-  checkRateLimit: async () => (h.limited ? { ok: false, retry_at: '2026-11-09T16:42:00.000Z', limit: 20, window_s: 600 } : { ok: true, remaining: 19 }),
+  checkRateLimit: async () => (h.limited ? { ok: false, retry_at: '2026-11-09T18:42:00.000Z', limit: 20, window_s: 600 } : { ok: true, remaining: 19 }),
 }));
 
 import { assembleAskText } from '@/lib/oti/ask';
@@ -43,7 +43,7 @@ function engCompiled(): CompiledAsk {
 
 function healthCompiled(): CompiledAsk {
   const parts = { challenge: HEALTH.compiledPartial[0]!.text, tried: HEALTH.compiledPartial[1]!.text, needs: HEALTH.compiledPartial[2]!.text, by: 'Nov 20', offers: 'our tender templates' };
-  return { parts, subject: HEALTH.subject, text: assembleAskText(HEALTH.partial, parts, ['needs', 'by', 'offers']), price: null, topic: 'Hospital procurement, Mexico' };
+  return { parts, subject: HEALTH.subject, text: assembleAskText(HEALTH.partial, parts, ['needs', 'by', 'offers']), price: null, topic: 'Hospital procurement, US' };
 }
 
 const engineer = PRESETS.find((p) => p.id === 'engineer')!;
@@ -63,7 +63,7 @@ describe('the SAMPLE fan-out without a model key', () => {
     if (!start.ok) return;
     expect(start.ask_id).toBe('sa_eng');
     const events = await collect(start.events);
-    expect(events[0]).toEqual({ event: 'plan', data: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'authored', recorded_at: '2026-11-09T09:00:00-06:00' } });
+    expect(events[0]).toEqual({ event: 'plan', data: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'authored', recorded_at: '2026-11-09T09:00:00-08:00' } });
     const cells = cellsOf(events);
     expect(cells).toHaveLength(40);
     expect(new Set(cells.map((c) => c.cell)).size).toBe(40);
@@ -100,7 +100,7 @@ describe('the SAMPLE fan-out without a model key', () => {
     if (!start.ok) throw new Error('refused');
     const cells = cellsOf(await collect(start.events));
     const filler = cells.find((c) => c.cell === shuffled(40, hash32('sa_eng'))[39]);
-    expect(filler).toMatchObject({ you: false, label: `m-${hex4('sa_eng:fill')}`, state: 'decline', reason_code: 'topic', source: 'authored', city: 'Monterrey' });
+    expect(filler).toMatchObject({ you: false, label: `m-${hex4('sa_eng:fill')}`, state: 'decline', reason_code: 'topic', source: 'authored', city: 'Seattle' });
     expect(cells.some((c) => c.you)).toBe(false);
   });
 
@@ -156,7 +156,7 @@ describe('the SAMPLE fan-out with live gates', () => {
     const ruled = new Set(SAMPLE_MEMBERS.filter((m) => m.topic === 'health').map((m) => m.rules));
     h.gate = async (input) => (ruled.has(input.rules) ? (input.rules.includes('price') ? asksBack(input.rules, { type: 'price', text: 'What do you charge per hospital?' }) : accepts(input.rules, input.rules.split('.')[0] as string)) : declines(input.rules));
     const c = healthCompiled();
-    const custom = { ...c, text: 'We sell inventory software to clinics in Puebla. 9 pilots, 2 paid. Need someone who has bought for a hospital network.' };
+    const custom = { ...c, text: 'We sell inventory software to clinics in Phoenix. 9 pilots, 2 paid. Need someone who has bought for a hospital network.' };
     const start = await startSampleSendWith({ sample_ask_id: null, text: custom.text, compiled: custom, you: null }, { clientKey: null }, { replay: false });
     if (!start.ok) throw new Error(`refused ${start.status}`);
     expect(start.ask_id).toMatch(/^sa_[0-9A-Za-z]{6}$/);

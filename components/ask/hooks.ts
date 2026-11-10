@@ -80,7 +80,7 @@ export function useOnline(): boolean {
 }
 
 /**
- * The zone times render in: Mexico City on the server and while hydrating (the server can't know the viewer's
+ * The zone times render in: Pacific time on the server and while hydrating (the server can't know the viewer's
  * zone), then the viewer's own zone (`undefined` = the browser's), per docs/CONTRACT.md §time.
  */
 export function useViewerTz(): string | undefined {

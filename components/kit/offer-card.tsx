@@ -22,11 +22,11 @@ export interface OfferCardProps {
   /** The heading level depends on the page: h1 on /o, h3 inside the /ask preview. */
   titleAs?: 'h1' | 'h2' | 'h3';
   titleId?: string;
-  /** “Lucía Ferrer · Orvella Health · Seed · Guadalajara”. */
+  /** “Maya Bennett · Oakline Health · Seed · Chicago”. */
   from: ReactNode;
   /** Usually “Matched your rule: <Mark>“…”</Mark>”. */
   match?: ReactNode;
-  /** The cost of answering: “Lucía sees your name only if you choose OK. …”. */
+  /** The cost of answering: “Maya sees your name only if you choose OK. …”. */
   fine?: ReactNode;
   facts: readonly Fact[];
   /** Accessible name when there is no visible heading id to point at. */

@@ -34,11 +34,11 @@ import { csrfToken, EXAMPLE_CSRF, resolveRecipientRef, SAMPLE_CSRF } from './ser
  * not-set-up state; a database error renders “Something broke on our side. Nothing was sent to anyone.”
  */
 
-/** The fixed REAL example the QA states render (Mon Nov 9, 21:04 CST → Thu Nov 12, 21:04 CST). */
+/** The fixed REAL example the QA states render (Mon Nov 9, 21:04 PT → Thu Nov 12, 21:04 PT). */
 const EXAMPLE = {
   offerId: 'o_3Fp9',
-  actedAt: '2026-11-09T21:16:00-06:00',
-  withdrawnAt: '2026-11-10T10:12:00-06:00',
+  actedAt: '2026-11-09T21:16:00-08:00',
+  withdrawnAt: '2026-11-10T10:12:00-08:00',
   pausedUntil: 'Dec 1',
   rulesVersion: 4,
 };
@@ -54,7 +54,7 @@ function weekdayOn(iso: string): TimeLabel {
   return { iso, text: fmtWeekday(Date.parse(iso), NETWORK_TZ) };
 }
 
-/** The hand-written edit for Ana's rules (SAMPLE and the QA example), labelled as written by hand. */
+/** The hand-written edit for Priya's rules (SAMPLE and the QA example), labelled as written by hand. */
 function sampleEdit(why: WhyKey | null): OfferEditModel | null {
   if (why !== 'area' && why !== 'stage') return null;
   const e = OFFER_SAMPLE.suggested_edits[why];

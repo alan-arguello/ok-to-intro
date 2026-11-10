@@ -100,8 +100,8 @@ import { liveCanRun, type LiveInfo, type RealAccess, type ResendSeed } from './t
 
 const DRAFT_KEY = 'oti.s2.draft';
 const YC_SAMPLE_TEXT = 'Need 20 minutes with a YC alum to review our YC application before the batch deadline. We tried the online guides.';
-/** QA example profile (Lucía Ferrer, a fictional founder in lib/sample) for the signed-in REAL states. */
-const EXAMPLE_PROFILE = { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' };
+/** QA example profile (Maya Bennett, a fictional founder in lib/sample) for the signed-in REAL states. */
+const EXAMPLE_PROFILE = { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' };
 /** The compiler should answer in about 3 s (ux-spec S2): a note at 8 s, the manual form at 15 s. */
 const SLOW_MS = 8_000;
 const GIVE_UP_MS = 15_000;
@@ -181,7 +181,7 @@ function startState(props: AskComposeProps, preset: PresetId): ComposeState {
     case 'compiler-down':
       return composeReducer(initialCompose('sample', sa.partial), { type: 'checkDown', kind: 'down', until: null, samples: sampleAnswers(sa), subject: sa.subject, text: sa.partial });
     case 'queued': {
-      // The REAL example is Lucía's hospital ask (lib/sample), as in the prototype.
+      // The REAL example is Maya's hospital ask (lib/sample), as in the prototype.
       const h = SAMPLE_NETWORK_ASKS.health;
       const base = initialCompose('real', h.complete);
       return composeReducer(composeReducer(base, { type: 'checkExample', text: h.complete, rows: exampleRows(h, 'complete'), subject: h.subject, topic: null }), { type: 'queued' });

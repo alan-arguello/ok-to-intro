@@ -185,7 +185,7 @@ export function loopForPlayground(stores: SampleStores, now: number): SampleLoop
 
 /* ---------- cards ---------- */
 
-/** The canonical SAMPLE card: Lucía Ferrer's ask, Ana's matched rule (also the QA example). */
+/** The canonical SAMPLE card: Maya Bennett's ask, Priya's matched rule (also the QA example). */
 export function canonicalCard(): OfferCardModel {
   const a = OFFER_SAMPLE.asker;
   return {
@@ -221,7 +221,7 @@ export function loopHours(loop: SampleLoop, now: number): number {
   return hoursLeft(loop.offeredAt + OFFER_WINDOW_MS, now);
 }
 
-/** What the server can render before the tab is read: the canonical card for the known sample ids, else Lucía's. */
+/** What the server can render before the tab is read: the canonical card for the known sample ids, else Maya's. */
 export function serverSampleCard(source: SampleSource, now: number): { card: OfferCardModel; askId: string | null } {
   if (source.kind === 'ask') {
     const loop = loopForAsk(source.id, NO_STORES, now);

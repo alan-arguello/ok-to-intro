@@ -1,6 +1,6 @@
 /**
  * What the /me server component hands its client view. Pure types: safe on both sides of the boundary.
- * `mode: 'sample'` is the QA-only preview (example numbers, the sample member Ana Ruiz, actions simulated in the tab);
+ * `mode: 'sample'` is the QA-only preview (example numbers, the sample member Priya Shah, actions simulated in the tab);
  * `mode: 'real'` is the signed-in member's own data, and every action is a server action.
  */
 
@@ -8,7 +8,7 @@ import type { QaState } from '@/lib/qa';
 import type { AskerOutcome, MemberStatus } from '@/lib/types';
 import type { LedgerCounts } from './copy';
 
-/** A time the server formatted in Mexico City (`label`), re-formatted in the viewer's zone after hydration when `iso` is set. */
+/** A time the server formatted in Pacific time (`label`), re-formatted in the viewer's zone after hydration when `iso` is set. */
 export interface TimeLabel {
   iso: string | null;
   label: string;
@@ -66,7 +66,7 @@ export interface MeInitial {
   /** The first-visit block's source label: “From the playground”, “Health operator preset”, or null. */
   rulesSourceLabel: string | null;
   capUsed: number;
-  /** Cap month, YYYY-MM-01 (Mexico City). */
+  /** Cap month, YYYY-MM-01 (Pacific time). */
   month: string;
   ledger: MeLedger | null;
   pending: { title: string; from: string; hoursLeft: number; href: string } | null;

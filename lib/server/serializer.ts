@@ -33,7 +33,7 @@ import { askerAsOf, memberEventVisibleAt, nextCheckpoint, roundedReplyBy } from 
  * - coarse reasons only on no_match, counted over the whole network once 3 gates ran, buckets under 3 folded into
  *   `other` together with SQL skips and failures;
  * - a pass and an expiry read the same (both `nothistime`, both move the offer on, or close the ask);
- * - checkpoints: what a member did shows at the first 09:00 / 21:00 (Mexico City) after it happened, and the times an
+ * - checkpoints: what a member did shows at the first 09:00 / 21:00 (Pacific time) after it happened, and the times an
  *   asker reads for it are that checkpoint; an intro shows at once; the asker's own actions show at once;
  * - a member's identity only after OK, once the intro email went out (until then the OK reads as the offer still
  *   waiting, so “The intro email went to you both” is always true); their matched line only if they turned it on.
@@ -394,7 +394,7 @@ export function failedGateCount(snapshot: AskSnapshot): number {
  * “Your asks”: one short status phrase per ask (S3 /me, MCP my_asks)
  * ========================================================================== */
 
-/** “offered · reply by Thu Nov 12, 21:04 CST”. Server-side, so times read in the network's zone. */
+/** “offered · reply by Thu Nov 12, 21:04 PT”. Server-side, so times read in the network's zone. */
 export function askerStatusLine(view: AskerAskView): string {
   switch (view.outcome) {
     case 'ready':

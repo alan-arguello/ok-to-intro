@@ -1,15 +1,15 @@
 /**
- * Times. English labels with the zone abbreviation, e.g. “Thu Nov 12, 21:04 CST”.
+ * Times. English labels with the zone abbreviation, e.g. “Thu Nov 12, 21:04 PT”.
  *
  * - Client components show the viewer's own zone: call without `tz` (the browser's zone).
- * - Server code must pass `NETWORK_TZ` explicitly (Vercel runs in UTC), so emails and no-JS pages read CST.
+ * - Server code must pass `NETWORK_TZ` explicitly (Vercel runs in UTC), so emails and no-JS pages read PT.
  * - Asker-visible changes on REAL asks (other than “intro made”) land at the next 09:00 or 21:00 checkpoint
- *   in Mexico City, computed on read (ux-spec §1 “Conflicts resolved”). See lastCheckpoint/nextCheckpoint.
- * - Monthly caps count per calendar month in Mexico City (capMonth).
+ *   in Pacific time, computed on read (ux-spec §1 “Conflicts resolved”). See lastCheckpoint/nextCheckpoint.
+ * - Monthly caps count per calendar month in Pacific time (capMonth).
  */
 
-/** The network's home zone. Mexico City has had no DST since 2022 (UTC−6 all year), but nothing here assumes it. */
-export const NETWORK_TZ = 'America/Mexico_City';
+/** The network's home zone. Pacific time (PT) observes DST; the calendar math goes through Intl, so nothing here assumes a fixed offset. */
+export const NETWORK_TZ = 'America/Los_Angeles';
 
 export const HOUR_MS = 3_600_000;
 export const DAY_MS = 24 * HOUR_MS;
@@ -45,6 +45,11 @@ function formatter(tz: string | undefined): Intl.DateTimeFormat {
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+/** US Pacific reads "PT" all year (never PST or PDT), so labels match the copy: 09:00 or 21:00 Pacific time (PT). */
+function zoneLabel(abbr: string): string {
+  return abbr === 'PST' || abbr === 'PDT' ? 'PT' : abbr;
+}
+
 /** Wall-clock parts of an instant in `tz` (undefined = the runtime's own zone). */
 export function zonedParts(ms: number, tz?: string): Parts {
   const o: Record<string, string> = {};
@@ -59,7 +64,7 @@ export function zonedParts(ms: number, tz?: string): Parts {
     second: Number(o.second),
     weekday: o.weekday ?? '',
     monthShort,
-    zone: o.timeZoneName ?? '',
+    zone: zoneLabel(o.timeZoneName ?? ''),
   };
 }
 
@@ -76,7 +81,7 @@ export function zonedTimeToUtc(year: number, month: number, day: number, hour: n
 
 const pad2 = (n: number) => (n < 10 ? `0${n}` : String(n));
 
-/** “Thu Nov 12, 21:04 CST”. */
+/** “Thu Nov 12, 21:04 PT”. */
 export function fmtWhen(ms: number, tz?: string): string {
   const p = zonedParts(ms, tz);
   return `${p.weekday} ${p.monthShort} ${p.day}, ${pad2(p.hour)}:${pad2(p.minute)} ${p.zone}`;
@@ -105,7 +110,7 @@ export function fmtClock(ms: number, tz?: string): string {
   return `${pad2(p.hour)}:${pad2(p.minute)}`;
 }
 
-/** The zone abbreviation the viewer sees, e.g. “CST”. */
+/** The zone abbreviation the viewer sees, e.g. “PT”. */
 export function zoneAbbr(ms: number, tz?: string): string {
   return zonedParts(ms, tz).zone;
 }
@@ -120,7 +125,7 @@ export function toMs(t: string | number | Date): number {
   return t instanceof Date ? t.getTime() : typeof t === 'number' ? t : Date.parse(t);
 }
 
-/* ---------- asker checkpoints (09:00 and 21:00 in Mexico City) ---------- */
+/* ---------- asker checkpoints (09:00 and 21:00 Pacific time (PT)) ---------- */
 
 function checkpointsAround(ms: number): number[] {
   const p = zonedParts(ms, NETWORK_TZ);
@@ -160,7 +165,7 @@ export function askerAsOf(sendFinishedAt: Date | number | null, now: Date | numb
 
 /* ---------- monthly caps ---------- */
 
-/** First day of the cap month in Mexico City, as `YYYY-MM-01` (the `cap_usage.month` value). */
+/** First day of the cap month in Pacific time, as `YYYY-MM-01` (the `cap_usage.month` value). */
 export function capMonth(at: Date | number = Date.now()): string {
   const p = zonedParts(toMs(at), NETWORK_TZ);
   return `${p.year}-${pad2(p.month)}-01`;
@@ -178,7 +183,7 @@ export function resetsOn(month: string): string {
   return `${MONTHS[m % 12]} 1`;
 }
 
-/** The UTC instant the cap month after `month` starts (local midnight in Mexico City). */
+/** The UTC instant the cap month after `month` starts (local midnight in Pacific time). */
 export function nextMonthStart(month: string): Date {
   const y = Number(month.slice(0, 4));
   const m = Number(month.slice(5, 7));

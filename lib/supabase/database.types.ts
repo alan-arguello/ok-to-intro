@@ -236,7 +236,7 @@ export type DraftRow = {
 };
 
 export type ModelUsageRow = {
-  /** Local day in Mexico City, YYYY-MM-DD. */
+  /** Local day in Pacific time, YYYY-MM-DD. */
   day: string;
   usd: number;
   calls: number;

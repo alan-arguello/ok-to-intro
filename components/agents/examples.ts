@@ -45,11 +45,11 @@ import { INSTALL_MCP_COMMAND, MCP_SERVER_ID } from '@/lib/site';
 import type { PresetId, QuestionType, SampleNetworkAskId } from '@/lib/types';
 import { PART_KEYS } from '@/lib/types';
 
-/* ---------- one fixed example timeline (Mexico City): Lucía's ask, Mon Nov 9 ---------- */
+/* ---------- one fixed example timeline (Pacific time): Maya's ask, Mon Nov 9 ---------- */
 
-const SENT_AT = OFFER_SAMPLE.sent_iso; // Mon Nov 9, 21:04 CST
-const REPLY_BY = OFFER_SAMPLE.reply_by_iso; // Thu Nov 12, 21:04 CST
-const at = (hhmm: string, day = '2026-11-09') => `${day}T${hhmm}:00-06:00`;
+const SENT_AT = OFFER_SAMPLE.sent_iso; // Mon Nov 9, 21:04 PT
+const REPLY_BY = OFFER_SAMPLE.reply_by_iso; // Thu Nov 12, 21:04 PT
+const at = (hhmm: string, day = '2026-11-09') => `${day}T${hhmm}:00-08:00`;
 const SEEN_AT = at('21:10'); // the member opens Claude Code: 71 h left
 const RESPOND_AT = at('21:16');
 const ANSWER_AT = at('21:12');
@@ -57,7 +57,7 @@ const RULES_AT = at('21:20');
 const CHECKIN_AT = at('21:22');
 const LIMIT_AT = at('10:42');
 
-/** `days` local days after `iso` in Mexico City, at `hour`:00 there (the check-in schedule). */
+/** `days` local days after `iso` in Pacific time, at `hour`:00 there (the check-in schedule). */
 function localDay(iso: string, days: number, hour: number): string {
   const p = zonedParts(toMs(iso), NETWORK_TZ);
   const d = new Date(Date.UTC(p.year, p.month - 1, p.day + days));
@@ -168,7 +168,7 @@ export function exampleSampleSend(id: SampleNetworkAskId, offeredAt: string): Sa
   };
 }
 
-/* ---------- pending_for_me: Lucía's ask reaching Ana (fictional) ---------- */
+/* ---------- pending_for_me: Maya's ask reaching Priya (fictional) ---------- */
 
 const ORVELLA = SAMPLE_ASKS.find((a) => a.id === 'a02');
 const OFFER_ID = 'o_3Fp9';
@@ -255,7 +255,7 @@ function askTranscript(): Transcript {
   const send = exampleSampleSend('sa_health', SENT_AT);
   const q = send.question_list[0];
   const rows: TranscriptRow[] = [
-    row('U', '/ask need someone who has bought software for a public hospital in Mexico'),
+    row('U', '/ask need someone who has bought software for a public hospital in the US'),
     row('B'),
     row('C', 'I read README.md and notes/pipeline.md (not .env or keys).'),
     row('B'),
@@ -415,7 +415,7 @@ export function toolExamples(): Record<ToolName, string[]> {
     my_asks: [
       myAsksReceipt(
         [
-          { id: 'a_91xQ2k', subject: OFFER_SAMPLE.subject, outcome: 'offered', status: `offered · reply by Thu Nov 12, 21:04 CST` },
+          { id: 'a_91xQ2k', subject: OFFER_SAMPLE.subject, outcome: 'offered', status: `offered · reply by Thu Nov 12, 21:04 PT` },
           {
             id: 'a_7c2dWe',
             subject: 'First SOC 2 in 60 days, 20 min?',
@@ -423,7 +423,7 @@ export function toolExamples(): Record<ToolName, string[]> {
             status: 'a gate has a question for you',
             question: { id: 'q_8kM3', type: 'deal_size', text: SAMPLE_NETWORK_ASKS.founder.ask_back[0]?.[1].text ?? 'How large is the bank contract, per year?' },
           },
-          { id: 'a_3k9pZr', subject: 'Postgres p95 at 40M rows, 20 min?', outcome: 'intro', status: 'intro made · Sun Nov 8, 16:30 CST' },
+          { id: 'a_3k9pZr', subject: 'Postgres p95 at 40M rows, 20 min?', outcome: 'intro', status: 'intro made · Sun Nov 8, 16:30 PT' },
         ],
         { example: true },
       ),

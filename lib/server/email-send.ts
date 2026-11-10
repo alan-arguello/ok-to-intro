@@ -279,7 +279,7 @@ export async function cancelEmailKey(key: string): Promise<void> {
  * Small helpers the builders share
  * ========================================================================== */
 
-/** “Lucía” from “Lucía Ferrer”; the email's local part when no name was given. */
+/** “Maya” from “Maya Bennett”; the email's local part when no name was given. */
 export function firstName(name: string | null | undefined, email?: string | null): string {
   const n = String(name ?? '').trim();
   if (n) return n.split(/\s+/)[0] as string;

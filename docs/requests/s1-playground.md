@@ -51,7 +51,7 @@ None of these block S1: each section says what S1 does meanwhile.
 - Decided-by chain for hand-written rows: “example accept → …” instead of “model accept → …”; Details reads
   “Example verdict (written by hand) → …” and “Example output (written by hand, not a model run)”.
 - Run diff between the hand-written examples and a live run on the same rules: “1 differs from the hand-written
-  examples: Pinole Labs.” / “Every verdict matches the hand-written examples.” (“model variance” only between two
+  examples: Fernby Labs.” / “Every verdict matches the hand-written examples.” (“model variance” only between two
   model runs).
 - Quote test link: “2 real catches on the Board ›” → “Clause-check counts on the Board ›” (no invented count).
 - QA fixture runs (live-layout QA states) are labelled “QA fixture, not a model call”, with no latency, cost or

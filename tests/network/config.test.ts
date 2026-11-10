@@ -47,7 +47,7 @@ describe('the REAL network switches on with its variables', () => {
     const offers = await import('@/lib/server/offers');
     const checkins = await import('@/lib/server/checkins');
     const dispatch = await import('@/lib/server/dispatch');
-    const user = { id: '00000000-0000-4000-8000-000000000001', email: 'lucia@example.com' };
+    const user = { id: '00000000-0000-4000-8000-000000000001', email: 'maya@example.com' };
     expect(await asks.canAskReal(user)).toEqual({ allowed: false, reason: 'not_configured' });
     expect(await asks.listMyAsks(user)).toEqual({ ok: false, reason: 'not_configured' });
     expect(await asks.getAskerView('a_91xQr2', user)).toEqual({ ok: false, reason: 'not_configured' });

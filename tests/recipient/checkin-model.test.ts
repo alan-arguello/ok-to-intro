@@ -17,7 +17,7 @@ import { checkinQuestion } from '@/lib/emails';
 import { QA_STATES } from '@/lib/qa';
 import type { CheckinView } from '@/lib/types';
 
-const NOW = Date.parse('2026-11-11T15:00:00Z');
+const NOW = Date.parse('2026-11-11T17:00:00Z');
 const q = (sp: Record<string, string>, qa = false): CheckinQuery => parseCheckinQuery(sp, qa);
 
 function view(over: Partial<CheckinView> = {}): CheckinView {
@@ -27,13 +27,13 @@ function view(over: Partial<CheckinView> = {}): CheckinView {
     kind: 'd1',
     role: 'asker',
     sample: false,
-    other_name: 'Ana Ruiz',
-    other_first: 'Ana',
-    intro_subject: 'Hospital procurement in Mexico, 20 min?',
-    intro_made_at: '2026-11-09T21:16:00-06:00',
+    other_name: 'Priya Shah',
+    other_first: 'Priya',
+    intro_subject: 'Hospital procurement in the US, 20 min?',
+    intro_made_at: '2026-11-09T21:16:00-08:00',
     answer: null,
     answered_at: null,
-    closes_at: '2026-12-09T10:00:00-06:00',
+    closes_at: '2026-12-09T10:00:00-08:00',
     reminder_at: null,
     ...over,
   };
@@ -69,9 +69,9 @@ describe('values, answers and labels', () => {
     expect(answerText('d1', '4')).toBe('4 of 5');
     expect(answerText('d1', 'notyet')).toBe('we haven’t talked yet');
     expect(answerText('d14', 'customer')).toBe('A customer');
-    expect(checkinQuestion('d1', 'asker', 'Ana')).toBe('How useful was the call with Ana?');
-    expect(checkinQuestion('d1', 'member', 'Lucía')).toBe('Was the call with Lucía worth your 20 minutes?');
-    expect(checkinQuestion('d14', 'asker', 'Ana')).toBe('What came of the intro to Ana?');
+    expect(checkinQuestion('d1', 'asker', 'Priya')).toBe('How useful was the call with Priya?');
+    expect(checkinQuestion('d1', 'member', 'Maya')).toBe('Was the call with Maya worth your 20 minutes?');
+    expect(checkinQuestion('d14', 'asker', 'Priya')).toBe('What came of the intro to Priya?');
   });
 });
 
@@ -137,7 +137,7 @@ describe('REAL: the check-in decides', () => {
   });
 
   it('answered: “You answered on …” with (Change); `change=1` reopens it with the saved answer', () => {
-    const a = view({ answer: { kind: 'd1', rating: 4 }, answered_at: '2026-11-10T10:00:00-06:00' });
+    const a = view({ answer: { kind: 'd1', rating: 4 }, answered_at: '2026-11-10T10:00:00-08:00' });
     expect(uiFromRecord(a, q({}), NOW)).toMatchObject({ view: 'already', value: '4' });
     expect(uiFromRecord(a, q({ change: '1' }), NOW)).toMatchObject({ view: 'form', value: '4' });
     expect(uiFromRecord(a, q({ change: '1', v: '2' }), NOW)).toMatchObject({ view: 'form', value: '2' });
@@ -147,7 +147,7 @@ describe('REAL: the check-in decides', () => {
   });
 
   it('a closed window reads closed, answered or not', () => {
-    expect(uiFromRecord(view({ closes_at: '2026-11-11T14:00:00Z' }), q({ v: '4' }), NOW).view).toBe('closed');
-    expect(uiFromRecord(view({ closes_at: '2026-11-11T14:00:00Z', answer: { kind: 'd1', rating: 3 } }), q({}), NOW).view).toBe('closed');
+    expect(uiFromRecord(view({ closes_at: '2026-11-11T16:00:00Z' }), q({ v: '4' }), NOW).view).toBe('closed');
+    expect(uiFromRecord(view({ closes_at: '2026-11-11T16:00:00Z', answer: { kind: 'd1', rating: 3 } }), q({}), NOW).view).toBe('closed');
   });
 });

@@ -67,7 +67,7 @@ describe('parseBoardSnapshot', () => {
     const s = parseBoardSnapshot(raw);
     expect(s?.asks_sent).toBe(12);
     expect(s?.as_of).toBe('2026-11-10T20:02:00.000Z');
-    expect(s?.demand[0]).toEqual({ topic: 'Hospital procurement, Mexico', asks: 4, reached: 1, askers: 3 });
+    expect(s?.demand[0]).toEqual({ topic: 'Hospital procurement, US', asks: 4, reached: 1, askers: 3 });
   });
 
   it('refuses a snapshot with a missing or invalid count rather than print a 0 nobody counted', () => {
@@ -110,9 +110,9 @@ describe('formatting', () => {
 });
 
 describe('boardView: real counts', () => {
-  it('writes the lede with the first join and the last update, in Mexico City time', () => {
+  it('writes the lede with the first join and the last update, in Pacific time', () => {
     const v = view(EXAMPLE_SNAPSHOT);
-    expect(v.lede).toBe('Real counts since Nov 9, 2026. Every number has its denominator. Last update Nov 10, 14:02 CST.');
+    expect(v.lede).toBe('Real counts since Nov 9, 2026. Every number has its denominator. Last update Nov 10, 14:02 PT.');
     expect(v.updated).toBe('Nov 10, 14:02');
     expect(view(snap({ since: null })).lede.startsWith('Real counts. Every number has its denominator. Last update')).toBe(true);
   });
@@ -169,7 +169,7 @@ describe('boardView: real counts', () => {
   it('lists a demand topic only with 3 or more founders, and counts the rest as other topics', () => {
     const v = view(EXAMPLE_SNAPSHOT);
     expect(v.demand.rows.map((d) => `${d.topic}: ${lineText(d.line)}`)).toEqual([
-      'Hospital procurement, Mexico: 4 asks from 3 founders · 3 of 4 reached nobody',
+      'Hospital procurement, US: 4 asks from 3 founders · 3 of 4 reached nobody',
       'First SOC 2 audit: 3 asks from 3 founders · 3 of 3 reached nobody',
     ]);
     expect(lineText(v.demand.other ?? [])).toBe('Other topics (fewer than 3 founders each): 5 asks');
@@ -269,7 +269,7 @@ describe('the QA examples', () => {
 
   it('render the four prototype states', () => {
     expect(lineText(exampleBoardView('launch-day').headline?.line ?? [])).toBe(BOARD_COPY.noIntros);
-    expect(exampleBoardView('launch-day').lede).toContain('Last update Nov 9, 21:30 CST.');
+    expect(exampleBoardView('launch-day').lede).toContain('Last update Nov 9, 21:30 PT.');
     expect(lineText(exampleBoardView('small-n').headline?.line ?? [])).toContain('2 useful outcomes so far');
     expect(exampleBoardView('stale').stale).toBe(true);
     expect(exampleBoardView('default').stale).toBe(false);
@@ -292,7 +292,7 @@ describe('the QA examples', () => {
 describe('the clause-check example', () => {
   it('runs the real clause finder on the SAMPLE rules and says what code did', () => {
     const ex = clauseExample();
-    expect(ex.company).toBe('Mezquite Health');
+    expect(ex.company).toBe('Sagefen Health');
     expect(ex.quoted).toEqual([{ text: 'Happy to take any intro', found: false }]);
     expect(`${ex.found} of ${ex.total}`).toBe('0 of 1');
     expect(ex.change).toBe('accept → decline (code)');

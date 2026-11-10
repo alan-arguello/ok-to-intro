@@ -21,7 +21,7 @@ const clean = (s: string | null | undefined) => stripEnd(String(s ?? '').replace
 /**
  * Card facts in order: Problem, Needs, Tried, By, Offers, then Price when a gate asked for it and the asker
  * answered. Empty parts are dropped. `price` is the fact text as the surface shows it, e.g.
- * “$18k a year per hospital (Lucía told your gate)”.
+ * “$18k a year per hospital (Maya told your gate)”.
  */
 export function askFacts(parts: AskParts, price?: string | null): Fact[] {
   const facts: Fact[] = [];

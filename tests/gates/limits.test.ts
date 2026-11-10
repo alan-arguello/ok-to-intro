@@ -109,12 +109,12 @@ describe('budget', () => {
     recordUsage(0.02, 1, now);
     expect(await spentToday(now)).toBeCloseTo(10.01, 6);
     expect(await currentPause(now)).toEqual({ state: 'budget', until: nextLocalMidnight(now).toISOString(), reason: 'daily_cap' });
-    // A new Mexico City day starts from zero.
+    // A new Pacific-time day starts from zero.
     const tomorrow = nextLocalMidnight(now).getTime() + 1000;
     expect(await currentPause(tomorrow)).toBeNull();
     expect(localDay(now)).toBe('2026-11-09');
-    expect(nextLocalMidnight(now).toISOString()).toBe('2026-11-10T06:00:00.000Z');
-    expect(nextMonthStartFrom(now).toISOString()).toBe('2026-12-01T06:00:00.000Z');
+    expect(nextLocalMidnight(now).toISOString()).toBe('2026-11-10T08:00:00.000Z');
+    expect(nextMonthStartFrom(now).toISOString()).toBe('2026-12-01T08:00:00.000Z');
   });
 
   it('recognises Anthropic’s spend stops and nothing else', () => {

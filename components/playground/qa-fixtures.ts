@@ -29,7 +29,7 @@ const LONG_RULES = [
   'No asks to join an advisory board, no recruiting asks and no requests to try a product.',
   'Prefer asks that name a deadline in the next 30 days and offer something back, even a write-up.',
   'No cold sales pitches for observability, hosting or security tools, even when they are framed as a question.',
-  'Happy to talk with founders anywhere in Latin America, in English or Spanish, at most 20 minutes per call.',
+  'Happy to talk with founders anywhere in North America, in English or Spanish, at most 20 minutes per call.',
   'No asks about pricing, go-to-market or hiring; those go to other people in the network who know them better.',
   'No asks that open with praise and skip the problem.',
 ].join('\n');
@@ -66,7 +66,7 @@ function engineerGates(): GateMap {
   return out;
 }
 
-/** rerun-changed: Engineer plus “No asks from health companies.”; the example has Guadua Health declined by it. */
+/** rerun-changed: Engineer plus “No asks from health companies.”; the example has Wrenby Health declined by it. */
 function engineerWithHealthLine(): GateMap {
   const out = engineerGates();
   const base = out.a09;
@@ -76,7 +76,7 @@ function engineerWithHealthLine(): GateMap {
     model_verdict: 'decline',
     cited: [{ text: 'No asks from health companies.', found: false }],
     reason_code: 'rule_says_no',
-    reason: 'Guadua Health is a health company.',
+    reason: 'Wrenby Health is a health company.',
     question: null,
   };
   return out;

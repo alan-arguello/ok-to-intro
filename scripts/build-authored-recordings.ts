@@ -30,7 +30,7 @@ if (outArg !== -1 && !process.argv[outArg + 1]) {
   process.exit(1);
 }
 const force = process.argv.includes('--force');
-const generatedAt = process.env.RECORDED_AT || '2026-11-09T09:00:00-06:00';
+const generatedAt = process.env.RECORDED_AT || '2026-11-09T09:00:00-08:00';
 const sha256 = (s: string) => createHash('sha256').update(s).digest('hex');
 
 function guard(file: string) {

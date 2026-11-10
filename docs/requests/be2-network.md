@@ -28,7 +28,7 @@ BE2 built against the contract as written. Nothing below blocks anyone; each ite
 - Change: report `network: 'real'` only when `flags.realNetwork && flags.hasResend`.
 - Why: BE2's `networkConfigured()` (lib/server/audit.ts) now also needs email: members learn about an offer by email
   and an intro is an email to both people, so an instance with a database but no Resend key shows every REAL surface's
-  “not set up on this instance” state instead of telling a member “We emailed you and Lucía” when nothing went out.
+  “not set up on this instance” state instead of telling a member “We emailed you and Maya” when nothing went out.
   `/api/health` still says `network: 'real'` in that state.
 - Blocking? no.
 

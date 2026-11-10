@@ -665,7 +665,7 @@ export interface LedgerDecision {
 }
 
 export interface MemberLedger extends LedgerCounts {
-  /** Cap month, YYYY-MM-01 (Mexico City). */
+  /** Cap month, YYYY-MM-01 (Pacific time). */
   month: string;
   /** One per non-blank line of the CURRENT rules; null when nothing reached the gate this month. */
   tallies: string[] | null;
@@ -750,7 +750,7 @@ export function buildLedger(rules: string, decisions: readonly LedgerDecision[],
   };
 }
 
-/** The member's ledger for the current cap month (Mexico City): decisions their gate made, and offers delivered. */
+/** The member's ledger for the current cap month (Pacific time): decisions their gate made, and offers delivered. */
 export async function getMonthLedger(memberId: string, rules: string, now: Date = new Date()): Promise<{ ok: true; ledger: MemberLedger } | Failure> {
   const db = admin();
   if (!db) return NOT_CONFIGURED;

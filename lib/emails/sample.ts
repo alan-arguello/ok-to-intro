@@ -1,7 +1,7 @@
 /**
  * SAMPLE inputs for the email templates: what the public viewer (/emails/[kind]) renders and what the tests check.
  * Everything here is fictional (lib/sample) and is labelled SAMPLE on the page. The canonical emails use the fixed
- * REAL example (Lucía Ferrer asks; Ana Ruiz's gate accepted; Mon Nov 9, 21:04 CST). With `?ask=<id>` the viewer
+ * REAL example (Maya Bennett asks; Priya Shah's gate accepted; Mon Nov 9, 21:04 PT). With `?ask=<id>` the viewer
  * passes a `SampleLoop` built from the visitor's own tab (components/offer/sample-loop.ts), so the intro shows the ask
  * that was actually sent and the member who held it. Pure; safe in client and server code.
  */
@@ -91,11 +91,11 @@ export interface SampleEmail {
   note: string | null;
 }
 
-const EXAMPLE_MEMBER = { name: OFFER_SAMPLE.member.name, first: OFFER_SAMPLE.member.first, email: 'ana@example.com' };
+const EXAMPLE_MEMBER = { name: OFFER_SAMPLE.member.name, first: OFFER_SAMPLE.member.first, email: 'priya@example.com' };
 /** The visitor's own line in a SAMPLE intro (they haven't joined, so they have no one-liner yet). */
 export const SAMPLE_YOU_LINE = 'the member whose gate accepted (your one line goes here when you join)';
 
-/** `Sofía Peralta` → `sofia@example.com` (fictional addresses on the reserved example.com domain). */
+/** `Hannah Kim` → `hannah@example.com` (fictional addresses on the reserved example.com domain). */
 function exampleAddress(first: string): string {
   return `${first.normalize('NFD').replace(/[^a-zA-Z]/g, '').toLowerCase() || 'member'}@example.com`;
 }
@@ -114,7 +114,7 @@ function askerFooter(askId: string): Extract<EmailFooter, { role: 'asker' }> {
   return { role: 'asker', ask_url: absoluteUrl(`/ask/${encodeURIComponent(askId)}`), delete_url: absoluteUrl('/me#delete') };
 }
 
-/** The canonical facts without the “(Lucía told your gate)” aside, as the intro quotes them. */
+/** The canonical facts without the “(Maya told your gate)” aside, as the intro quotes them. */
 function introFacts(facts: readonly Fact[]): Fact[] {
   return facts.map(([k, v]): Fact => [k, k === 'Price' ? v.replace(/\s*\([^)]*told your gate\)\s*$/, '') : v]);
 }
@@ -236,7 +236,7 @@ function canonicalIntro(): SampleEmail {
     message,
     to: both,
     replyTo: both,
-    note: `The line “Ana’s rules include …” is there only because Ana turned on “Show askers the line that matched”. Otherwise the rule stays private.`,
+    note: `The line “Priya’s rules include …” is there only because Priya turned on “Show askers the line that matched”. Otherwise the rule stays private.`,
   };
 }
 

@@ -11,7 +11,7 @@ import { ROUTES } from '@/lib/site';
 import type { MemberRef } from '@/lib/types';
 
 /**
- * Everything /me shows for a signed-in member, read server-side (owner: S3). Times are labelled in Mexico City for
+ * Everything /me shows for a signed-in member, read server-side (owner: S3). Times are labelled in Pacific time for
  * the server render; the client re-labels them in the viewer's zone after hydration (TimeLabel.iso).
  * Member data failing → the page's “Something broke on our side” state. BE2 data (the pending offer, “Your asks”)
  * failing → those parts degrade on their own.

@@ -29,5 +29,5 @@ export const BOARD_COPY = {
   defsNoteSmall: 'Any denominator under 20 is a small sample.',
   defsNoteMedian: 'The median time to answer is shown from 3 answered offers, so no single member’s answer time is published.',
   defsNoteCheckpoint:
-    'Counts are as of the last 09:00 or 21:00 checkpoint in Mexico City, the same times askers see changes, so the board can’t be used to time a member’s answer.',
+    'Counts are as of the last 09:00 or 21:00 checkpoint in Pacific time (PT), the same times askers see changes, so the board can’t be used to time a member’s answer.',
 } as const;

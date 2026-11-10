@@ -93,7 +93,7 @@ describe('code refusals (no model call, with or without a key)', () => {
   it('refuses asks about YC applications and the vague samples', () => {
     expect(codeRefusal('Need 20 minutes with a YC alum to review our YC application before the batch deadline.')).toBe('yc_application');
     for (const s of Object.values(SAMPLE_NETWORK_ASKS)) expect(codeRefusal(s.vague)).toBe('vague');
-    expect(codeRefusal('  need   INTROS to hospital buyers in mexico. ')).toBe('vague');
+    expect(codeRefusal('  need   INTROS to hospital buyers in the us. ')).toBe('vague');
     expect(codeRefusal('Help with fundraising')).toBe('vague');
     expect(codeRefusal(PARTIAL)).toBeNull();
     expect(codeRefusal(ENG.complete)).toBeNull();
@@ -105,7 +105,7 @@ describe('code refusals (no model call, with or without a key)', () => {
     expect(yc[1]!.data).toEqual({ kind: 'yc_application', message: YC_APPLICATION_REFUSAL });
     const vague = await events(await post({ text: ENG.vague, network: 'sample' }));
     expect(vague[1]!.data).toEqual({ kind: 'vague', message: VAGUE_COPY });
-    expect(vague[0]!.data).toMatchObject({ network: 'sample', words: 11 });
+    expect(vague[0]!.data).toMatchObject({ network: 'sample', words: 12 });
   });
 });
 
@@ -295,7 +295,7 @@ describe('part, subject and topic checks', () => {
   });
 
   it('normalizeTopic is short and single-line, or null', () => {
-    expect(normalizeTopic('  Hospital procurement,\nMexico. ')).toBe('Hospital procurement, Mexico');
+    expect(normalizeTopic('  Hospital procurement,\nUS. ')).toBe('Hospital procurement, US');
     expect(normalizeTopic('')).toBeNull();
     expect(normalizeTopic(5)).toBeNull();
     expect(normalizeTopic('x '.repeat(80))!.length).toBeLessThanOrEqual(80);

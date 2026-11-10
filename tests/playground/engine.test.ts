@@ -39,7 +39,7 @@ function memoryStorage(): PlaygroundStorage & { saved: PlaygroundStore[]; run: R
 function setup(script?: Script, storage = memoryStorage()) {
   const calls: TryRequest[] = [];
   const announced: string[] = [];
-  let clock = Date.parse('2026-11-09T16:00:00Z');
+  let clock = Date.parse('2026-11-09T18:00:00Z');
   const deps: EngineDeps = {
     postTry: async (body, onEvent, signal) => {
       calls.push(body);
@@ -267,12 +267,12 @@ describe('live runs (POST /api/try)', () => {
   });
 
   it('429: the limited notice names the next live run; presets still run', async () => {
-    const { engine, calls } = setup(() => ({ ok: false, status: 429, body: { error: 'rate_limited', retry_at: '2026-11-09T16:42:00Z' } }));
+    const { engine, calls } = setup(() => ({ ok: false, status: 429, body: { error: 'rate_limited', retry_at: '2026-11-09T18:42:00Z' } }));
     engine.setRules(EDITED);
     engine.run();
     await flush();
     const s = engine.getState();
-    expect(s.env.limitedUntil).toBe(Date.parse('2026-11-09T16:42:00Z'));
+    expect(s.env.limitedUntil).toBe(Date.parse('2026-11-09T18:42:00Z'));
     expect(s.notes[0]?.text).toMatch(/^You ran 20 live checks in 10 minutes\. The next live run is at \d\d:\d\d\. Presets are unlimited\.$/);
     expect(engine.run()).toBe('blocked');
     expect(calls).toHaveLength(1);
@@ -393,7 +393,7 @@ describe('Try a change', () => {
     expect(calls).toHaveLength(0);
     expect(s.cap).toBe(1);
     expect(s.capNote).toBe('Cap changed to 1. Applied in code, no model call.');
-    expect(s.diff).toBe('1 changed since your last run: Lumbre AI.');
+    expect(s.diff).toBe('1 changed since your last run: Tallow AI.');
     expect(s.changed).toEqual({ a03: 'reach' });
     expect(announced.at(-1)).toBe('Cap changed to 1. Applied in code, no model call. 1 verdict changed.');
     engine.undoApplied();
@@ -511,7 +511,7 @@ describe('QA states (prototype names)', () => {
   it('the states show what the spec says', () => {
     expect(at('running').s.phase).toBe('running');
     expect(at('running').c.checking).toBe(5);
-    expect(at('rerun-changed').s.diff).toBe('1 changed since your last run: Guadua Health.');
+    expect(at('rerun-changed').s.diff).toBe('1 changed since your last run: Wrenby Health.');
     expect(at('rerun-nochange').s.diff).toBe('No verdict changed. That line did not decide any of these 12 asks.');
     expect(at('stale').s.stale).toBe(true);
     expect(at('cap-changed').s.capNote).toBe('Cap changed to 1. Applied in code, no model call.');

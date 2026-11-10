@@ -1,6 +1,6 @@
 {
   "source": "model",
-  "recorded_at": "2026-11-09T21:02:26.870Z",
+  "recorded_at": "2026-11-10T00:59:33.691Z",
   "model": "claude-haiku-5-5",
   "rubric_hash": "0c21893b06ed373e2239fc0e7d7701d6de11cdaffd4ac44c3c24b7919cbc36fe",
   "note": "Recorded with the production gate by npm run record:presets: the 39 sample members × the 3 sample asks (members the SQL prefilter skips are never gated).",
@@ -8,14 +8,14 @@
     "sa_eng": {
       "sample_ask_id": "sa_eng",
       "based_on": "a01",
-      "wall_ms": 3438,
+      "wall_ms": 2936,
       "members": [
         {
           "label": "m-7f2a",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Postgres p95 degradation at 40M rows with a 900 ms p95 and blocked writes: a Postgres-at-scale topic with a real workload, stated by a founder.",
+          "reason": "Postgres p95 degradation at 40M rows with a 900 ms p95 and blocked writes: a real Postgres-at-scale workload, squarely the topic.",
           "cited": [
             {
               "text": "Happy to talk about Postgres or Kafka at scale.",
@@ -27,14 +27,14 @@
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1459
+          "ms": 1401
         },
         {
           "label": "m-19b4",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Postgres p95 rising from 40 ms to 900 ms at 40M rows with a stated load-test harness: database performance, with real numbers.",
+          "reason": "Postgres p95 rising from 40 ms to 900 ms at 40M rows with a stated load test: database performance, backed by real numbers.",
           "cited": [
             {
               "text": "Happy to talk about database performance.",
@@ -52,14 +52,14 @@
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1179
+          "ms": 1091
         },
         {
           "label": "m-c3d0",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Postgres p95 degradation at 40M rows with a 900 ms p95 and blocked writes: a Postgres workload topic, backed by a real production problem.",
+          "reason": "Postgres p95 degradation at 40M rows with a 900 ms p95 and blocked writes: the stated topic, backed by a real workload.",
           "cited": [
             {
               "text": "Happy to talk about Postgres, Redis or queues.",
@@ -71,7 +71,7 @@
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1704
+          "ms": 1068
         },
         {
           "label": "m-08e1",
@@ -102,24 +102,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling is not covered by the member’s rules, which only cover LLM evals and agent reliability; no topic line matches.",
+          "reason": "Postgres scaling and write-blocking is not LLM evals or agent reliability; no rules line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1382
+          "confidence": 0.95,
+          "ms": 1033
         },
         {
           "label": "m-2b6d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not an LLM evals topic the member covers; no rules line applies.",
+          "reason": "Postgres scaling at 40M rows: the member’s only rule covers LLM evals in production, which this ask does not match.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 925
+          "ms": 1366
         },
         {
           "label": "m-91c8",
@@ -138,36 +138,36 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s rules cover only applied ML questions from founders with data; this Postgres performance ask does not match that topic.",
+          "reason": "Postgres p95 scaling and write blocking at 40M rows is not an applied ML question from a founder with data; no rules line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 1684
+          "ms": 1588
         },
         {
           "label": "m-a7f0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres performance at 40M rows is not about selling to hospitals in Mexico; no rule line covers this topic.",
+          "reason": "Postgres scaling at 40M rows is not about selling to US hospitals; no rules line covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1686
+          "ms": 1208
         },
         {
           "label": "m-3c5b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not public hospital procurement in Mexico; no rules line covers this topic.",
+          "reason": "Postgres scaling at 40M rows is not public hospital procurement in the US; no rules line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1297
+          "ms": 1117
         },
         {
           "label": "m-f19d",
@@ -186,24 +186,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not a health founder in Colombia with 10+ customer calls; no rule covers this ask.",
+          "reason": "Postgres scaling is not a health topic and no rule covers it; the ask also lacks any health or Canadian founder fact.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1258
+          "ms": 1664
         },
         {
           "label": "m-b0a6",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres p95 at 40M rows is a database performance question; the member’s only rule covers clinic groups and hospital networks in Mexico, so no line applies.",
+          "reason": "Postgres scaling at 40M rows is not a clinic group or hospital network topic, and no rule line covers it.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1161
+          "ms": 1368
         },
         {
           "label": "m-8d27",
@@ -222,24 +222,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres performance at 40M rows is not covered by the member’s rules, which only cover selling to insurers in Colombia.",
+          "reason": "Postgres performance at scale is not covered by the member’s rules, which only cover selling to insurers in Canada.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1309
+          "ms": 993
         },
         {
           "label": "m-d6e9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling is not an insurer in Mexico with a signed pilot; no rules line covers this ask.",
+          "reason": "Postgres performance at 40M rows is not covered by the member’s rules, which only cover insurers in the US with signed pilots.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 970
+          "ms": 1093
         },
         {
           "label": "m-7c1a",
@@ -258,31 +258,31 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not payments or payouts in LATAM; no member rule covers this topic.",
+          "reason": "Postgres scaling at 40M rows is outside the member’s only stated topic, cross-border payments and payouts.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1685
+          "ms": 1044
         },
         {
           "label": "m-a3b8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres performance at 40M rows: no rules line covers database performance; the member only lists fintech compliance.",
+          "reason": "Postgres scaling at 40M rows is database performance, not fintech compliance; no member rule covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1233
+          "ms": 1184
         },
         {
           "label": "m-5f0e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres performance at 40M rows is not covered by the member’s only rule, which concerns banking partnerships in Mexico.",
+          "reason": "Postgres scaling at 40M rows is not banking partnerships in the US; no rule covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
@@ -294,48 +294,48 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not a topic in the member’s rules, which only cover fintech founders with paying customers; the ask names no fintech context.",
+          "reason": "Postgres scaling at 40M rows is not a topic in the member’s rules, which cover fintech founders with paying customers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1364
+          "ms": 1237
         },
         {
           "label": "m-1a7b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not covered by the member’s only rule, which covers first engineering hires in LATAM.",
+          "reason": "Postgres p95 tuning at 40M rows is not covered by the member’s only rule, which is about first engineering hires outside the Bay Area.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1935
+          "ms": 2292
         },
         {
           "label": "m-9e2c",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is a database performance problem; the member’s rules only cover hiring and comp for seed-stage teams.",
+          "reason": "Postgres p95 tuning at 40M rows is not covered by the member’s rules, which only list hiring and comp for seed-stage teams.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 2206
+          "confidence": 0.9,
+          "ms": 2126
         },
         {
           "label": "m-4b6f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows needs a DBA-type expert; the member’s only topic line covers remote hiring, which this ask does not touch.",
+          "reason": "Postgres performance at 40M rows is not remote hiring, and no rules line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2236
+          "ms": 2546
         },
         {
           "label": "m-e0d3",
@@ -354,55 +354,55 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres performance at 40M rows is not covered by the member’s only topic line, which covers a first SOC 2 audit.",
+          "reason": "Postgres performance at 40M rows is not covered by the member’s only rule, which covers first SOC 2 audits.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2111
+          "ms": 2230
         },
         {
           "label": "m-3f9a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres performance at 40M rows is not a security review topic in this member’s rules, so no rules line covers this ask.",
+          "reason": "Postgres performance at 40M rows is not a security review topic; no rule covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2105
+          "ms": 2018
         },
         {
           "label": "m-b7c2",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling is not a topic covered by the member’s rules, which cover only SOC 2 and ISO 27001 compliance.",
+          "reason": "Postgres performance at 40M rows is outside the only topic the member set, SOC 2 and ISO 27001 compliance; no rules line covers it.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2263
+          "ms": 2131
         },
         {
           "label": "m-0c5d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Rules cover only pre-seed founders raising in Mexico; this seed-stage Postgres performance ask is not covered by any rule line.",
+          "reason": "Postgres scaling is not covered by the member’s rules, which only cover pre-seed founders raising in New York; this founder is at Seed.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2286
+          "ms": 2250
         },
         {
           "label": "m-d2a9",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Postgres latency at 40M rows with a 900 ms p95 is a devtools-adjacent infrastructure problem and a real workload, so it fits the member’s devtools rule.",
+          "reason": "Postgres performance at 40M rows with a 900 ms p95 is developer tooling work from a seed-stage company with a real workload; the rule’s topic covers it.",
           "cited": [
             {
               "text": "Angel checks for devtools.",
@@ -414,55 +414,55 @@
           "question": null,
           "flags": [],
           "confidence": 0.6,
-          "ms": 2480
+          "ms": 2417
         },
         {
           "label": "m-8f6b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling is a database engineering problem, not pricing; the member’s rules only cover pricing talks and exclude deal-flow asks.",
+          "reason": "Postgres scaling is a database-performance topic; the member’s rules only cover pricing and reject deal-flow asks, so no line covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2504
+          "confidence": 0.85,
+          "ms": 2416
         },
         {
           "label": "m-1e4d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling help for a database problem is not covered by the member’s only rule, which concerns first customers for B2B SaaS.",
+          "reason": "Postgres scaling help for a database problem: no rules line covers this topic; the member only takes First customers for B2B SaaS asks.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 2915
+          "ms": 2417
         },
         {
           "label": "m-7a0f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows needs an infra engineer; no member rule covers this topic, which is consumer growth and retention.",
+          "reason": "Postgres p95 at 40M rows is a database scaling problem; the member’s only stated topic is consumer growth and retention, which this ask does not cover.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 3438
+          "ms": 2417
         },
         {
           "label": "m-c5e8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is a database performance topic; the member’s only rule covers paid acquisition for consumer apps, so no rule covers this ask.",
+          "reason": "Postgres scaling at 40M rows is not paid acquisition for consumer apps, and no rule covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2502
+          "ms": 2817
         },
         {
           "label": "m-3b2e",
@@ -474,86 +474,86 @@
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2790
+          "ms": 2936
         },
         {
           "label": "m-f6c1",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not covered by the member’s only rule, which concerns expanding from Mexico to Colombia; no line matches this topic.",
+          "reason": "Postgres scaling at 40M rows is not covered by the member’s only rule, which concerns expanding from the US to Europe; no topic line applies.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 3144
+          "ms": 2936
         },
         {
           "label": "m-9d7a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling is outside the member’s stated topic: their only rule covers entering Brazil, and no line matches this ask.",
+          "reason": "Member’s rules cover only entering India; this Postgres scaling ask matches no rules line.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 2802
+          "confidence": 0.9,
+          "ms": 2651
         },
         {
           "label": "m-5c3f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Postgres scaling is not covered by the member’s Peru and Chile go-to-market rules; no topic line applies to this ask.",
+          "reason": "Postgres scaling is not covered by the member’s Southeast Asia go-to-market rules; no topic line matches this ask.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2978
+          "ms": 2694
         }
       ]
     },
     "sa_health": {
       "sample_ask_id": "sa_health",
       "based_on": "a02",
-      "wall_ms": 3084,
+      "wall_ms": 2680,
       "members": [
         {
           "label": "m-7f2a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not Postgres or Kafka at scale; no rule covers this topic.",
+          "reason": "Hospital procurement and inventory software is not covered by the member’s topic; the only rule is Postgres or Kafka at scale.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1175
+          "ms": 1060
         },
         {
           "label": "m-19b4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not database performance; no rule covers this topic.",
+          "reason": "Ask is about hospital procurement and inventory software sales; no rules line covers procurement or sales topics, only database performance.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1400
+          "confidence": 0.9,
+          "ms": 1155
         },
         {
           "label": "m-c3d0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Hospital procurement in Mexico is not covered by the member’s rules, which only list Postgres, Redis or queues.",
+          "reason": "Hospital procurement and inventory software is outside any topic line; the member only covers Postgres, Redis or queues.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1515
+          "ms": 1058
         },
         {
           "label": "m-08e1",
@@ -583,25 +583,32 @@
           "label": "m-e4f7",
           "state": "decline",
           "na": null,
-          "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not covered by the member’s topics on LLM evals and agent reliability.",
-          "cited": [],
+          "reason_code": "topic",
+          "reason": "Hospital procurement and inventory software is outside LLM evals and agent reliability; the member’s only topic line does not cover it.",
+          "cited": [
+            {
+              "text": "Happy to talk about LLM evals and agent reliability.",
+              "found": true,
+              "start": 0,
+              "end": 52
+            }
+          ],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1127
+          "ms": 1579
         },
         {
           "label": "m-2b6d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is outside the only topic in the rules (LLM evals in production), so no rule covers this ask.",
+          "reason": "Public hospital procurement is not covered by any rule; the only topic line is LLM evals in production, which this ask does not match.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1281
+          "confidence": 0.9,
+          "ms": 1222
         },
         {
           "label": "m-91c8",
@@ -620,22 +627,22 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Hospital procurement in Mexico is not an applied ML question from a founder with data; no rules line covers this topic.",
+          "reason": "Hospital procurement and inventory software is not about applied ML questions from founders with data; no rule line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1452
+          "confidence": 0.95,
+          "ms": 1572
         },
         {
           "label": "m-a7f0",
-          "state": "decline",
+          "state": "accept",
           "na": null,
-          "reason_code": "topic",
-          "reason": "Founder selling inventory software to public hospitals in Jalisco, but they want a procurement committee member, not a founder selling to hospitals; the member’s topic is founders, so this is outside it.",
+          "reason_code": "match",
+          "reason": "Founder selling inventory software to US public hospitals, with 14 buyer calls and stalled committees; matches the hospital topic.",
           "cited": [
             {
-              "text": "Happy to talk to founders selling to hospitals in Mexico.",
+              "text": "Happy to talk to founders selling to hospitals in the US.",
               "found": true,
               "start": 0,
               "end": 57
@@ -643,21 +650,21 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1414
+          "confidence": 0.9,
+          "ms": 1142
         },
         {
           "label": "m-3c5b",
           "state": "ask_back",
           "na": null,
           "reason_code": "proof",
-          "reason": "Public hospital procurement in Mexico matches the topic, but the ask states no price for the deal, which the rule requires.",
+          "reason": "Public hospital procurement in the US matches the rule, but the ask states no price for the product, which the rule requires.",
           "cited": [
             {
-              "text": "Public hospital procurement in Mexico.",
+              "text": "Public hospital procurement in the US",
               "found": true,
               "start": 0,
-              "end": 38
+              "end": 37
             },
             {
               "text": "Only with a price.",
@@ -668,11 +675,11 @@
           ],
           "question": {
             "type": "price",
-            "text": "What is the list price per year of your inventory software for a public hospital?"
+            "text": "What is the price of your inventory software per hospital or per year?"
           },
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1420
+          "confidence": 0.85,
+          "ms": 1383
         },
         {
           "label": "m-f19d",
@@ -690,32 +697,39 @@
           "label": "m-4e82",
           "state": "decline",
           "na": null,
-          "reason_code": "region",
-          "reason": "Ask is a Mexico health procurement question from a founder in Mexico; the member’s rule covers only Colombia.",
+          "reason_code": "rule_says_no",
+          "reason": "Ask is for a US public hospital procurement contact; the member’s rule covers health founders in Canada, so the region does not match.",
           "cited": [
             {
-              "text": "Health founders in Colombia with 10+ customer calls.",
+              "text": "Health founders in Canada with 10+ customer calls.",
               "found": true,
               "start": 0,
-              "end": 52
+              "end": 50
             }
           ],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1922
+          "ms": 1596
         },
         {
           "label": "m-b0a6",
           "state": "decline",
           "na": null,
-          "reason_code": "no_rule",
-          "reason": "Ask seeks a public hospital procurement committee member; the rules cover clinic groups and hospital networks only, not public hospital procurement.",
-          "cited": [],
+          "reason_code": "topic",
+          "reason": "Ask targets public hospitals in Illinois, a hospital network topic in the US, but wants someone who sat on a procurement committee, not a clinic or network operator, and the offer is templates.",
+          "cited": [
+            {
+              "text": "Clinic groups and hospital networks in the US.",
+              "found": true,
+              "start": 0,
+              "end": 46
+            }
+          ],
           "question": null,
           "flags": [],
-          "confidence": 0.75,
-          "ms": 1227
+          "confidence": 0.6,
+          "ms": 1081
         },
         {
           "label": "m-8d27",
@@ -734,24 +748,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Asks for a public hospital procurement contact in Mexico; the member’s rules cover only selling to insurers in Colombia, which does not match.",
+          "reason": "Public hospital procurement in Illinois is not insurers in Canada; no rules line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1138
+          "ms": 1152
         },
         {
           "label": "m-d6e9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement is not covered by the member’s rules, which only mention insurers in Mexico with signed pilots.",
+          "reason": "Public hospital procurement is not covered by the member’s rules, which only cover US insurers with signed pilots; this ask is not about insurers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1270
+          "ms": 1080
         },
         {
           "label": "m-7c1a",
@@ -770,84 +784,84 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not payments or payouts in LATAM; no rules line covers this topic.",
+          "reason": "Ask is about US public hospital procurement; the member’s only rule covers cross-border payments and payouts, which this does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1283
+          "ms": 1593
         },
         {
           "label": "m-a3b8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not fintech compliance; no rules line covers this ask’s topic.",
+          "reason": "Public hospital procurement and inventory software is not fintech compliance; no rules line covers this ask.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1290
+          "ms": 1096
         },
         {
           "label": "m-5f0e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Jalisco is not covered by the member’s rule on banking partnerships in Mexico; no rule line matches.",
+          "reason": "Hospital procurement and public hospital committees are not covered by the member’s only rule, which covers banking partnerships in the US.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1258
+          "ms": 1059
         },
         {
           "label": "m-c8d4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not covered by the member’s only rule, which covers fintech founders with paying customers.",
+          "reason": "Hospital procurement and inventory software is not fintech; no rules line covers this ask’s topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1267
+          "ms": 1061
         },
         {
           "label": "m-1a7b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not covered by the member’s topic line on first engineering hires in LATAM; no rule covers this ask.",
+          "reason": "Public hospital procurement advice is not covered by the member’s only rule about first engineering hires outside the Bay Area.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2036
+          "ms": 1956
         },
         {
           "label": "m-9e2c",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is outside the member’s only rules, which cover hiring and comp for seed-stage teams.",
+          "reason": "Public hospital procurement is not covered by the member’s rules, which only cover hiring and comp for seed-stage teams.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2281
+          "ms": 2128
         },
         {
           "label": "m-4b6f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not covered by the member’s only rule, which covers remote hiring.",
+          "reason": "Public hospital procurement is not covered by the member’s only rule, which covers remote hiring; no line applies to this ask.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2258
+          "ms": 2117
         },
         {
           "label": "m-e0d3",
@@ -866,93 +880,86 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about public hospital procurement in Mexico; no rule line covers this topic, which is not a SOC 2 audit.",
+          "reason": "Public hospital procurement and inventory software: no rules line covers this topic, only SOC 2 audits.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2486
+          "ms": 1986
         },
         {
           "label": "m-3f9a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The ask needs a public hospital procurement committee member in Mexico; the member’s rules only cover security reviews for B2B startups, so no line covers this topic.",
+          "reason": "Hospital procurement committee access is not covered by the member’s rules, which only cover security reviews for B2B startups.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 3049
+          "confidence": 0.8,
+          "ms": 1964
         },
         {
           "label": "m-b7c2",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not covered by any topic line in the member’s rules; the only line is about SOC 2 and ISO 27001.",
+          "reason": "Hospital procurement committee advice is not covered by the member’s only rule, which concerns SOC 2 and ISO 27001 compliance.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2535
+          "ms": 2237
         },
         {
           "label": "m-0c5d",
           "state": "decline",
           "na": null,
-          "reason_code": "stage",
-          "reason": "Asker is Seed stage, not pre-seed; the rules limit intros to pre-seed founders raising in Mexico.",
+          "reason_code": "region",
+          "reason": "Public hospital procurement in Illinois at Seed stage; the member only takes pre-seed founders raising in New York.",
           "cited": [
             {
-              "text": "Pre-seed founders raising in Mexico.",
+              "text": "Pre-seed founders raising in New York.",
               "found": true,
               "start": 0,
-              "end": 36
+              "end": 38
             }
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2226
+          "confidence": 0.9,
+          "ms": 2209
         },
         {
           "label": "m-d2a9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Hospital procurement in Mexico is not devtools; the member’s only topic line does not cover this ask.",
-          "cited": [
-            {
-              "text": "Angel checks for devtools.",
-              "found": true,
-              "start": 0,
-              "end": 26
-            }
-          ],
+          "reason": "Public hospital procurement and inventory software is outside the one topic in these rules, devtools, so no line covers this ask.",
+          "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2968
+          "confidence": 0.95,
+          "ms": 2284
         },
         {
           "label": "m-8f6b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about public hospital procurement in Mexico; the member’s rules only cover pricing talks, and no line covers this topic.",
+          "reason": "Public hospital procurement is not covered by the member’s rules, which only cover pricing talks and deal-flow asks are excluded.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2968
+          "confidence": 0.8,
+          "ms": 2157
         },
         {
           "label": "m-1e4d",
           "state": "decline",
           "na": null,
           "reason_code": "topic",
-          "reason": "Ask seeks a public hospital procurement committee member in Mexico; the member’s rules cover only first customers for B2B SaaS, so this is outside the limited topic.",
+          "reason": "Founder seeks a public hospital procurement contact for stalled deals; this is about selling to a specific buyer type, not a first-customers topic the member covers.",
           "cited": [
             {
               "text": "First customers for B2B SaaS.",
@@ -963,123 +970,130 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 2726
+          "confidence": 0.55,
+          "ms": 2377
         },
         {
           "label": "m-7a0f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is B2B inventory software, outside the member’s only topic of consumer growth and retention.",
+          "reason": "Public hospital procurement and inventory software sales fall outside the only topic the member lists: consumer growth and retention.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2727
+          "confidence": 0.95,
+          "ms": 2279
         },
         {
           "label": "m-c5e8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not paid acquisition for consumer apps; no rule covers this topic.",
+          "reason": "Public hospital procurement for inventory software is outside the only topic in these rules, paid acquisition for consumer apps.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 3084
+          "ms": 2515
         },
         {
           "label": "m-3b2e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is not covered by the member’s only rule, which covers marketplaces: supply and demand.",
+          "reason": "Public hospital procurement is not covered by the member’s only rule, which concerns marketplaces: supply and demand.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2780
+          "ms": 2630
         },
         {
           "label": "m-f6c1",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover expansion from Mexico to Colombia only; this ask about Mexican public hospital procurement is not covered by any topic line.",
-          "cited": [],
+          "reason": "The member’s only rule covers US-to-Europe expansion; this ask seeks a US public hospital procurement contact, which that line does not cover.",
+          "cited": [
+            {
+              "text": "Expanding from the US to Europe.",
+              "found": true,
+              "start": 0,
+              "end": 32
+            }
+          ],
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 2442
+          "confidence": 0.9,
+          "ms": 2620
         },
         {
           "label": "m-9d7a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only entering Brazil; this ask is about Mexican public hospital procurement, which no rule covers.",
+          "reason": "The member’s only rule covers entering India; this ask about US public hospital procurement in Illinois matches no rule line.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2755
+          "ms": 2521
         },
         {
           "label": "m-5c3f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement in Mexico is outside the member’s only stated topic, go-to-market in Peru and Chile, so no rule covers this ask.",
+          "reason": "Public hospital procurement in Illinois is outside the only rules line, which covers Southeast Asia go-to-market.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2968
+          "ms": 2680
         }
       ]
     },
     "sa_founder": {
       "sample_ask_id": "sa_founder",
       "based_on": "a07",
-      "wall_ms": 3453,
+      "wall_ms": 2680,
       "members": [
         {
           "label": "m-7f2a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs SOC 2 audit help; the member’s only rule covers Postgres or Kafka at scale, which does not match this topic.",
+          "reason": "Needs SOC 2 audit help, which no line in the rules covers; the rules only cover Postgres or Kafka at scale.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1189
+          "ms": 995
         },
         {
           "label": "m-19b4",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about SOC 2 compliance, which no member rule covers; the rules only cover database performance with real numbers.",
+          "reason": "Ask is about SOC 2 compliance, which no rules line covers; the member only takes database performance talks, and only with real numbers.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1853
+          "ms": 1415
         },
         {
           "label": "m-c3d0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Rules cover Postgres, Redis and queues; this ask is about SOC 2 compliance for a payouts API, which no rule covers.",
+          "reason": "Founder needs SOC 2 audit help for a bank deal; the member’s rules cover only Postgres, Redis or queues, which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1257
+          "confidence": 0.95,
+          "ms": 1052
         },
         {
           "label": "m-08e1",
@@ -1110,24 +1124,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs a first SOC 2 audit guide; no member rule covers SOC 2 or compliance, only LLM evals and agent reliability.",
+          "reason": "Ask is about SOC 2 compliance for a payments startup; no member rule covers it. Only LLM evals and agent reliability topics are listed.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1626
+          "ms": 1644
         },
         {
           "label": "m-2b6d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover LLM evals in production only; a first SOC 2 audit is outside that topic.",
+          "reason": "Ask is about passing a first SOC 2 audit; the member’s rules only cover LLM evals in production, so no line covers this topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1251
+          "ms": 1010
         },
         {
           "label": "m-91c8",
@@ -1146,36 +1160,36 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs a SOC 2 compliance advisor; no rule covers this topic, which is outside applied ML questions from founders with data.",
+          "reason": "Asks for SOC 2 compliance help; no member rule covers this topic, which is outside applied ML questions from founders with data.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1504
+          "confidence": 0.9,
+          "ms": 1101
         },
         {
           "label": "m-a7f0",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs a first SOC 2 passed at a small startup; no rule covers compliance or security help, and the ask is not about selling to hospitals in Mexico.",
+          "reason": "Founder needs SOC 2 help for a payouts API selling to a bank; no rule covers this topic. Rules only cover selling to US hospitals.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1331
+          "ms": 1035
         },
         {
           "label": "m-3c5b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Asks for SOC 2 compliance help from someone who passed one; the rules only cover public hospital procurement in Mexico, which this is not.",
+          "reason": "Member’s rules cover only public hospital procurement in the US; a SOC 2 for a payouts API at a bank is outside every stated topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1207
+          "confidence": 0.9,
+          "ms": 1007
         },
         {
           "label": "m-f19d",
@@ -1194,24 +1208,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Payouts API seeking SOC 2 help is not covered by the member’s topic, which is health founders in Colombia.",
+          "reason": "Your rules cover health founders in Canada with 10+ customer calls; this is a payments founder seeking SOC 2 help, which no rule covers.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1260
+          "confidence": 0.9,
+          "ms": 996
         },
         {
           "label": "m-b0a6",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Your rules cover clinic groups and hospital networks in Mexico; this ask is about SOC 2 compliance for a payouts API, which no rule covers.",
+          "reason": "Payouts API seeking SOC 2 compliance help; no rule covers this topic, which is not a clinic group or hospital network in the US.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 1138
+          "ms": 1584
         },
         {
           "label": "m-8d27",
@@ -1230,31 +1244,24 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Payouts API seeking SOC 2 help; the member’s only rule covers selling to insurers in Colombia, which this ask does not touch.",
-          "cited": [
-            {
-              "text": "Selling to insurers in Colombia.",
-              "found": true,
-              "start": 0,
-              "end": 32
-            }
-          ],
+          "reason": "Ask is about passing a SOC 2 audit, which no rule covers; the member’s rules only mention selling to insurers in Canada.",
+          "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1210
+          "ms": 1534
         },
         {
           "label": "m-d6e9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs a SOC 2 auditor-prep contact; the member’s rules only cover insurers in Mexico, so no rule applies.",
+          "reason": "Founder needs a SOC 2 audit advisor who passed a first SOC 2; no rules line covers that topic, and the member only takes insurer conversations with signed pilots.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1250
+          "confidence": 0.9,
+          "ms": 1039
         },
         {
           "label": "m-7c1a",
@@ -1273,43 +1280,50 @@
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Rules cover payments and payouts in LATAM; this ask is about SOC 2 compliance, which no rule line covers.",
+          "reason": "No rule covers SOC 2 compliance help; the member’s only topic is cross-border payments and payouts, and this ask is not about that.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1192
+          "ms": 992
         },
         {
           "label": "m-a3b8",
           "state": "decline",
           "na": null,
-          "reason_code": "no_rule",
-          "reason": "Member’s rules cover fintech compliance; this founder needs a first SOC 2 for a payouts API, which is not plainly fintech compliance and no other topic line applies.",
-          "cited": [],
+          "reason_code": "topic",
+          "reason": "SOC 2 audit readiness for a payouts API is adjacent to fintech compliance but the ask is about security audit evidence, not the fintech compliance topic the member named.",
+          "cited": [
+            {
+              "text": "Happy to talk about fintech compliance.",
+              "found": true,
+              "start": 0,
+              "end": 39
+            }
+          ],
           "question": null,
           "flags": [],
           "confidence": 0.55,
-          "ms": 1452
+          "ms": 1112
         },
         {
           "label": "m-5f0e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Founder needs a SOC 2 audit mentor; the member’s rules cover only banking partnerships in Mexico, which this ask does not touch.",
+          "reason": "Needs a SOC 2 compliance peer; the member’s only rule covers US banking partnerships, which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.95,
-          "ms": 1180
+          "confidence": 0.9,
+          "ms": 1068
         },
         {
           "label": "m-c8d4",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Payouts API startup with 6 paying customers and $9k MRR, blocked on a SOC 2 for a bank: a fintech founder with paying customers.",
+          "reason": "Payouts API with 6 paying customers and $9k MRR: a fintech founder with paying customers, so the rule’s condition is met.",
           "cited": [
             {
               "text": "Fintech founders with paying customers.",
@@ -1320,44 +1334,44 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1453
+          "confidence": 0.85,
+          "ms": 1022
         },
         {
           "label": "m-1a7b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover engineering hires in LATAM only; a SOC 2 compliance ask from a payments founder matches no rules line.",
+          "reason": "Member’s rules cover only engineering hires outside the Bay Area; a SOC 2 compliance ask is not covered by that topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2273
+          "ms": 2060
         },
         {
           "label": "m-9e2c",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only hiring and comp for seed-stage teams; a first SOC 2 compliance ask is outside that topic.",
+          "reason": "Member’s rules cover only hiring and comp for seed-stage teams; a SOC 2 compliance question falls outside that topic.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 3025
+          "ms": 2090
         },
         {
           "label": "m-4b6f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask is about SOC 2 compliance, which no rules line covers; the member only lists remote hiring.",
+          "reason": "Asks for a SOC 2 compliance mentor; the member’s only topic line covers remote hiring, which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2211
+          "ms": 2154
         },
         {
           "label": "m-e0d3",
@@ -1376,7 +1390,7 @@
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "Founder needs help with a first SOC 2 audit for a bank customer deadline, which is the topic the member covers.",
+          "reason": "Founder is blocked on a first SOC 2 audit for a bank customer within 60 days, matching the topic line.",
           "cited": [
             {
               "text": "Happy to talk about a first SOC 2 audit.",
@@ -1387,15 +1401,15 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 2230
+          "confidence": 0.93,
+          "ms": 2122
         },
         {
           "label": "m-3f9a",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "SOC 2 readiness for a B2B payouts startup with paying customers and a bank deadline: a security review topic, with real revenue as stated proof.",
+          "reason": "SOC 2 Type I audit prep for a B2B payouts startup with paying customers and a bank deadline: squarely a security review topic.",
           "cited": [
             {
               "text": "Security reviews for B2B startups.",
@@ -1407,14 +1421,14 @@
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 2503
+          "ms": 2302
         },
         {
           "label": "m-b7c2",
           "state": "accept",
           "na": null,
           "reason_code": "match",
-          "reason": "First bank customer is requiring SOC 2 Type I, so a customer is asking for it; the ask fits the SOC 2 topic.",
+          "reason": "First SOC 2 Type I blocked by a named bank customer’s requirement: the topic, with a customer asking for it.",
           "cited": [
             {
               "text": "SOC 2 and ISO 27001. Only with a customer asking for it.",
@@ -1425,128 +1439,128 @@
           ],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2270
+          "confidence": 0.9,
+          "ms": 2589
         },
         {
           "label": "m-0c5d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only pre-seed founders raising in Mexico; this ask is about SOC 2 compliance help, a topic the rules don’t cover.",
+          "reason": "Member’s rules cover only pre-seed founders raising in New York; this ask is about SOC 2 compliance with no matching topic line, and no region stated.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2308
+          "confidence": 0.8,
+          "ms": 2570
         },
         {
           "label": "m-d2a9",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover devtools; a payouts API for marketplaces with a SOC 2 compliance need is outside that topic.",
+          "reason": "Member’s rules cover devtools only; a SOC 2 compliance ask for a payouts API falls outside any stated topic.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 2509
+          "confidence": 0.8,
+          "ms": 2214
         },
         {
           "label": "m-8f6b",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Ask needs SOC 2 compliance help; no rule covers that topic. Rules only cover pricing and reject deal-flow asks.",
+          "reason": "Needs SOC 2 compliance help from someone who passed a first audit; no rule covers that topic, and the ask is not about pricing.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 2504
+          "ms": 2226
         },
         {
           "label": "m-1e4d",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "The member’s rules cover first customers for B2B SaaS; this ask is about passing a SOC 2 audit, which no rules line covers.",
+          "reason": "No rules line covers SOC 2 compliance help; the member’s rules only list first customers for B2B SaaS.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.85,
-          "ms": 3117
+          "ms": 2561
         },
         {
           "label": "m-7a0f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Payouts API seeking a first SOC 2 audit advisor; the member’s only rule covers consumer growth and retention, which does not match this topic.",
+          "reason": "Payouts API seeking a first SOC 2 expert; the member’s rules cover only consumer growth and retention, which this ask does not match.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2607
+          "ms": 2199
         },
         {
           "label": "m-c5e8",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only paid acquisition for consumer apps; this ask is about SOC 2 compliance for a B2B payouts API, which no rule covers.",
+          "reason": "Member’s only rule covers paid acquisition for consumer apps; this ask is about SOC 2 compliance for a B2B payouts API.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.95,
-          "ms": 2812
+          "ms": 2108
         },
         {
           "label": "m-3b2e",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Asks for a first SOC 2 audit guide, which is outside the member’s marketplace supply-and-demand topic; no rule covers it.",
+          "reason": "Founder needs a first SOC 2 passed by someone at a small startup; the member’s only rule covers marketplace supply and demand, which this ask does not touch.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 3314
+          "ms": 2676
         },
         {
           "label": "m-f6c1",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules only cover expanding from Mexico to Colombia; this ask is about passing a first SOC 2 audit, which no rule covers.",
+          "reason": "Member’s only rule covers expanding from the US to Europe; a first SOC 2 for a payouts API is outside any topic they wrote.",
           "cited": [],
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 3150
+          "confidence": 0.95,
+          "ms": 2560
         },
         {
           "label": "m-9d7a",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover only entering Brazil; this SOC 2 compliance ask matches no rule line.",
+          "reason": "The member’s only rule is about entering India; nothing covers a SOC 2 compliance question, so the ask is declined.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 3453
+          "ms": 2680
         },
         {
           "label": "m-5c3f",
           "state": "decline",
           "na": null,
           "reason_code": "no_rule",
-          "reason": "Member’s rules cover Peru and Chile go-to-market only; this ask is about SOC 2 compliance and does not match any stated topic.",
+          "reason": "Ask is about SOC 2 compliance for a payouts API; no rules line covers this topic, only Southeast Asia go-to-market.",
           "cited": [],
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 3025
+          "ms": 2599
         }
       ]
     }

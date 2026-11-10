@@ -80,7 +80,7 @@ const MONTHS: Record<string, number> = {
 const MONTH_RE = '(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)';
 
 /**
- * The asker's deadline (“By”) as a Mexico City date, when it names one: “Nov 21”, “before November 21, 2026”,
+ * The asker's deadline (“By”) as a Pacific-time date, when it names one: “Nov 21”, “before November 21, 2026”,
  * “21 Nov”, “2026-11-21”. A date without a year is the next one on or after today. Anything else has no deadline.
  */
 export function parseDeadline(by: string, now: Date = new Date()): string | null {

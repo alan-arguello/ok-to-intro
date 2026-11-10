@@ -11,7 +11,7 @@
 -- what each person may see.
 --
 -- Time: every function takes the instant as a parameter (p_now). The server reads the clock once per request and
--- the tests move it. Mexico City is the network's zone: cap months (0001), deadlines and the asker's 09:00 / 21:00
+-- the tests move it. Pacific time (PT) is the network's zone: cap months (0001), deadlines and the asker's 09:00 / 21:00
 -- checkpoints.
 --
 -- Link tokens: the server derives each offer's and check-in's link token from TOKEN_HMAC_SECRET and the object's id,
@@ -34,7 +34,7 @@ as $$
   values (p_at, p_action, p_actor, p_member, p_asker, p_ask, p_offer, coalesce(p_detail, '{}'::jsonb))
 $$;
 
--- The first asker checkpoint (09:00 or 21:00 in Mexico City) at or after p_ts. A change a member caused at p_ts
+-- The first asker checkpoint (09:00 or 21:00 Pacific time (PT)) at or after p_ts. A change a member caused at p_ts
 -- becomes visible to the asker at this instant (docs/CONTRACT.md §d.5; lib/server/checkpoints.ts is the same rule).
 create or replace function public.net__ceil_checkpoint(p_ts timestamptz)
 returns timestamptz
@@ -43,7 +43,7 @@ stable
 set search_path = ''
 as $$
   select min(c) from (
-    select (((p_ts at time zone 'America/Mexico_City')::date + g.n) + make_interval(hours => h.hour)) at time zone 'America/Mexico_City' as c
+    select (((p_ts at time zone 'America/Los_Angeles')::date + g.n) + make_interval(hours => h.hour)) at time zone 'America/Los_Angeles' as c
     from generate_series(-1, 1) as g(n)
     cross join (values (9), (21)) as h(hour)
   ) x
@@ -136,9 +136,9 @@ begin
   end if;
   select count(*), max(responded_at) into v_offers, v_last from public.offers where ask_id = p_ask;
 
-  -- Past the asker's deadline (a Mexico City date) the ask closes instead of moving on.
+  -- Past the asker's deadline (a Pacific-time date) the ask closes instead of moving on.
   if v_ask.deadline is not null then
-    v_deadline := ((v_ask.deadline + 1)::timestamp at time zone 'America/Mexico_City');
+    v_deadline := ((v_ask.deadline + 1)::timestamp at time zone 'America/Los_Angeles');
     if p_now >= v_deadline then
       return public.net__close(p_ask, 'deadline', greatest(v_deadline, coalesce(v_last, v_deadline)), p_now);
     end if;

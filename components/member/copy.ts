@@ -96,7 +96,7 @@ export function normalizeRules(text: string): string {
 
 export const ME_COPY = {
   title: 'Your gate',
-  protoNote: 'Prototype: example numbers for layout. Signed in as the sample member Ana Ruiz.',
+  protoNote: 'Prototype: example numbers for layout. Signed in as the sample member Priya Shah.',
   protoRows: 'Prototype: example rows.',
   notOnYet: 'Not on yet',
   offersGoToOthers: 'offers go to others',
@@ -182,7 +182,7 @@ export function matchedOn(example: string): string {
   return `Asker sees: “Matched: ‘${example}’.”`;
 }
 
-/** “Cap 2 a month · 1 of 2 used in November · resets Dec 1”. `month` is the cap month (YYYY-MM-01, Mexico City). */
+/** “Cap 2 a month · 1 of 2 used in November · resets Dec 1”. `month` is the cap month (YYYY-MM-01, Pacific time). */
 export function capStatusLine(cap: number, used: number, month: string): string {
   return `Cap ${cap} a month · ${used} of ${cap} used in ${monthName(month)} · resets ${resetsOn(month)}`;
 }
@@ -216,7 +216,7 @@ export function isPauseChoice(v: unknown): v is PauseChoice {
   return v === '2w' || v === 'month' || v === 'off';
 }
 
-/** When a pause ends: 2 weeks from now, the next cap month (Mexico City), or never (null). Same rule as /api/pause. */
+/** When a pause ends: 2 weeks from now, the next cap month (Pacific time), or never (null). Same rule as /api/pause. */
 export function pauseUntil(choice: PauseChoice, nowMs: number): string | null {
   if (choice === '2w') return new Date(nowMs + 14 * 86_400_000).toISOString();
   if (choice === 'month') return nextMonthStart(capMonth(nowMs)).toISOString();
@@ -350,7 +350,7 @@ export function tokenLine(createdDay: string, lastUsed: string | null): string {
   return `Token created ${createdDay} · ${lastUsed ? `last used ${lastUsed} from Claude Code` : 'not used yet'}`;
 }
 
-/** “1 ask is waiting on you · Hospital procurement in Mexico · from Lucía Ferrer · 61 h left”. */
+/** “1 ask is waiting on you · Hospital procurement in the US · from Maya Bennett · 61 h left”. */
 export function pendingParts(title: string, from: string, hoursLeft: number): { head: string; rest: string } {
   return { head: '1 ask is waiting on you', rest: ` · ${title} · from ${from} · ${hoursLeft} h left` };
 }

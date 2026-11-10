@@ -34,7 +34,7 @@ export function sharesWords(a: string, b: string, n = 6): boolean {
   return false;
 }
 
-/** “Hospital procurement, Mexico” → “hospital procurement”. */
+/** “Hospital procurement, US” → “hospital procurement”. */
 export function topicPhrase(topic: string | null | undefined): string | null {
   const t = String(topic ?? '')
     .split(/[,;:(·|]/)[0]

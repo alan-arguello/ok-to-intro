@@ -37,7 +37,7 @@ vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/autho
 vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 const ENGINEER = presetById('engineer').rules;
-const run = () => recordedRunFor('engineer', ENGINEER, Date.parse('2026-11-09T16:00:00Z'));
+const run = () => recordedRunFor('engineer', ENGINEER, Date.parse('2026-11-09T18:00:00Z'));
 
 function liveCopy(r: Run): Run {
   const out: Run = { ...r, mode: 'live', source: 'live', gates: {}, errors: {}, events: [], wall_ms: 2300, cost_usd: 0.0019 };
@@ -58,7 +58,7 @@ describe('display verdicts (applyCap in the browser)', () => {
     expect(reachDays).toEqual([2, 4]);
   });
 
-  it('cap 1 moves Lumbre AI over the cap with no model call', () => {
+  it('cap 1 moves Tallow AI over the cap with no model call', () => {
     const { map } = computeDisplays(run(), [], 1, false);
     expect(map.a03.display).toBe('held');
     expect(countDisplays(map).reach).toBe(1);
@@ -246,7 +246,7 @@ describe('run diff', () => {
     next.rules = `${ENGINEER}\nNo asks from health companies.`;
     next.gates.a09 = { ...(next.gates.a09 as RowGate), verdict: 'decline', model_verdict: 'decline', cited: [] };
     const d = runDiff(prev, next, computeDisplays(next, [], 2, false).map);
-    expect(d.diff).toBe('1 changed since your last run: Guadua Health.');
+    expect(d.diff).toBe('1 changed since your last run: Wrenby Health.');
     expect(d.changed).toEqual({ a09: 'held' });
     const same = run();
     same.rules = `${ENGINEER}\nNo asks about crypto.`;
@@ -261,7 +261,7 @@ describe('run diff', () => {
     const live = liveCopy(run());
     live.gates.a06 = { ...(live.gates.a06 as RowGate), verdict: 'decline', model_verdict: 'decline', question: null };
     const d = runDiff(prev, live, computeDisplays(live, [], 2, false).map);
-    expect(d.diff).toBe('1 differs from the hand-written examples: Pinole Labs.');
+    expect(d.diff).toBe('1 differs from the hand-written examples: Fernby Labs.');
     expect(d.variance).toEqual([]);
     const second = liveCopy(run());
     const d2 = runDiff(snapshotOf(live, computeDisplays(live, [], 2, false).map), second, computeDisplays(second, [], 2, false).map);
@@ -284,7 +284,7 @@ describe('raw trace', () => {
     const text = rows.map((row) => `${row.time ?? ''}${row.segs.map((s) => s.text).join('')}`);
     expect(rows.every((row) => row.time === null)).toBe(true);
     expect(text[0]).toBe('plan  example verdicts, written by hand · not a model run · 12 asks · rules 196 chars');
-    expect(text).toContain('gate  #1 Arrecife Data accept');
+    expect(text).toContain('gate  #1 Tidewell Data accept');
     expect(text).toContain('check #1 quotes 2/2 found (code)');
     expect(text).toContain('cap   #1 reach · 1 of 2 (code)');
     expect(text).toContain('cap   #9 over_cap · used day 2, day 4 (code)');

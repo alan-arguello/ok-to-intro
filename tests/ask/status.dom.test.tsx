@@ -24,7 +24,7 @@ function streamedRun(id: 'sa_eng' | 'sa_health' = 'sa_eng'): SampleRun {
   const ex = exampleRun(id, 'offered', null, Date.now());
   const sa = SAMPLE_NETWORK_ASKS[id === 'sa_eng' ? 'engineer' : 'health'];
   const events: FanoutEvent[] = [
-    { event: 'plan', data: { ask_id: id, network: 'sample', total: 40, sample_source: 'authored', recorded_at: '2026-11-09T09:00:00-06:00' } },
+    { event: 'plan', data: { ask_id: id, network: 'sample', total: 40, sample_source: 'authored', recorded_at: '2026-11-09T09:00:00-08:00' } },
     ...ex.cells.map((c) => ({ event: 'cell' as const, data: { ...c!, at: undefined } })),
     ...ex.questions.map((q) => ({ event: 'question' as const, data: { qid: q.qid, type: q.type, text: q.text, gates: q.gates } })),
     { event: 'offer', data: { expires_at: new Date(Date.now() + 72 * 3_600_000).toISOString(), to: 'member', cell: holderCell(ex)!.cell } },
@@ -171,18 +171,18 @@ describe('/ask/sa_… (SAMPLE, lives in this tab)', () => {
 
 describe('/ask/a_… (REAL, the serializer’s view)', () => {
   it('the QA example: four states, no reveal switch, crumbs to your asks, a dashed example note', () => {
-    render(<RealStatus initial={exampleRealView()} from="Lucía Ferrer · Orvella Health · Seed · Guadalajara" example />);
+    render(<RealStatus initial={exampleRealView()} from="Maya Bennett · Oakline Health · Seed · Chicago" example />);
     expect(screen.getByRole('link', { name: '‹ Your asks' }).getAttribute('href')).toBe('/me#asks');
     expect(screen.queryByRole('switch')).toBeNull();
     expect(screen.getByText('Example REAL ask for layout (QA state). A real ask reads from the database.')).toBeTruthy();
     expect(document.getElementById('st-legend')!.textContent).toBe('1 offered2 next in line37 not this time');
-    expect(document.getElementById('st-outcome')!.textContent).toMatch(/They have until Thu Nov 12, 21:04 \w+ to reply\./);
+    expect(document.getElementById('st-outcome')!.textContent).toMatch(/They have until \w+ Nov 1[23], \d\d:04 \w+ to reply\./);
     expect(fetch).not.toHaveBeenCalled();
   });
 
   it('a later position reads “Offered to the next person in line”, never passed or expired', () => {
     const v = exampleRealView();
-    render(<RealStatus initial={{ ...v, offered: { reply_by: '2026-11-13T09:00:00-06:00', position: 2, in_line: 3 } }} from="x" example />);
+    render(<RealStatus initial={{ ...v, offered: { reply_by: '2026-11-13T09:00:00-08:00', position: 2, in_line: 3 } }} from="x" example />);
     const text = document.getElementById('st-outcome')!.textContent!;
     expect(text).toMatch(/Offered to the next person in line \(2 of 3\)\./);
     expect(text).not.toMatch(/passed|expired/);
@@ -242,7 +242,7 @@ describe('/ask/a_… sends a created REAL ask once and follows it', () => {
         return new Response('{}', { status: 404 });
       }),
     );
-    render(<RealStatus initial={ready} from="Lucía Ferrer · Orvella Health · Seed · Guadalajara" />);
+    render(<RealStatus initial={ready} from="Maya Bennett · Oakline Health · Seed · Chicago" />);
     await flush();
     await flush();
     await flush();

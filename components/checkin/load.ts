@@ -30,14 +30,14 @@ import {
  * error renders “Something broke on our side. Nothing was sent to anyone.”
  */
 
-/** The fixed REAL example (Lucía asked, Ana said OK on Mon Nov 9). */
+/** The fixed REAL example (Maya asked, Priya said OK on Mon Nov 9). */
 const EXAMPLE = {
-  introMade: '2026-11-09T21:16:00-06:00',
-  d14: '2026-11-23T10:00:00-06:00',
-  reminder: '2026-11-13T10:00:00-06:00',
-  answeredD1: '2026-11-10T10:00:00-06:00',
-  answeredD14: '2026-11-24T10:00:00-06:00',
-  closed: '2026-12-09T10:00:00-06:00',
+  introMade: '2026-11-09T21:16:00-08:00',
+  d14: '2026-11-23T10:00:00-08:00',
+  reminder: '2026-11-13T10:00:00-08:00',
+  answeredD1: '2026-11-10T10:00:00-08:00',
+  answeredD14: '2026-11-24T10:00:00-08:00',
+  closed: '2026-12-09T10:00:00-08:00',
 };
 
 function day(iso: string): CkTimeLabel {

@@ -102,7 +102,7 @@ function count(v: unknown): number | null {
  * The dated REAL line under the S1 lede (public.real_line()). Never throws, also at build time (S1 is prerendered):
  * `not_configured` when the real network isn't connected on this instance (S1 shows REAL_LINE_OFF);
  * `db_down` when it is configured but can't be read (S1 renders no REAL line rather than a wrong one).
- * `since` is the first member's join date in Mexico City (“Nov 9”), or null before anyone joined.
+ * `since` is the first member's join date in Pacific time (“Nov 9”), or null before anyone joined.
  */
 export async function getRealLine(): Promise<RealLineResult> {
   if (!flags.hasSupabaseAdmin) return { ok: false, reason: 'not_configured' };

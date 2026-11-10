@@ -275,7 +275,7 @@ export function waffleLabel(items: readonly LegendItem[], total: number): string
   return `${total} members: ${items.map((i) => i.text).join(', ')}`;
 }
 
-/** The popover line for one cell when the reveal is on (“m-7f2a · Mexico City · accepted · cited “…” · cap 1 of 2 used”). */
+/** The popover line for one cell when the reveal is on (“m-7f2a · San Francisco · accepted · cited “…” · cap 1 of 2 used”). */
 export function cellDetail(run: SampleRun, pos: number, liveOff: boolean): string {
   const c = cellAt(run, pos);
   if (!c) return 'checking';
@@ -408,7 +408,7 @@ export function sourceLine(run: SampleRun, liveOff: boolean): string {
 function recordedDay(iso: string | null): string {
   if (!iso) return 'earlier';
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? 'earlier' : `${d.toLocaleString('en-US', { month: 'short', timeZone: 'America/Mexico_City' })} ${d.toLocaleString('en-US', { day: 'numeric', timeZone: 'America/Mexico_City' })}`;
+  return Number.isNaN(d.getTime()) ? 'earlier' : `${d.toLocaleString('en-US', { month: 'short', timeZone: 'America/Los_Angeles' })} ${d.toLocaleString('en-US', { day: 'numeric', timeZone: 'America/Los_Angeles' })}`;
 }
 
 /** The member's name for the intro copy (fictional sample names exist only for members an offer can reach). */
@@ -507,7 +507,7 @@ function exampleYou(sa: SampleNetworkAsk, pg: PlaygroundStore | null, force: boo
 }
 
 function exampleFiller(sa: SampleNetworkAsk): SampleCell {
-  return { cell: -1, state: 'decline', you: false, label: `m-${hex4(`${sa.id}:fill`)}`, city: 'Monterrey', reason_code: 'topic', cited: null, question: null, ms: null, cap: 2, used: 1, na: null, source: 'authored', at: null };
+  return { cell: -1, state: 'decline', you: false, label: `m-${hex4(`${sa.id}:fill`)}`, city: 'Seattle', reason_code: 'topic', cited: null, question: null, ms: null, cap: 2, used: 1, na: null, source: 'authored', at: null };
 }
 
 /** The canonical fan-out of a sample ask as cells by position (39 authored members + your gate or a filler). */
@@ -704,8 +704,8 @@ export function splitTraceLine(line: string): { time: string | null; rest: strin
 }
 
 /**
- * The REAL view for the QA state `real` (Lucía's fictional hospital ask from lib/sample, offered Mon Nov 9, 21:04
- * CST): example data for layout, shown next to a dashed note, never fetched or sent.
+ * The REAL view for the QA state `real` (Maya's fictional hospital ask from lib/sample, offered Mon Nov 9, 21:04
+ * PT): example data for layout, shown next to a dashed note, never fetched or sent.
  */
 export function exampleRealView(): import('@/lib/types').AskerAskView {
   const a = askByKey('a02');
@@ -719,12 +719,12 @@ export function exampleRealView(): import('@/lib/types').AskerAskView {
   return {
     id: 'a_91x',
     network: 'real',
-    subject: a?.subject ?? 'Hospital procurement in Mexico, 20 min?',
+    subject: a?.subject ?? 'Hospital procurement in the US, 20 min?',
     compiled: { parts, subject: a?.subject ?? '', text, price: null, topic: a?.topic ?? null },
     sent_at: OFFER_SAMPLE.sent_iso,
     outcome: 'offered',
     as_of: OFFER_SAMPLE.sent_iso,
-    next_checkpoint: '2026-11-10T09:00:00-06:00',
+    next_checkpoint: '2026-11-10T09:00:00-08:00',
     cells,
     people_interrupted: 1,
     gates_failed: 0,
@@ -739,7 +739,7 @@ export function exampleRealView(): import('@/lib/types').AskerAskView {
     trace: [
       `+0 ms     ask a_91x · compiled 5/5 · ${text.trim().split(/\s+/).filter(Boolean).length} words · REAL network · ${NETWORK_TOTAL} members`,
       '+2104 ms  gates done',
-      '+2110 ms  offered to 1 person · reply window ends Thu Nov 12, 21:04 CST',
+      '+2110 ms  offered to 1 person · reply window ends Thu Nov 12, 21:04 PT',
       '+2110 ms  people interrupted 1',
     ],
   };

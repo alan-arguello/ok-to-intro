@@ -517,7 +517,7 @@ export function samplePositions(id: string): number[] {
 
 /** The 40th cell when the visitor has no playground rules: a hand-written sample member that declines (topic). */
 function fillerCell(id: string, pos: number): FanoutCellEventSample {
-  return { cell: pos, state: 'decline', you: false, label: `m-${hex4(`${id}:fill`)}`, city: 'Monterrey', reason_code: 'topic', cited: null, question: null, ms: null, cap: 2, used: 1, na: null, source: 'authored' };
+  return { cell: pos, state: 'decline', you: false, label: `m-${hex4(`${id}:fill`)}`, city: 'Seattle', reason_code: 'topic', cited: null, question: null, ms: null, cap: 2, used: 1, na: null, source: 'authored' };
 }
 
 function recordedCell(row: RecordedMemberGate, m: SampleMember, pos: number, fromModel: boolean): FanoutCellEventSample {

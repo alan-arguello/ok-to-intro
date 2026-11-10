@@ -117,7 +117,7 @@ export function isAuthored(file: Pick<RecordedFile<unknown>, 'source'>): boolean
   return file.source !== 'model';
 }
 
-/** “Nov 9, 09:00” in Mexico City (recorded data keeps its own date for every viewer). */
+/** “Nov 9, 09:00” in Pacific time (recorded data keeps its own date for every viewer). */
 export function recordedDateLabel(iso: string): string {
   const ms = Date.parse(iso);
   return `${fmtDay(ms, NETWORK_TZ)}, ${fmtClock(ms, NETWORK_TZ)}`;

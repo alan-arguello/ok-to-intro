@@ -18,12 +18,12 @@ describe('text helpers', () => {
     expect(plural(2, 'person', 'people')).toBe('2 people');
     expect(traceTime(0)).toBe('+0 ms     ');
     expect(traceTime(1290)).toBe('+1290 ms  ');
-    expect(bareSubject('Hospital procurement in Mexico, 20 min?')).toBe('Hospital procurement in Mexico');
+    expect(bareSubject('Hospital procurement in the US, 20 min?')).toBe('Hospital procurement in the US');
   });
 
   it('reads Needs the same everywhere: “20 minutes with …”', () => {
     expect(needsLine('Someone who has run Postgres past 100M rows')).toBe('20 minutes with someone who has run Postgres past 100M rows');
-    expect(needsLine('A CTO who made a first hire in LATAM')).toBe('20 minutes with a CTO who made a first hire in LATAM');
+    expect(needsLine('A CTO who made a first hire outside the Bay Area')).toBe('20 minutes with a CTO who made a first hire outside the Bay Area');
     expect(needsLine('CTO who made a first hire')).toBe('20 minutes with CTO who made a first hire');
     expect(needsLine('20 minutes with someone')).toBe('20 minutes with someone');
     expect(needsLine('')).toBe('');
@@ -104,8 +104,8 @@ describe('QA states', () => {
 
 describe('recorded labels', () => {
   it('never call authored data a model run', () => {
-    expect(recordedLabel({ source: 'authored', recorded_at: '2026-11-09T09:00:00-06:00', model: 'claude-haiku-5-5' })).toBe(AUTHORED_LABEL);
-    expect(recordedLabel({ source: 'model', recorded_at: '2026-11-09T09:00:00-06:00', model: 'claude-haiku-5-5' }, { gates: 12, wall_ms: 1910, cost_usd: 0.0019 })).toBe(
+    expect(recordedLabel({ source: 'authored', recorded_at: '2026-11-09T09:00:00-08:00', model: 'claude-haiku-5-5' })).toBe(AUTHORED_LABEL);
+    expect(recordedLabel({ source: 'model', recorded_at: '2026-11-09T09:00:00-08:00', model: 'claude-haiku-5-5' }, { gates: 12, wall_ms: 1910, cost_usd: 0.0019 })).toBe(
       'Recorded run · Nov 9, 09:00 · claude-haiku-5-5 · 12 gates in 1.9 s · $0.002',
     );
     expect(isAuthored(PRESET_RECORDINGS)).toBe(PRESET_RECORDINGS.source === 'authored');

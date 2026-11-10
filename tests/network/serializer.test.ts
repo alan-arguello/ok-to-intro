@@ -12,7 +12,7 @@ import type { AskerAskView, CompiledAsk, OfferState, ReasonCode, Verdict } from 
  */
 
 const H = 3_600_000;
-const SENT = Date.parse('2026-11-09T21:04:00-06:00');
+const SENT = Date.parse('2026-11-09T21:04:00-08:00');
 const GATED = SENT + 2104;
 
 const SECRET = {
@@ -32,14 +32,14 @@ const COMPILED: CompiledAsk = {
   parts: {
     challenge: 'Public hospital committees stall at technical review',
     tried: '14 buyer calls; 2 committees reached review',
-    needs: 'someone who has sat on a public hospital procurement committee in Mexico',
+    needs: 'someone who has sat on a public hospital procurement committee in the US',
     by: 'Nov 20',
     offers: 'our tender templates',
   },
-  subject: 'Hospital procurement in Mexico, 20 min?',
-  text: 'Selling inventory software to public hospitals in Jalisco. 14 buyer calls; 2 committees stalled at technical review.',
+  subject: 'Hospital procurement in the US, 20 min?',
+  text: 'Selling inventory software to public hospitals in Illinois. 14 buyer calls; 2 committees stalled at technical review.',
   price: null,
-  topic: 'Hospital procurement, Mexico',
+  topic: 'Hospital procurement, US',
 };
 
 const iso = (ms: number) => new Date(ms).toISOString();
@@ -89,7 +89,7 @@ function offer(position: number, cell: number, state: OfferState, offeredAt: num
   };
 }
 
-/** Lucía's ask: 40 members, 7 skipped by SQL, accepts at 3, 17, 25, a question at 8, declines elsewhere. */
+/** Maya's ask: 40 members, 7 skipped by SQL, accepts at 3, 17, 25, a question at 8, declines elsewhere. */
 function base(overrides: Partial<AskSnapshot['ask']> = {}, offers: SnapshotOffer[] = [offer(1, 17, 'pending', GATED, null)]): AskSnapshot {
   const skips: Record<number, string> = { 0: 'self', 5: 'at_cap', 9: 'at_cap', 12: 'paused', 21: 'repeat_pair', 30: 'at_cap', 38: 'paused' };
   const members = Array.from({ length: 40 }, (_, position) => ({ position, skip: skips[position] ?? null, member_id: SECRET.id(position), email: SECRET.email(position), cap: 2, used: 2 }));
@@ -159,7 +159,7 @@ function assertNoLeak(view: AskerAskView) {
 }
 
 describe('serializeForAsker: the fixtures', () => {
-  const NOW = new Date('2026-11-10T15:30:00-06:00');
+  const NOW = new Date('2026-11-10T15:30:00-08:00');
 
   it('an open ask: 4 states, the exact reply-by for the first holder, the 4-line trace, nothing else', () => {
     const view = serializeForAsker(base(), NOW);
@@ -175,19 +175,19 @@ describe('serializeForAsker: the fixtures', () => {
     expect(view.matched_line).toBeNull();
     expect(view.questions).toEqual([{ id: 'q_price1', type: 'price', text: 'What do you charge per hospital, per year?', gates: 1, answer: null, answered_at: null }]);
     expect(view.compiled).toEqual(COMPILED);
-    expect(view.as_of).toBe(iso(Date.parse('2026-11-10T09:00:00-06:00')));
-    expect(view.next_checkpoint).toBe(iso(Date.parse('2026-11-10T21:00:00-06:00')));
+    expect(view.as_of).toBe(iso(Date.parse('2026-11-10T09:00:00-08:00')));
+    expect(view.next_checkpoint).toBe(iso(Date.parse('2026-11-10T21:00:00-08:00')));
     expect(view.trace).toEqual([
       '+0 ms     ask a_91xQ2k · compiled 5/5 · 17 words · REAL network · 40 members',
       '+2104 ms  gates done',
-      '+2104 ms  offered to 1 person · reply window ends Thu Nov 12, 21:04 CST',
+      '+2104 ms  offered to 1 person · reply window ends Thu Nov 12, 21:04 PT',
       '+2104 ms  people interrupted 1',
     ]);
-    expect(askerStatusLine(view)).toBe('offered · reply by Thu Nov 12, 21:04 CST');
+    expect(askerStatusLine(view)).toBe('offered · reply by Thu Nov 12, 21:04 PT');
   });
 
   it('the line a member opted to show, as their own words at the offsets code found; never without the opt-in', () => {
-    const rules = 'Happy to talk to B2B founders selling to public hospitals in Mexico.';
+    const rules = 'Happy to talk to B2B founders selling to public hospitals in the US.';
     const shown = serializeForAsker(base({}, [offer(1, 17, 'pending', GATED, null, { matched: { rules, cited: [{ text: 'b2b founders selling to public hospitals', found: true, start: 17, end: 57 }] } })]), NOW);
     expect(shown.matched_line).toBe('B2B founders selling to public hospitals');
     const hidden = serializeForAsker(base(), NOW);
@@ -195,57 +195,57 @@ describe('serializeForAsker: the fixtures', () => {
   });
 
   it('a pass and an expiry at the same instant read exactly the same, before and after their checkpoint', () => {
-    const at = Date.parse('2026-11-10T11:13:00-06:00');
+    const at = Date.parse('2026-11-10T11:13:00-08:00');
     const pass = base({}, [offer(1, 17, 'passed', GATED, at), offer(2, 3, 'pending', at, null)]);
     const expiry = base({}, [offer(1, 17, 'expired', GATED, at), offer(2, 3, 'pending', at, null)]);
-    for (const now of [NOW, new Date('2026-11-10T21:00:01-06:00'), new Date('2026-11-12T08:00:00-06:00')]) {
+    for (const now of [NOW, new Date('2026-11-10T21:00:01-08:00'), new Date('2026-11-12T08:00:00-08:00')]) {
       expect(serializeForAsker(pass, now)).toEqual(serializeForAsker(expiry, now));
     }
   });
 
   it('a No after the last checkpoint changes nothing until the next one; then the reply-by is rounded up to a checkpoint', () => {
-    const passAt = Date.parse('2026-11-10T11:13:00-06:00');
+    const passAt = Date.parse('2026-11-10T11:13:00-08:00');
     const moved = base({}, [offer(1, 17, 'passed', GATED, passAt), offer(2, 3, 'pending', passAt, null)]);
     expect(serializeForAsker(moved, NOW)).toEqual(serializeForAsker(base(), NOW));
-    const after = serializeForAsker(moved, new Date('2026-11-10T21:00:00-06:00'));
+    const after = serializeForAsker(moved, new Date('2026-11-10T21:00:00-08:00'));
     assertNoLeak(after);
-    expect(after.offered).toEqual({ reply_by: iso(Date.parse('2026-11-13T21:00:00-06:00')), position: 2, in_line: 3 });
+    expect(after.offered).toEqual({ reply_by: iso(Date.parse('2026-11-13T21:00:00-08:00')), position: 2, in_line: 3 });
     expect(isCheckpoint(after.offered!.reply_by)).toBe(true);
     expect(after.cells[17]).toBe('nothistime');
     expect(after.cells[3]).toBe('offered');
     expect(after.people_interrupted).toBe(2);
-    expect(askerStatusLine(after)).toBe('offered to the next person in line (2 of 3) · reply by Fri Nov 13, 21:00 CST');
+    expect(askerStatusLine(after)).toBe('offered to the next person in line (2 of 3) · reply by Fri Nov 13, 21:00 PT');
   });
 
   it('a 2-line answer shows at its checkpoint, stamped with that checkpoint, without the member’s name', () => {
-    const at = Date.parse('2026-11-10T10:02:00-06:00');
+    const at = Date.parse('2026-11-10T10:02:00-08:00');
     const snap = base({ status: 'answered' }, [offer(1, 17, 'answered', GATED, at, { answer: 'Ask for the technical annex first.' })]);
-    const before = serializeForAsker(snap, new Date('2026-11-10T20:59:59-06:00'));
+    const before = serializeForAsker(snap, new Date('2026-11-10T20:59:59-08:00'));
     expect(before.outcome).toBe('offered');
     expect(before.answer).toBeNull();
-    const after = serializeForAsker(snap, new Date('2026-11-10T21:00:00-06:00'));
+    const after = serializeForAsker(snap, new Date('2026-11-10T21:00:00-08:00'));
     assertNoLeak(after);
     expect(after.outcome).toBe('answered');
-    expect(after.answer).toEqual({ text: 'Ask for the technical annex first.', at: iso(Date.parse('2026-11-10T21:00:00-06:00')) });
+    expect(after.answer).toEqual({ text: 'Ask for the technical annex first.', at: iso(Date.parse('2026-11-10T21:00:00-08:00')) });
   });
 
   it('intro made shows at once, with the name, the one line and the scheduling link', () => {
-    const at = Date.parse('2026-11-10T11:16:00-06:00');
+    const at = Date.parse('2026-11-10T11:16:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'ok', GATED, at)]);
-    snap.intro = { member_name: 'Ana Ruiz', member_line: 'Ran procurement for a public hospital network in Jalisco.', scheduling_url: 'https://cal.com/ana-ruiz/20min', sent_at: iso(at + 900), created_at: iso(at), member_id: SECRET.id(17), email: SECRET.email(17) };
+    snap.intro = { member_name: 'Priya Shah', member_line: 'Ran procurement for a public hospital network in Illinois.', scheduling_url: 'https://cal.com/priya-shah/20min', sent_at: iso(at + 900), created_at: iso(at), member_id: SECRET.id(17), email: SECRET.email(17) };
     const view = serializeForAsker(snap, new Date(at + 60_000));
     assertNoLeak(view);
     expect(view.outcome).toBe('intro');
-    expect(view.intro).toEqual({ member_name: 'Ana Ruiz', member_line: 'Ran procurement for a public hospital network in Jalisco.', sent_at: iso(at + 900), scheduling_url: 'https://cal.com/ana-ruiz/20min' });
+    expect(view.intro).toEqual({ member_name: 'Priya Shah', member_line: 'Ran procurement for a public hospital network in Illinois.', sent_at: iso(at + 900), scheduling_url: 'https://cal.com/priya-shah/20min' });
     expect(view.cells.filter((c) => c === 'offered')).toEqual(['offered']);
     expect(view.cells.filter((c) => c === 'next')).toHaveLength(0);
   });
 
   it('intro made settles the whole line at once, even when the No before it is not due to show yet', () => {
-    const passAt = Date.parse('2026-11-10T11:00:00-06:00');
-    const okAt = Date.parse('2026-11-10T11:30:00-06:00');
+    const passAt = Date.parse('2026-11-10T11:00:00-08:00');
+    const okAt = Date.parse('2026-11-10T11:30:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'passed', GATED, passAt), offer(2, 3, 'ok', passAt, okAt)]);
-    snap.intro = { member_name: 'Ana Ruiz', member_line: 'x', scheduling_url: null, sent_at: iso(okAt + 800), created_at: iso(okAt) };
+    snap.intro = { member_name: 'Priya Shah', member_line: 'x', scheduling_url: null, sent_at: iso(okAt + 800), created_at: iso(okAt) };
     const view = serializeForAsker(snap, new Date(okAt + 1000));
     expect(view.people_interrupted).toBe(2);
     expect(view.cells[3]).toBe('offered');
@@ -254,22 +254,22 @@ describe('serializeForAsker: the fixtures', () => {
   });
 
   it('an OK whose intro email has not gone out yet reads as the offer still waiting: no intro, no name', () => {
-    const okAt = Date.parse('2026-11-10T11:16:00-06:00');
+    const okAt = Date.parse('2026-11-10T11:16:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'ok', GATED, okAt)]);
-    snap.intro = { member_name: 'Ana Ruiz', member_line: 'Ran procurement for a public hospital network in Jalisco.', scheduling_url: null, sent_at: null, created_at: iso(okAt) };
-    for (const at of [okAt + 1000, Date.parse('2026-11-10T21:00:01-06:00'), okAt + 80 * 3_600_000]) {
+    snap.intro = { member_name: 'Priya Shah', member_line: 'Ran procurement for a public hospital network in Illinois.', scheduling_url: null, sent_at: null, created_at: iso(okAt) };
+    for (const at of [okAt + 1000, Date.parse('2026-11-10T21:00:01-08:00'), okAt + 80 * 3_600_000]) {
       const view = serializeForAsker(snap, new Date(at));
       assertNoLeak(view);
       expect(view.outcome).toBe('offered');
       expect(view.intro).toBeNull();
       expect(view.offered).toMatchObject({ position: 1 });
-      expect(JSON.stringify(view)).not.toContain('Ana');
+      expect(JSON.stringify(view)).not.toContain('Priya');
     }
     // The moment the email is out, the intro shows (at once, not at a checkpoint).
     const sent = { ...snap, intro: { ...snap.intro, sent_at: iso(okAt + 5 * 60_000) } };
     const view = serializeForAsker(sent, new Date(okAt + 5 * 60_000 + 1000));
     expect(view.outcome).toBe('intro');
-    expect(view.intro).toMatchObject({ member_name: 'Ana Ruiz', sent_at: iso(okAt + 5 * 60_000) });
+    expect(view.intro).toMatchObject({ member_name: 'Priya Shah', sent_at: iso(okAt + 5 * 60_000) });
   });
 
   it('no match: coarse reasons over the whole network, buckets under 3 and SQL skips folded into other', () => {
@@ -295,20 +295,20 @@ describe('serializeForAsker: the fixtures', () => {
   });
 
   it('closed after everyone passed: the time is the checkpoint it became visible at', () => {
-    const p1 = Date.parse('2026-11-10T10:00:00-06:00');
-    const p2 = Date.parse('2026-11-10T13:00:00-06:00');
+    const p1 = Date.parse('2026-11-10T10:00:00-08:00');
+    const p2 = Date.parse('2026-11-10T13:00:00-08:00');
     const snap = base({ status: 'closed', close_reason: 'all_passed', closed_at: iso(p2) }, [offer(1, 17, 'passed', GATED, p1), offer(2, 3, 'passed', p1, p2), offer(3, 25, 'expired', p2, p2)]);
     const before = serializeForAsker(snap, NOW);
     expect(before.outcome).toBe('offered');
     expect(before.offered?.position).toBe(1);
-    const after = serializeForAsker(snap, new Date('2026-11-10T21:00:00-06:00'));
+    const after = serializeForAsker(snap, new Date('2026-11-10T21:00:00-08:00'));
     assertNoLeak(after);
-    expect(after.closed).toEqual({ reason: 'all_passed', offered_count: 3, at: iso(Date.parse('2026-11-10T21:00:00-06:00')) });
+    expect(after.closed).toEqual({ reason: 'all_passed', offered_count: 3, at: iso(Date.parse('2026-11-10T21:00:00-08:00')) });
     expect(after.cells.every((c) => c === 'nothistime')).toBe(true);
   });
 
   it('withdrawn: the asker’s own action, exact and at once', () => {
-    const w = Date.parse('2026-11-10T12:00:00-06:00');
+    const w = Date.parse('2026-11-10T12:00:00-08:00');
     const view = serializeForAsker(base({ status: 'withdrawn', withdrawn_at: iso(w) }, [offer(1, 17, 'withdrawn', GATED, w)]), new Date(w + 1));
     assertNoLeak(view);
     expect(view.outcome).toBe('withdrawn');
@@ -483,12 +483,12 @@ describe('serializeForAsker: properties over 400 simulated histories', () => {
 });
 
 describe('checkpoints', () => {
-  it('ceilCheckpoint rounds up to 09:00 or 21:00 in Mexico City and keeps exact checkpoints', () => {
-    expect(ceilCheckpoint('2026-11-10T09:00:00-06:00').toISOString()).toBe(iso(Date.parse('2026-11-10T09:00:00-06:00')));
-    expect(ceilCheckpoint('2026-11-10T09:00:00.001-06:00').toISOString()).toBe(iso(Date.parse('2026-11-10T21:00:00-06:00')));
-    expect(ceilCheckpoint('2026-11-10T22:15:00-06:00').toISOString()).toBe(iso(Date.parse('2026-11-11T09:00:00-06:00')));
-    expect(ceilCheckpoint('2026-12-31T23:59:00-06:00').toISOString()).toBe(iso(Date.parse('2027-01-01T09:00:00-06:00')));
-    expect(isCheckpoint('2026-11-10T21:00:00-06:00')).toBe(true);
-    expect(isCheckpoint('2026-11-10T21:00:01-06:00')).toBe(false);
+  it('ceilCheckpoint rounds up to 09:00 or 21:00 Pacific time (PT) and keeps exact checkpoints', () => {
+    expect(ceilCheckpoint('2026-11-10T09:00:00-08:00').toISOString()).toBe(iso(Date.parse('2026-11-10T09:00:00-08:00')));
+    expect(ceilCheckpoint('2026-11-10T09:00:00.001-08:00').toISOString()).toBe(iso(Date.parse('2026-11-10T21:00:00-08:00')));
+    expect(ceilCheckpoint('2026-11-10T22:15:00-08:00').toISOString()).toBe(iso(Date.parse('2026-11-11T09:00:00-08:00')));
+    expect(ceilCheckpoint('2026-12-31T23:59:00-08:00').toISOString()).toBe(iso(Date.parse('2027-01-01T09:00:00-08:00')));
+    expect(isCheckpoint('2026-11-10T21:00:00-08:00')).toBe(true);
+    expect(isCheckpoint('2026-11-10T21:00:01-08:00')).toBe(false);
   });
 });

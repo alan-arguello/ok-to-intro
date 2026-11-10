@@ -1,6 +1,6 @@
 {
   "source": "authored",
-  "recorded_at": "2026-11-09T09:00:00-06:00",
+  "recorded_at": "2026-11-09T09:00:00-08:00",
   "model": "claude-haiku-5-5",
   "rubric_hash": null,
   "note": "Hand-written expectations from lib/sample (39 sample members × 3 sample asks). Not a model run.",
@@ -618,7 +618,7 @@
           "reason": null,
           "cited": [
             {
-              "text": "Happy to talk to founders selling to hospitals in Mexico",
+              "text": "Happy to talk to founders selling to hospitals in the US",
               "found": true,
               "start": 0,
               "end": 56
@@ -676,7 +676,7 @@
           "reason": null,
           "cited": [
             {
-              "text": "Clinic groups and hospital networks in Mexico",
+              "text": "Clinic groups and hospital networks in the US",
               "found": true,
               "start": 0,
               "end": 45

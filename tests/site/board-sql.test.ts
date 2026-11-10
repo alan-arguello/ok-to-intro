@@ -17,10 +17,10 @@ let a: string;
 let b: string;
 let c: string;
 
-// Mexico City is UTC−6: the 09:00 checkpoint on Jan 10 is 15:00Z. All in the past, so “as of now” sees them too.
-const BEFORE = '2026-01-10T14:00:00Z';
-const CHECKPOINT = '2026-01-10T15:00:00Z';
-const AFTER = '2026-01-10T16:30:00Z';
+// Pacific time is UTC−8 in January: the 09:00 checkpoint on Jan 10 is 17:00Z. All in the past, so “as of now” sees them too.
+const BEFORE = '2026-01-10T16:00:00Z';
+const CHECKPOINT = '2026-01-10T17:00:00Z';
+const AFTER = '2026-01-10T18:30:00Z';
 
 beforeAll(async () => {
   db = await createTestDb();
@@ -29,13 +29,13 @@ beforeAll(async () => {
   b = await db.createMember('as-of-b@example.com', { rules: RULES });
   c = await db.createMember('as-of-c@example.com', { rules: RULES });
   // They joined the day before (members created after the checkpoint don't count in it).
-  await db.pg.query(`update public.members set created_at = '2026-01-09T12:00:00Z'`);
+  await db.pg.query(`update public.members set created_at = '2026-01-09T14:00:00Z'`);
   await db.pg.query(
     `insert into public.audit (at, action, member_id, asker_id, ask_id, offer_id, detail) values
       ($4, 'member_joined', $1, null, null, null, '{}'),
-      ($4, 'ask_sent', null, $2, 'a_asof1', null, '{"topic":"Hospital procurement, Mexico"}'),
-      ($4, 'ask_sent', null, $3, 'a_asof2', null, '{"topic":"Hospital procurement, Mexico"}'),
-      ($4, 'ask_sent', null, $1, 'a_asof3', null, '{"topic":"Hospital procurement, Mexico"}'),
+      ($4, 'ask_sent', null, $2, 'a_asof1', null, '{"topic":"Hospital procurement, US"}'),
+      ($4, 'ask_sent', null, $3, 'a_asof2', null, '{"topic":"Hospital procurement, US"}'),
+      ($4, 'ask_sent', null, $1, 'a_asof3', null, '{"topic":"Hospital procurement, US"}'),
       ($4, 'gate_checked', $1, $2, 'a_asof1', null, '{"verdict":"accept","decided_by":"gate","attempt":1}'),
       ($4, 'gate_checked', $3, $2, 'a_asof1', null, '{"verdict":"decline","decided_by":"clause_check","attempt":1}'),
       ($4, 'offer_delivered', $1, $2, 'a_asof1', 'o_asof1', '{}'),
@@ -79,7 +79,7 @@ describe('board_snapshot(p_as_of)', () => {
     expect(parsed?.quotes_not_found).toBe(1);
     expect(parsed?.members_with_rules).toBe(3);
     // Three different founders asked about the topic, so it is listed.
-    expect(parsed?.demand).toEqual([{ topic: 'Hospital procurement, Mexico', asks: 3, reached: 1, askers: 3 }]);
+    expect(parsed?.demand).toEqual([{ topic: 'Hospital procurement, US', asks: 3, reached: 1, askers: 3 }]);
   });
 
   it('replaces the zero-argument function (no ambiguous overload) and stays server-only', async () => {

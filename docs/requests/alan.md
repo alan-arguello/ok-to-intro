@@ -1,4 +1,4 @@
-# Decisions from Alan (Mon Nov 9, 10:30 Mexico City)
+# Decisions from Alan (Mon Nov 9, 08:30 PT)
 
 For the integrator and every builder. These override the defaults in the specs.
 

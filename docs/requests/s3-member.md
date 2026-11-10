@@ -40,8 +40,8 @@
   hint) who opens /join without `?next=` goes straight to /me (or /me?carried=1); `?next=` means a protected page just
   bounced them, so /join stays put (no loop on a stale cookie).
 - **Asker profile on /me.** Settings carry Company, Stage and City next to Name (S2's “Sent as”, `canAskReal`
-  `profile_incomplete`), with “When you ask, the member who gets it sees “Ana Ruiz · Orvella Health · Seed ·
-  Guadalajara”.” Anchors: `#asks`, `#settings`, `#token`, `#delete`.
+  `profile_incomplete`), with “When you ask, the member who gets it sees “Priya Shah · Oakline Health · Seed ·
+  Chicago”.” Anchors: `#asks`, `#settings`, `#token`, `#delete`.
 - **A waiting offer stays on /me while paused.** The /pause lede says an ask already waiting stays open, so /me keeps
   “1 ask is waiting on you” while paused (the prototype hid it); Resume stays the one black pill and “Review the ask”
   is an outline button in that state only.

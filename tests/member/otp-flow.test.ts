@@ -96,14 +96,14 @@ beforeEach(() => {
 
 describe('email-code sign-in through supabase-js', () => {
   it('asks for a code, rejects a wrong one, signs in with the right one and creates the member from the verified user', async () => {
-    const mail = 'ana.otp@example.invalid';
+    const mail = 'priya.otp@example.invalid';
     const id = await db.createUser(mail);
     const gotrue = fakeGoTrue({ id, email: mail });
     const jar = new Map<string, string>();
     const client = serverClient(jar, gotrue.fetch);
 
     // 1. Send: a 6-digit code, never a link (no redirect_to), new users created.
-    const sent = await requestSignInCode(client.auth, { email: ' Ana.OTP@Example.invalid ', ip: '203.0.113.20' });
+    const sent = await requestSignInCode(client.auth, { email: ' Priya.OTP@Example.invalid ', ip: '203.0.113.20' });
     expect(sent).toMatchObject({ ok: true, resend_in_s: 60 });
     const otp = gotrue.calls.find((c) => c.path === '/auth/v1/otp');
     expect(otp?.method).toBe('POST');
@@ -135,17 +135,17 @@ describe('email-code sign-in through supabase-js', () => {
   });
 
   it('reads Supabase’s once-a-minute answer as “a code was just sent” and an outage as down', async () => {
-    const id = await db.createUser('lucia.otp@example.invalid');
+    const id = await db.createUser('maya.otp@example.invalid');
     const recent = fakeGoTrue(
-      { id, email: 'lucia.otp@example.invalid' },
+      { id, email: 'maya.otp@example.invalid' },
       { status: 429, body: { code: 429, error_code: 'over_email_send_rate_limit', msg: 'For security purposes, you can only request this after 42 seconds.' } },
     );
-    expect(await requestSignInCode(serverClient(new Map(), recent.fetch).auth, { email: 'lucia.otp@example.invalid', ip: null })).toMatchObject({ ok: true, resend_in_s: 42 });
+    expect(await requestSignInCode(serverClient(new Map(), recent.fetch).auth, { email: 'maya.otp@example.invalid', ip: null })).toMatchObject({ ok: true, resend_in_s: 42 });
 
-    const team = fakeGoTrue({ id, email: 'lucia.otp@example.invalid' }, { status: 400, body: { code: 400, error_code: 'email_address_not_authorized', msg: 'Email address not authorized' } });
-    expect(await requestSignInCode(serverClient(new Map(), team.fetch).auth, { email: 'lucia.otp@example.invalid', ip: null })).toMatchObject({ ok: false, error: 'not_authorized' });
+    const team = fakeGoTrue({ id, email: 'maya.otp@example.invalid' }, { status: 400, body: { code: 400, error_code: 'email_address_not_authorized', msg: 'Email address not authorized' } });
+    expect(await requestSignInCode(serverClient(new Map(), team.fetch).auth, { email: 'maya.otp@example.invalid', ip: null })).toMatchObject({ ok: false, error: 'not_authorized' });
 
-    const down = fakeGoTrue({ id, email: 'lucia.otp@example.invalid' }, { status: 503, body: { msg: 'upstream' } });
-    expect(await requestSignInCode(serverClient(new Map(), down.fetch).auth, { email: 'lucia.otp@example.invalid', ip: null })).toMatchObject({ ok: false, error: 'down' });
+    const down = fakeGoTrue({ id, email: 'maya.otp@example.invalid' }, { status: 503, body: { msg: 'upstream' } });
+    expect(await requestSignInCode(serverClient(new Map(), down.fetch).auth, { email: 'maya.otp@example.invalid', ip: null })).toMatchObject({ ok: false, error: 'down' });
   });
 });

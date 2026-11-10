@@ -12,7 +12,7 @@ import type { AuthoredVerdict } from './types';
 
 const E1 = 'founders about Postgres, queues or LLM evals in production';
 const E2 = 'a real workload: a table size, a p95 or an error rate';
-const H1 = 'B2B founders selling to public hospitals or insurers in Mexico or Colombia';
+const H1 = 'B2B founders selling to public hospitals or insurers in the US or Canada';
 const H2 = 'talked to 10+ buyers and have a price';
 const DECK = 'No asks to review a deck.';
 const INV = 'Asks which founders you would back: reads as an investor looking for deal flow, not a founder asking for help.';
@@ -48,7 +48,7 @@ export const AUTHORED_VERDICTS: Readonly<Record<PresetId, readonly AuthoredVerdi
   ],
   health: [
     v('a01', 'decline', [], 'no_rule', 'Postgres performance. No line in these rules covers it.'),
-    v('a02', 'ask_back', [H1, 'have a price'], 'proof', 'Public hospitals in Jalisco with 14 buyer calls, but the ask gives no price.', {
+    v('a02', 'ask_back', [H1, 'have a price'], 'proof', 'Public hospitals in Illinois with 14 buyer calls, but the ask gives no price.', {
       question: { type: 'price', text: 'What do you charge per hospital, per year?' },
     }),
     v('a03', 'decline', [], 'no_rule', 'AI support tooling. No line in these rules covers it.'),
@@ -57,7 +57,7 @@ export const AUTHORED_VERDICTS: Readonly<Record<PresetId, readonly AuthoredVerdi
     v('a06', 'decline', [], 'no_rule', 'Job queues. No line in these rules covers it.'),
     v('a07', 'decline', [], 'no_rule', 'Sells to a bank, not to hospitals or insurers.'),
     v('a08', 'decline', [], 'no_rule', 'Postgres schema design. No line in these rules covers it.'),
-    v('a09', 'accept', [H1, H2], 'match', 'Sells to insurers in Colombia; 11 insurer calls; $2,500 a month per insurer.'),
+    v('a09', 'accept', [H1, H2], 'match', 'Sells to insurers in the US; 11 insurer calls; $2,500 a month per insurer.'),
     v('a10', 'decline', [], 'no_rule', INV, { flags: ['asker_not_founder'] }),
     v('a11', 'decline', [], 'no_rule', `Sells to private clinics, not public hospitals or insurers. ${INJ}`, { flags: ['instruction_in_ask'] }),
     v('a12', 'decline', [DECK], 'rule_says_no', 'Asks for feedback on a pitch deck.'),
@@ -91,7 +91,7 @@ export const PROTOTYPE_RUN_ESTIMATES: Readonly<Record<PresetId, { wall_ms: numbe
 };
 
 /**
- * The fake model output “Test the quote check” injects for Mezquite Health (ux-spec S1). Always labelled
+ * The fake model output “Test the quote check” injects for Sagefen Health (ux-spec S1). Always labelled
  * “Test of the code check: a fake model output, not a model call”. Never injected into a live run.
  */
 export const CLAUSE_CHECK_TEST_OUTPUT = {

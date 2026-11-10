@@ -52,11 +52,11 @@ function offer(over: Partial<OfferView> = {}): OfferView {
     sample: false,
     title: OFFER_SAMPLE.title,
     subject: OFFER_SAMPLE.subject,
-    asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' },
-    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.' },
+    asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
+    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.' },
     rules_version: 3,
-    topic: 'Hospital procurement, Mexico',
-    scheduling_url: 'https://cal.com/ana-ruiz/20min',
+    topic: 'Hospital procurement, US',
+    scheduling_url: 'https://cal.com/priya-shah/20min',
     facts: [...OFFER_SAMPLE.facts],
     cap: 2,
     nth: 1,
@@ -67,7 +67,7 @@ function offer(over: Partial<OfferView> = {}): OfferView {
     no_reason: null,
     paused_until: null,
     ask_withdrawn_at: null,
-    member_first: 'Ana',
+    member_first: 'Priya',
     ...over,
   };
 }
@@ -79,10 +79,10 @@ function checkin(over: Partial<CheckinView> = {}): CheckinView {
     kind: 'd1',
     role: 'asker',
     sample: false,
-    other_name: 'Ana Ruiz',
-    other_first: 'Ana',
+    other_name: 'Priya Shah',
+    other_first: 'Priya',
     intro_subject: OFFER_SAMPLE.subject,
-    intro_made_at: '2026-11-09T21:16:00-06:00',
+    intro_made_at: '2026-11-09T21:16:00-08:00',
     answer: null,
     answered_at: null,
     closes_at: new Date(Date.now() + 20 * 24 * HOUR).toISOString(),
@@ -94,7 +94,7 @@ function checkin(over: Partial<CheckinView> = {}): CheckinView {
 beforeEach(() => {
   vi.clearAllMocks();
   envState.env.TOKEN_HMAC_SECRET = 'test-secret-that-is-long-enough-for-hmac-0123456789';
-  session.getUser.mockResolvedValue({ ok: true, user: { id: 'u-ana', email: 'ana@example.com' } });
+  session.getUser.mockResolvedValue({ ok: true, user: { id: 'u-priya', email: 'priya@example.com' } });
 });
 
 describe('/o: resolving the link', () => {
@@ -104,17 +104,17 @@ describe('/o: resolving the link', () => {
     expect(offers.getOffer).toHaveBeenCalledWith({ token: TOKEN }, expect.any(Date));
     expect(m.mode).toBe('real');
     expect(m.ui.view).toBe('open');
-    expect(m.card).toMatchObject({ title: 'Hospital procurement in Mexico', from: 'Lucía Ferrer · Orvella Health · Seed · Guadalajara', matched: OFFER_SAMPLE.matched, who: 'Lucía', cap: 2, nth: 1 });
+    expect(m.card).toMatchObject({ title: 'Hospital procurement in the US', from: 'Maya Bennett · Oakline Health · Seed · Chicago', matched: OFFER_SAMPLE.matched, who: 'Maya', cap: 2, nth: 1 });
     expect(m.card?.facts[0]?.[0]).toBe('Problem');
     expect(m.hours).toBe(71);
     expect(m.forms?.csrf).toBe(csrfToken(`o:t:${TOKEN}`));
-    expect(JSON.stringify(m)).not.toContain('u-ana');
+    expect(JSON.stringify(m)).not.toContain('u-priya');
   });
 
   it('an offer id is the signed-in member’s (the /me link); signed out goes to sign in first', async () => {
     offers.getOffer.mockResolvedValue({ found: true, offer: offer() });
     await loadOfferPage('o_3Fp9kL', { choice: 'ok' });
-    expect(offers.getOffer).toHaveBeenCalledWith({ offer_id: 'o_3Fp9kL', member_id: 'u-ana' }, expect.any(Date));
+    expect(offers.getOffer).toHaveBeenCalledWith({ offer_id: 'o_3Fp9kL', member_id: 'u-priya' }, expect.any(Date));
     session.getUser.mockResolvedValue({ ok: false, reason: 'signed_out' });
     session.requireMember.mockImplementation(() => {
       throw Object.assign(new Error('NEXT_REDIRECT'), { digest: 'NEXT_REDIRECT;replace;/join?next=%2Fo%2Fo_3Fp9kM;307;' });
@@ -158,18 +158,18 @@ describe('/o: the offer’s state decides', () => {
     const expired = await loadOfferPage(TOKEN, { choice: 'answer' });
     expect(expired.ui.view).toBe('expired');
     expect(expired.hours).toBeNull();
-    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ state: 'withdrawn', ask_withdrawn_at: '2026-11-10T10:12:00-06:00' }) });
+    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ state: 'withdrawn', ask_withdrawn_at: '2026-11-10T10:12:00-08:00' }) });
     const withdrawn = await loadOfferPage(TOKEN, {});
     expect(withdrawn.ui.view).toBe('withdrawn');
     expect(withdrawn.withdrawnOn?.text).toBe('Tue Nov 10');
-    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ paused_until: '2026-12-01T06:00:00Z' }) });
+    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ paused_until: '2026-12-01T08:00:00Z' }) });
     const paused = await loadOfferPage(TOKEN, { choice: 'no' });
     expect(paused.ui).toMatchObject({ view: 'open', paused: true, nohint: true });
     expect(paused.pausedUntil).toBe('Dec 1');
   });
 
   it('after OK: “just did it” right after the POST, “you said OK on …” on any later visit', async () => {
-    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ state: 'ok', responded_at: '2026-11-09T21:16:00-06:00' }) });
+    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ state: 'ok', responded_at: '2026-11-09T21:16:00-08:00' }) });
     const now = await loadOfferPage(TOKEN, { done: 'ok' });
     expect(now.ui.view).toBe('ok-sent');
     expect(now.okAt?.text).toBe('21:16');
@@ -182,14 +182,14 @@ describe('/o: the offer’s state decides', () => {
 
   it('a No with “Not my area”: the templated line for the member’s own rules, labelled as not run', async () => {
     const rules = PRESETS.find((p) => p.id === 'health')?.rules as string;
-    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ state: 'passed', responded_at: '2026-11-09T21:16:00-06:00', no_reason: 'not_my_area' }) });
-    offers.memberForOffer.mockResolvedValue({ member_id: 'u-ana' });
+    offers.getOffer.mockResolvedValue({ found: true, offer: offer({ state: 'passed', responded_at: '2026-11-09T21:16:00-08:00', no_reason: 'not_my_area' }) });
+    offers.memberForOffer.mockResolvedValue({ member_id: 'u-priya' });
     member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules, rules_version: 3 } });
     const m = await loadOfferPage(TOKEN, { done: 'no' });
     expect(m.ui).toMatchObject({ view: 'no', why: 'area' });
-    expect(m.edit).toEqual({ context: 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.', add: 'No asks about hospital procurement.', caption: SUGGESTED_EDIT_UNTESTED });
+    expect(m.edit).toEqual({ context: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.', add: 'No asks about hospital procurement.', caption: SUGGESTED_EDIT_UNTESTED });
     expect(m.rulesVersion).toBe(3);
-    expect(m.edit?.add).not.toContain('Orvella');
+    expect(m.edit?.add).not.toContain('Oakline');
     // Already in the rules: nothing to suggest.
     member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules: `${rules}\nNo asks about hospital procurement.`, rules_version: 4 } });
     expect((await loadOfferPage(TOKEN, { done: 'no', why: 'area' })).edit).toBeNull();
@@ -211,11 +211,11 @@ describe('/c: resolving the link and the check-in’s state', () => {
     checkins.getCheckin.mockResolvedValue({ found: true, checkin: checkin() });
     const form = await loadCheckinPage(TOKEN, { v: '4' });
     expect(form.ui).toMatchObject({ view: 'form', kind: 'd1', role: 'asker', value: '4' });
-    expect(form.other).toEqual({ name: 'Ana Ruiz', first: 'Ana' });
-    expect(form.subject).toBe('Hospital procurement in Mexico');
+    expect(form.other).toEqual({ name: 'Priya Shah', first: 'Priya' });
+    expect(form.subject).toBe('Hospital procurement in the US');
     expect(form.introMade?.text).toBe('Nov 9');
     expect(form.forms?.csrf).toBe(csrfToken(`c:t:${TOKEN}`));
-    checkins.getCheckin.mockResolvedValue({ found: true, checkin: checkin({ answer: { kind: 'd1', rating: 4 }, answered_at: '2026-11-10T10:00:00-06:00' }) });
+    checkins.getCheckin.mockResolvedValue({ found: true, checkin: checkin({ answer: { kind: 'd1', rating: 4 }, answered_at: '2026-11-10T10:00:00-08:00' }) });
     const answered = await loadCheckinPage(TOKEN, { v: '2' });
     expect(answered.ui).toMatchObject({ view: 'already', value: '4' });
     expect(answered.answeredOn?.text).toBe('Nov 10');

@@ -943,7 +943,7 @@ export class PlaygroundEngine {
   }
 
   /**
-   * “Test the quote check”: Mezquite Health's output is swapped for a labelled fake that quotes “Happy to take any
+   * “Test the quote check”: Sagefen Health's output is swapped for a labelled fake that quotes “Happy to take any
    * intro”, which isn't in the rules; the real clause finder declines it. Undo restores the real verdict.
    */
   applyQuoteTest(): boolean {
@@ -989,7 +989,7 @@ export class PlaygroundEngine {
       orderVersion: s.orderVersion + 1,
       animateOrder: !this.noSave,
     });
-    this.deps.announce('Test of the quote check: Mezquite Health is declined by code.');
+    this.deps.announce('Test of the quote check: Sagefen Health is declined by code.');
     return true;
   }
 

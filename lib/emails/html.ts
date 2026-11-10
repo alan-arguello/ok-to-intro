@@ -48,7 +48,7 @@ export function withQuery(url: string, key: string, value: string): string {
   return `${base}${sep}${encodeURIComponent(key)}=${encodeURIComponent(value)}${hash !== undefined ? `#${hash}` : ''}`;
 }
 
-/** `https://cal.com/ana-ruiz/20min` → `cal.com/ana-ruiz/20min` (how the intro shows a link). */
+/** `https://cal.com/priya-shah/20min` → `cal.com/priya-shah/20min` (how the intro shows a link). */
 export function displayUrl(url: string): string {
   return String(url).replace(/^https?:\/\//i, '').replace(/\/$/, '');
 }

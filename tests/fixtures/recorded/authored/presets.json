@@ -1,6 +1,6 @@
 {
   "source": "authored",
-  "recorded_at": "2026-11-09T09:00:00-06:00",
+  "recorded_at": "2026-11-09T09:00:00-08:00",
   "model": "claude-haiku-5-5",
   "rubric_hash": null,
   "note": "Hand-written expectations from lib/sample (a literal reading of each preset). Not a model run. Replace with `npm run record:presets`.",
@@ -250,7 +250,7 @@
     },
     "health": {
       "preset": "health",
-      "rules_sha256": "83767b1a40912b415f5e76c4f331a275af6a12518542cbb0a74b3b5928116279",
+      "rules_sha256": "b6260dbdde969d3da44ed6651556265fa890a748f2935909961511b99940b319",
       "wall_ms": null,
       "cost_usd": null,
       "gates": [
@@ -274,21 +274,21 @@
           "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "B2B founders selling to public hospitals or insurers in Mexico or Colombia",
+              "text": "B2B founders selling to public hospitals or insurers in the US or Canada",
               "found": true,
               "start": 17,
-              "end": 91
+              "end": 89
             },
             {
               "text": "have a price",
               "found": true,
-              "start": 136,
-              "end": 148
+              "start": 134,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Public hospitals in Jalisco with 14 buyer calls, but the ask gives no price.",
+          "reason": "Public hospitals in Illinois with 14 buyer calls, but the ask gives no price.",
           "question": {
             "type": "price",
             "text": "What do you charge per hospital, per year?"
@@ -320,8 +320,8 @@
             {
               "text": "have a price",
               "found": true,
-              "start": 136,
-              "end": 148
+              "start": 134,
+              "end": 146
             }
           ],
           "decided_by": "gate",
@@ -395,21 +395,21 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "B2B founders selling to public hospitals or insurers in Mexico or Colombia",
+              "text": "B2B founders selling to public hospitals or insurers in the US or Canada",
               "found": true,
               "start": 17,
-              "end": 91
+              "end": 89
             },
             {
               "text": "talked to 10+ buyers and have a price",
               "found": true,
-              "start": 111,
-              "end": 148
+              "start": 109,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Sells to insurers in Colombia; 11 insurer calls; $2,500 a month per insurer.",
+          "reason": "Sells to insurers in the US; 11 insurer calls; $2,500 a month per insurer.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -456,8 +456,8 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 171,
-              "end": 196
+              "start": 169,
+              "end": 194
             }
           ],
           "decided_by": "gate",

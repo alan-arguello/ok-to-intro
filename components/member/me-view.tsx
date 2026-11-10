@@ -462,7 +462,7 @@ export function MeView({ initial }: { initial: MeInitial }) {
     const data = {
       exported_at: new Date().toISOString(),
       sample: true,
-      note: 'SAMPLE preview: the sample member Ana Ruiz, not anyone’s data.',
+      note: 'SAMPLE preview: the sample member Priya Shah, not anyone’s data.',
       name: saved.profile.name || null,
       rules: saved.rules,
       rules_version: saved.version,

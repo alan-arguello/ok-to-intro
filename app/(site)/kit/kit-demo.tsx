@@ -190,8 +190,8 @@ export function KitDemo() {
               <RowToggle expanded={false}>
                 <RowLine1>
                   <Verdict kind="reach" />
-                  <RowName>Arrecife Data</RowName>
-                  <RowLoc>Mexico City</RowLoc>
+                  <RowName>Tidewell Data</RowName>
+                  <RowLoc>San Francisco</RowLoc>
                   <RowAside desk>1.3 s</RowAside>
                 </RowLine1>
                 <RowBody>
@@ -227,8 +227,8 @@ export function KitDemo() {
               <RowToggle expanded={open} onClick={() => setOpen((o) => !o)}>
                 <RowLine1>
                   <Verdict kind="code" />
-                  <RowName>Mezquite Health</RowName>
-                  <RowLoc>Puebla</RowLoc>
+                  <RowName>Sagefen Health</RowName>
+                  <RowLoc>Phoenix</RowLoc>
                   <Tag kind="trap">Trap · injection</Tag>
                   <RowAside desk>1.3 s</RowAside>
                 </RowLine1>
@@ -253,15 +253,15 @@ export function KitDemo() {
             <Row>
               <RowLine1>
                 <Verdict kind="checking" />
-                <RowName>Pinole Labs</RowName>
-                <RowLoc>Mexico City</RowLoc>
+                <RowName>Fernby Labs</RowName>
+                <RowLoc>San Francisco</RowLoc>
               </RowLine1>
             </Row>
             <Row stale>
               <RowLine1>
                 <Verdict kind="decline" />
-                <RowName>Zarzal AI</RowName>
-                <RowLoc>Santiago</RowLoc>
+                <RowName>Gorse AI</RowName>
+                <RowLoc>Berlin</RowLoc>
                 <Tag kind="trap">Trap · polite spam</Tag>
                 <Tag kind="outline">Out of date</Tag>
               </RowLine1>
@@ -290,7 +290,7 @@ export function KitDemo() {
                 </ButtonLink>
               }
             >
-              Hospital procurement in Mexico · 61 h left
+              Hospital procurement in the US · 61 h left
             </Notice>
             <Diff
               label="Suggested change to your rules"
@@ -307,10 +307,10 @@ export function KitDemo() {
                 <T tone="dim">{'+0 ms     '}</T>plan  run r_8f2a · live · 12 gates · rules 196 chars
               </TraceLine>
               <TraceLine>
-                <T tone="dim">{'+1290 ms  '}</T>gate  #1 Arrecife Data <T tone="ok">accept</T> · 2 of 2 quotes found
+                <T tone="dim">{'+1290 ms  '}</T>gate  #1 Tidewell Data <T tone="ok">accept</T> · 2 of 2 quotes found
               </TraceLine>
               <TraceLine>
-                <T tone="dim">{'+1520 ms  '}</T>gate  #6 Pinole Labs <T tone="wait">ask_back</T> metric
+                <T tone="dim">{'+1520 ms  '}</T>gate  #6 Fernby Labs <T tone="wait">ask_back</T> metric
               </TraceLine>
               <TraceLine>
                 <T tone="dim">{'+6000 ms  '}</T>error #9 <T tone="no">timeout</T> after 6 s · not checked, never an accept
@@ -340,7 +340,7 @@ export function KitDemo() {
                 Matched your rule: <Mark>“{OFFER_SAMPLE.matched}”</Mark>
               </>
             }
-            fine="Lucía sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer."
+            fine="Maya sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer."
             facts={OFFER_SAMPLE.facts.filter(([k]) => k !== 'Price')}
           />
           <Panel className="stack">

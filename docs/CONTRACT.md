@@ -396,7 +396,7 @@ the hook all use its output.
 4. **A pass and an expiry read the same.** Both become `nothistime` for that member and either move the offer on
    (`offered` again, position + 1: “Offered to the next person in line (2 of 3)”) or close the ask
    (`closed.reason: 'all_passed'`). Nothing distinguishes them.
-5. **Checkpoints.** Asker-visible changes other than “intro made” land at the next 09:00 or 21:00 in Mexico City,
+5. **Checkpoints.** Asker-visible changes other than “intro made” land at the next 09:00 or 21:00 Pacific time (PT),
    computed on read: the view reflects `askerAsOf(ask.gated_at, now)` = max(send finished, last checkpoint)
    (lib/oti/time.ts). Member-driven events (pass, expiry, 2-line answer, the offer moving on) with a timestamp after
    `as_of` are invisible until the next checkpoint. Machine results the asker triggered (the send's fan-out, the
@@ -417,7 +417,7 @@ the hook all use its output.
    in line: the accept with the most unused cap this month, then the earliest answer, skipping members already offered.
    `create_offer` returns a row (done), no row (that member can't take it now: try the next one), `OTI01` (someone
    else just advanced it: stop) or `OTI02` (the ask isn't open: stop). When nobody is left, the ask closes
-   (`all_passed`). Past its deadline (`asks.deadline`, Mexico City date) it closes (`deadline`) instead of moving on.
+   (`all_passed`). Past its deadline (`asks.deadline`, Pacific-time date) it closes (`deadline`) instead of moving on.
 10. **Stream timing leaks nothing.** On REAL, SQL-skipped members are never resolved early (SAMPLE resolves them at
     once on purpose): `next` and `question` cells stream as gates answer, and every `nothistime` cell (declines,
     failures and skips alike) is emitted together after the last gate, in position order, just before `offer` and
@@ -642,8 +642,8 @@ sessionStorage is per tab: a link opened in a new tab finds no store and must fa
 ## §time · Time zones
 
 Client components show the viewer's zone (`fmtWhen(ms)` with no `tz`); server code and emails pass `NETWORK_TZ`
-(America/Mexico_City, “CST”). SAMPLE flows stamp their own times (sent = now, reply by = offered + 72 h). Cap months
-are calendar months in Mexico City (`capMonth`, SQL `public.cap_month`). Asker checkpoints: §d.5.
+(America/Los_Angeles, “PT”). SAMPLE flows stamp their own times (sent = now, reply by = offered + 72 h). Cap months
+are calendar months in Pacific time (`capMonth`, SQL `public.cap_month`). Asker checkpoints: §d.5.
 
 ## §db · Database (`supabase/migrations/0001_init.sql`)
 
@@ -653,7 +653,7 @@ are calendar months in Mexico City (`capMonth`, SQL `public.cap_month`). Asker c
   reason), `questions`, `gate_decisions`, `offers` (HMAC'd token, state machine trigger, 72 h window, one pending per
   ask), `intros`, `checkins` (HMAC'd tokens), `api_tokens`, `pause_tokens` (+ `paused_at`, `undo_status`,
   `undo_paused_until` for Undo), `rate_limits`, `email_outbox`, `audit`, `eval_cases`, `eval_runs`, `eval_results`,
-  `drafts` (MCP drafts, 24 h), `model_usage` (spend per Mexico City day), `app_state` (small shared state, e.g.
+  `drafts` (MCP drafts, 24 h), `model_usage` (spend per Pacific-time day), `app_state` (small shared state, e.g.
   `live_pause`), `hook_seen` (hook items shown, at most twice).
 - Functions: `cap_month(ts)`, `member_is_active(m, at)`, `save_rules(member, text, source)`,
   `reserve_slot(member, month)` (creates the row, row-locks it, compares with the cap, takes one slot or not),
@@ -711,7 +711,7 @@ development. Expected states with no keys:
 6. **`create_offer` is the only way an offer is made** (never insert into `offers` directly): it is what makes the
    cap hold under concurrency. Handle its four outcomes (row, no row, `OTI01`, `OTI02`).
 7. **Times:** client components omit `tz` (viewer's zone); server code and emails pass `NETWORK_TZ`; SAMPLE flows use
-   the viewer's own clock; cap months are Mexico City months.
+   the viewer's own clock; cap months are Pacific-time months.
 8. **Without keys every feature renders its designed state**, says “not set up on this instance”, never “down”, and
    never throws at import, build or request time.
 9. **One clause finder, one facts builder, one copy file**: `findClause`/`checkQuotes`, `askFacts`, `lib/oti/copy.ts`.

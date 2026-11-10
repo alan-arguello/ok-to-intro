@@ -41,9 +41,9 @@ describe('kit markup matches prototype/kit.html', () => {
         label="What a member sees"
         kicker="Ask for you"
         title={OFFER_SAMPLE.title}
-        from="Lucía Ferrer · Orvella Health · Seed · Guadalajara"
+        from="Maya Bennett · Oakline Health · Seed · Chicago"
         match="Matched your rule"
-        fine="Lucía sees your name only if you choose OK."
+        fine="Maya sees your name only if you choose OK."
         facts={[...OFFER_SAMPLE.facts].reverse()}
       />,
     );

@@ -39,9 +39,9 @@ vi.mock('@/lib/server/member', async (importOriginal) => {
     saveMemberSettings: async (...args: unknown[]) => {
       h.calls.push({ fn: 'saveMemberSettings', args });
       const input = args[1] as { rules: string };
-      return { ok: true, version: input.rules.includes('new') ? 4 : 3, saved_at: '2026-11-09T18:00:00.000Z', rules_changed: input.rules.includes('new'), status: 'on' };
+      return { ok: true, version: input.rules.includes('new') ? 4 : 3, saved_at: '2026-11-09T20:00:00.000Z', rules_changed: input.rules.includes('new'), status: 'on' };
     },
-    turnOnGate: record('turnOnGate', { ok: true, version: 1, saved_at: '2026-11-09T18:00:00.000Z', rules_changed: true, status: 'on' }),
+    turnOnGate: record('turnOnGate', { ok: true, version: 1, saved_at: '2026-11-09T20:00:00.000Z', rules_changed: true, status: 'on' }),
     pauseMember: async (...args: unknown[]) => {
       h.calls.push({ fn: 'pauseMember', args });
       return { ok: true, paused_until: args[1] };
@@ -54,10 +54,10 @@ vi.mock('@/lib/server/member', async (importOriginal) => {
       ok: true,
       member: {
         id: 'u1',
-        email: 'ana@example.invalid',
-        name: 'Ana Ruiz',
+        email: 'priya@example.invalid',
+        name: 'Priya Shah',
         one_line: '',
-        company: 'Orvella Health',
+        company: 'Oakline Health',
         stage: 'Seed',
         city: '',
         scheduling_url: null,
@@ -68,8 +68,8 @@ vi.mock('@/lib/server/member', async (importOriginal) => {
         paused_until: null,
         rules: 'Happy to help with Postgres.\nNo fundraising asks.',
         rules_version: 2,
-        rules_saved_at: '2026-11-09T15:04:00.000Z',
-        created_at: '2026-11-01T00:00:00.000Z',
+        rules_saved_at: '2026-11-09T17:04:00.000Z',
+        created_at: '2026-11-01T02:00:00.000Z',
       },
     }),
     getRulesSource: async () => 'playground',
@@ -93,15 +93,15 @@ vi.mock('@/lib/server/member', async (importOriginal) => {
   };
 });
 vi.mock('@/lib/server/api-tokens', () => ({
-  createApiToken: async () => ({ ok: true, token: 'oti_AAAAAAAAAAAAAAAAAAAAAA', created_at: '2026-11-09T18:00:00.000Z' }),
-  revokeApiToken: async () => ({ ok: true, revoked_at: '2026-11-09T18:00:00.000Z' }),
-  getApiTokenStatus: async () => ({ ok: true, status: { state: 'active', created_at: '2026-11-09T10:00:00.000Z', last_used_at: '2026-11-09T15:04:00.000Z', last_used_from: 'claude_code' } }),
+  createApiToken: async () => ({ ok: true, token: 'oti_AAAAAAAAAAAAAAAAAAAAAA', created_at: '2026-11-09T20:00:00.000Z' }),
+  revokeApiToken: async () => ({ ok: true, revoked_at: '2026-11-09T20:00:00.000Z' }),
+  getApiTokenStatus: async () => ({ ok: true, status: { state: 'active', created_at: '2026-11-09T12:00:00.000Z', last_used_at: '2026-11-09T17:04:00.000Z', last_used_from: 'claude_code' } }),
 }));
 vi.mock('@/lib/server/offers', () => ({
   listPendingForMember: async () => ({
     ok: true,
     pending: {
-      offers: [{ offer_id: 'o_3Fp9kL', title: 'Hospital procurement in Mexico', asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' }, matched: null, facts: [], ask_text: '', expires_at: '2026-11-12T03:04:00.000Z' }],
+      offers: [{ offer_id: 'o_3Fp9kL', title: 'Hospital procurement in the US', asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' }, matched: null, facts: [], ask_text: '', expires_at: '2026-11-12T05:04:00.000Z' }],
       questions: [],
       checkins: [],
       cap: { cap: 2, used: 1, month: '2026-11-01' },
@@ -109,14 +109,14 @@ vi.mock('@/lib/server/offers', () => ({
   }),
 }));
 vi.mock('@/lib/server/asks', () => ({
-  listMyAsks: async () => ({ ok: true, items: [{ id: 'a_91xQ2k', subject: 'Postgres p95 at 40M rows', network: 'real', outcome: 'offered', status_line: '', created_at: '2026-11-09T03:04:00.000Z' }] }),
+  listMyAsks: async () => ({ ok: true, items: [{ id: 'a_91xQ2k', subject: 'Postgres p95 at 40M rows', network: 'real', outcome: 'offered', status_line: '', created_at: '2026-11-09T05:04:00.000Z' }] }),
 }));
 
 import { sendCode, verifyCode } from '@/app/(site)/join/actions';
 import { createTokenAction, deleteAction, pauseAction, resumeAction, saveSettingsAction, turnOnAction } from '@/app/(site)/me/actions';
 import { loadMe } from '@/app/(site)/me/load';
 
-const settings = { name: 'Ana Ruiz', one_line: '', company: '', stage: '', city: '', scheduling_url: '', cap: 2, show_matched: false, rules: 'Happy to help.' };
+const settings = { name: 'Priya Shah', one_line: '', company: '', stage: '', city: '', scheduling_url: '', cap: 2, show_matched: false, rules: 'Happy to help.' };
 
 beforeEach(() => {
   h.user = null;
@@ -144,7 +144,7 @@ describe('/me actions', () => {
   });
 
   it('act for the session’s member only, and re-render the page when rules changed', async () => {
-    h.user = { id: 'u1', email: 'ana@example.invalid' };
+    h.user = { id: 'u1', email: 'priya@example.invalid' };
     expect(await saveSettingsAction(settings)).toMatchObject({ ok: true, version: 3, rules_changed: false });
     expect(h.refreshed).toBe(0);
     expect(await saveSettingsAction({ ...settings, rules: 'Happy to help, new line.' })).toMatchObject({ ok: true, version: 4 });
@@ -155,7 +155,7 @@ describe('/me actions', () => {
   });
 
   it('pause takes a choice, never a date from the browser', async () => {
-    h.user = { id: 'u1', email: 'ana@example.invalid' };
+    h.user = { id: 'u1', email: 'priya@example.invalid' };
     expect(await pauseAction('2099-01-01' as 'month')).toEqual({ ok: false, reason: 'bad_input' });
     const res = await pauseAction('month');
     expect(res.ok).toBe(true);
@@ -166,7 +166,7 @@ describe('/me actions', () => {
   });
 
   it('delete signs this browser out and clears the session cookies, nothing else', async () => {
-    h.user = { id: 'u1', email: 'ana@example.invalid' };
+    h.user = { id: 'u1', email: 'priya@example.invalid' };
     expect(await deleteAction()).toEqual({ ok: true });
     expect(h.calls.at(-1)).toEqual({ fn: 'deleteMember', args: ['u1'] });
     expect(h.signOut).toBe(1);
@@ -176,16 +176,16 @@ describe('/me actions', () => {
 
 describe('/join actions', () => {
   it('pass the first forwarded address (for HMAC’d limits) and never trust a browser-sent identity', async () => {
-    await sendCode({ email: 'ana@example.invalid' });
-    expect(h.calls[0]?.args[1]).toEqual({ email: 'ana@example.invalid', ip: '203.0.113.7' });
-    await verifyCode({ email: 'ana@example.invalid', code: '482913', sent_at: 1, carried: { rules: 'x', cap: 2 }, next: '/me' });
-    expect(h.calls[1]?.args[1]).toEqual({ email: 'ana@example.invalid', code: '482913', sent_at: 1, carried: { rules: 'x', cap: 2 }, next: '/me', ip: '203.0.113.7' });
+    await sendCode({ email: 'priya@example.invalid' });
+    expect(h.calls[0]?.args[1]).toEqual({ email: 'priya@example.invalid', ip: '203.0.113.7' });
+    await verifyCode({ email: 'priya@example.invalid', code: '482913', sent_at: 1, carried: { rules: 'x', cap: 2 }, next: '/me' });
+    expect(h.calls[1]?.args[1]).toEqual({ email: 'priya@example.invalid', code: '482913', sent_at: 1, carried: { rules: 'x', cap: 2 }, next: '/me', ip: '203.0.113.7' });
     // Vercel's own header wins over X-Forwarded-For (BE1's clientIp), and junk never becomes a key.
     h.headers.set('x-vercel-forwarded-for', '198.51.100.4');
-    await sendCode({ email: 'ana@example.invalid' });
+    await sendCode({ email: 'priya@example.invalid' });
     expect(h.calls[2]?.args[1]).toMatchObject({ ip: '198.51.100.4' });
     h.headers = new Map([['x-forwarded-for', '<script>']]);
-    await sendCode({ email: 'ana@example.invalid' });
+    await sendCode({ email: 'priya@example.invalid' });
     expect(h.calls[3]?.args[1]).toMatchObject({ ip: null });
     h.headers = new Map([['x-forwarded-for', '203.0.113.7, 10.0.0.1']]);
   });
@@ -193,20 +193,20 @@ describe('/join actions', () => {
 
 describe('/me loader', () => {
   it('maps the member, ledger, token, the waiting offer and the asks into the view’s shape', async () => {
-    const now = new Date('2026-11-09T16:15:00.000Z');
-    const res = await loadMe({ id: 'u1', email: 'ana@example.invalid' }, now, { first: false, carried: false });
+    const now = new Date('2026-11-09T18:15:00.000Z');
+    const res = await loadMe({ id: 'u1', email: 'priya@example.invalid' }, now, { first: false, carried: false });
     expect(res.ok).toBe(true);
     if (!res.ok) return;
     const i = res.initial;
     expect(i).toMatchObject({ mode: 'real', status: 'on', capUsed: 1, month: '2026-11-01', rulesVersion: 2, rulesSourceLabel: 'From the playground', exportHref: '/me/export' });
-    expect(i.saved).toEqual({ iso: '2026-11-09T15:04:00.000Z', label: '09:04', fmt: 'clock' });
+    expect(i.saved).toEqual({ iso: '2026-11-09T17:04:00.000Z', label: '09:04', fmt: 'clock' });
     expect(i.ledger?.lines).toEqual([
       { text: 'Happy to help with Postgres.', tally: '1 let in' },
       { text: 'No fundraising asks.', tally: '1 kept out' },
     ]);
     expect(i.ledger?.quotes).toEqual(['Postgres']);
-    expect(i.pending).toEqual({ title: 'Hospital procurement in Mexico', from: 'Lucía Ferrer', hoursLeft: 58, href: '/o/o_3Fp9kL' });
-    expect(i.token).toEqual({ state: 'active', created: { iso: '2026-11-09T10:00:00.000Z', label: 'Nov 9', fmt: 'day' }, lastUsed: { iso: '2026-11-09T15:04:00.000Z', label: '09:04', fmt: 'last' } });
-    expect(i.asks).toEqual({ state: 'ok', example: false, items: [{ id: 'a_91xQ2k', subject: 'Postgres p95 at 40M rows', outcome: 'offered', created: { iso: '2026-11-09T03:04:00.000Z', label: 'Nov 8', fmt: 'day' }, href: '/ask/a_91xQ2k' }] });
+    expect(i.pending).toEqual({ title: 'Hospital procurement in the US', from: 'Maya Bennett', hoursLeft: 58, href: '/o/o_3Fp9kL' });
+    expect(i.token).toEqual({ state: 'active', created: { iso: '2026-11-09T12:00:00.000Z', label: 'Nov 9', fmt: 'day' }, lastUsed: { iso: '2026-11-09T17:04:00.000Z', label: '09:04', fmt: 'last' } });
+    expect(i.asks).toEqual({ state: 'ok', example: false, items: [{ id: 'a_91xQ2k', subject: 'Postgres p95 at 40M rows', outcome: 'offered', created: { iso: '2026-11-09T05:04:00.000Z', label: 'Nov 8', fmt: 'day' }, href: '/ask/a_91xQ2k' }] });
   });
 });

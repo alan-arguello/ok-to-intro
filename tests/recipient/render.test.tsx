@@ -33,10 +33,10 @@ function offerModel(state: string, over: Partial<OfferPageModel> = {}, extra: Re
     pauseUntil: 'Dec 1',
     edit: ui.why === 'area' || ui.why === 'stage' ? { context: OFFER_SAMPLE.suggested_edits[ui.why].context, add: OFFER_SAMPLE.suggested_edits[ui.why].add, caption: OFFER_SAMPLE.suggested_edits[ui.why].expected } : null,
     rulesVersion: 4,
-    acted: { iso: '2026-11-09T21:16:00-06:00', text: 'Mon Nov 9 at 21:16' },
-    okAt: { iso: '2026-11-09T21:16:00-06:00', text: '21:16' },
-    expiredAt: { iso: '2026-11-12T21:04:00-06:00', text: 'Thu Nov 12 at 21:04' },
-    withdrawnOn: { iso: '2026-11-10T10:12:00-06:00', text: 'Tue Nov 10' },
+    acted: { iso: '2026-11-09T21:16:00-08:00', text: 'Mon Nov 9 at 21:16' },
+    okAt: { iso: '2026-11-09T21:16:00-08:00', text: '21:16' },
+    expiredAt: { iso: '2026-11-12T21:04:00-08:00', text: 'Thu Nov 12 at 21:04' },
+    withdrawnOn: { iso: '2026-11-10T10:12:00-08:00', text: 'Tue Nov 10' },
     scheduling: true,
     base: true,
     forms: { ref: 'demo', csrf: 'example', mode: 'example', offerId: 'o_3Fp9', keep: {} },
@@ -53,10 +53,10 @@ describe('/o: the decision', () => {
   it('open: the card in spec order, then OK to intro · Answer in 2 lines · No, in the row and the phone bar', () => {
     const html = render(offerModel('open'));
     const t = text(html);
-    expect(t).toContain('Hospital procurement in Mexico');
-    expect(t).toContain('Lucía Ferrer · Orvella Health · Seed · Guadalajara');
-    expect(t).toContain('Matched your rule: “B2B founders selling to public hospitals or insurers in Mexico or Colombia”');
-    expect(t).toContain('Lucía sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer.');
+    expect(t).toContain('Hospital procurement in the US');
+    expect(t).toContain('Maya Bennett · Oakline Health · Seed · Chicago');
+    expect(t).toContain('Matched your rule: “B2B founders selling to public hospitals or insurers in the US or Canada”');
+    expect(t).toContain('Maya sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer.');
     const desk = html.slice(html.indexOf('id="offer-desk"'), html.indexOf('id="offer-g-ok"'));
     expect([...desk.matchAll(/data-key="(\w+)"/g)].map((x) => x[1])).toEqual(['ok', 'answer', 'no']);
     const bar = html.slice(html.indexOf('id="offer-bar"'));
@@ -82,7 +82,7 @@ describe('/o: the decision', () => {
 
   it('?choice=no moves the primary to No and says one tap passes', () => {
     const html = render(offerModel('open', {}, { choice: 'no' }));
-    expect(text(html)).toContain('One tap on No passes. Lucía won’t be told.');
+    expect(text(html)).toContain('One tap on No passes. Maya won’t be told.');
     const desk = html.slice(html.indexOf('id="offer-desk"'), html.indexOf('id="offer-g-ok"'));
     expect(desk).toMatch(/<button[^>]*data-primary=""[^>]*data-key="no"/);
     expect(desk).not.toMatch(/<button[^>]*data-primary=""[^>]*data-key="ok"/);
@@ -90,7 +90,7 @@ describe('/o: the decision', () => {
 
   it('confirm (the email’s OK): Send intro, orange, then Back', () => {
     const t = text(render(offerModel('confirm-ok')));
-    expect(t).toContain('Send the intro email to you and Lucía? Send intro Back');
+    expect(t).toContain('Send the intro email to you and Maya? Send intro Back');
   });
 
   it('answer: the composer, 0 / 280, help, Send answer disabled until there is text', () => {
@@ -117,7 +117,7 @@ describe('/o: after the decision', () => {
   it('ok-sent (REAL copy) and the SAMPLE version with its intro email link', () => {
     const real = text(render(offerModel('ok-sent')));
     expect(real).toContain('Intro sent.');
-    expect(real).toContain('We emailed you and Lucía at 21:16 , with your scheduling link. Reply-all to pick a time. Tomorrow we’ll ask you both one question: did the call happen?');
+    expect(real).toContain('We emailed you and Maya at 21:16 , with your scheduling link. Reply-all to pick a time. Tomorrow we’ll ask you both one question: did the call happen?');
     expect(real).toContain('This used 1 of your 2 this month.');
     expect(real).toContain('Your gate ›');
     const sample = render(offerModel('ok-sent', { mode: 'sample' }));
@@ -127,17 +127,17 @@ describe('/o: after the decision', () => {
   });
 
   it('answer-sent, already-acted, expired, withdrawn', () => {
-    expect(text(render(offerModel('answer-sent')))).toContain('Sent. Lucía gets your 2 lines without your name. This used 1 of your 2 this month.');
+    expect(text(render(offerModel('answer-sent')))).toContain('Sent. Maya gets your 2 lines without your name. This used 1 of your 2 this month.');
     expect(text(render(offerModel('already-acted')))).toContain('You said OK on Mon Nov 9 at 21:16 . The intro email went to you both.');
     expect(text(render(offerModel('already-acted', {}, { did: 'no' })))).toContain('You passed on Mon Nov 9 at 21:16 .');
-    expect(text(render(offerModel('expired')))).toContain('This ask went to the next person on Thu Nov 12 at 21:04 , after 72 hours without a reply. Lucía wasn’t told it reached you. It still counted as 1 of your 2 this month.');
-    expect(text(render(offerModel('withdrawn')))).toContain('Lucía withdrew this ask on Tue Nov 10 . Nothing to do. It still counted as 1 of your 2 this month.');
+    expect(text(render(offerModel('expired')))).toContain('This ask went to the next person on Thu Nov 12 at 21:04 , after 72 hours without a reply. Maya wasn’t told it reached you. It still counted as 1 of your 2 this month.');
+    expect(text(render(offerModel('withdrawn')))).toContain('Maya withdrew this ask on Tue Nov 10 . Nothing to do. It still counted as 1 of your 2 this month.');
   });
 
   it('No: passed, then an optional private reason with five choices', () => {
     const html = render(offerModel('no-done'));
     const t = text(html);
-    expect(t).toContain('Passed. Lucía won’t be told. It goes to the next person whose rules accepted it. This still counts as 1 of your 2 this month.');
+    expect(t).toContain('Passed. Maya won’t be told. It goes to the next person whose rules accepted it. This still counts as 1 of your 2 this month.');
     expect(t).toContain('Why? Optional. Only you see this. Not my area Wrong stage Not specific No time this month Other');
     expect(html.match(/<button class="chip" type="submit" value="\w+" aria-pressed="false" data-value="\w+" name="why">/g)).toHaveLength(5);
   });
@@ -147,7 +147,7 @@ describe('/o: after the decision', () => {
     const t = text(html);
     expect(t).toContain('Suggested change to your rules');
     expect(html).toContain('<span class="d-add"><span class="sr-only">Add: </span>No asks about public procurement.</span>');
-    expect(t).toContain('Expected on the 12 sample asks (written by hand, not a model run): 1 change (Orvella Health: question first → decline). Nothing else changes.');
+    expect(t).toContain('Expected on the 12 sample asks (written by hand, not a model run): 1 change (Oakline Health: question first → decline). Nothing else changes.');
     expect(t).not.toMatch(/Tested on/);
     expect(html).toContain('<button type="submit" class="btn btn--primary" data-primary="" form="offer-f-add" data-why="add">Add to my rules</button>');
     expect(html).toMatch(/<button class="chip" type="submit" value="area" aria-pressed="true"/);
@@ -202,13 +202,13 @@ describe('/c: the check-in', () => {
       mode: 'example',
       ui,
       source: { kind: 'none' },
-      other: ui.role === 'member' ? { name: 'Lucía Ferrer', first: 'Lucía' } : { name: 'Ana Ruiz', first: 'Ana' },
-      subject: 'Hospital procurement in Mexico',
-      introMade: { iso: '2026-11-09T21:16:00-06:00', text: 'Nov 9' },
-      d14: { iso: '2026-11-23T10:00:00-06:00', text: 'Nov 23' },
-      reminder: { iso: '2026-11-13T10:00:00-06:00', text: 'Nov 13' },
-      answeredOn: { iso: '2026-11-10T10:00:00-06:00', text: 'Nov 10' },
-      closedOn: { iso: '2026-12-09T10:00:00-06:00', text: 'Dec 9' },
+      other: ui.role === 'member' ? { name: 'Maya Bennett', first: 'Maya' } : { name: 'Priya Shah', first: 'Priya' },
+      subject: 'Hospital procurement in the US',
+      introMade: { iso: '2026-11-09T21:16:00-08:00', text: 'Nov 9' },
+      d14: { iso: '2026-11-23T10:00:00-08:00', text: 'Nov 23' },
+      reminder: { iso: '2026-11-13T10:00:00-08:00', text: 'Nov 13' },
+      answeredOn: { iso: '2026-11-10T10:00:00-08:00', text: 'Nov 10' },
+      closedOn: { iso: '2026-12-09T10:00:00-08:00', text: 'Dec 9' },
       note: '',
       forms: { ref: 'demo', csrf: 'example', mode: 'example', keep: {} },
       justActed: false,
@@ -220,7 +220,7 @@ describe('/c: the check-in', () => {
   it('+1 day: the question, 1–5 as one radiogroup with the two outline options, preselected, Save in the row and the bar', () => {
     const html = renderCk(ck('d1-preselected'));
     const t = text(html);
-    expect(t).toContain('How useful was the call with Ana?');
+    expect(t).toContain('How useful was the call with Priya?');
     expect(t).toContain('1 2 3 4 5 1 = not at all · 5 = it unblocked me We haven’t talked yet It won’t happen');
     expect(html.match(/role="radio"/g)).toHaveLength(7);
     expect(html).toMatch(/role="radio" aria-checked="true" href="\/c\/demo\?state=d1-preselected&amp;v=4" data-value="4"/);
@@ -230,9 +230,9 @@ describe('/c: the check-in', () => {
   });
 
   it('member, +14 days and the won’t-happen reasons', () => {
-    expect(text(renderCk(ck('member-d1')))).toContain('Was the call with Lucía worth your 20 minutes?');
+    expect(text(renderCk(ck('member-d1')))).toContain('Was the call with Maya worth your 20 minutes?');
     const d14 = renderCk(ck('d14-preselected'));
-    expect(text(d14)).toContain('What came of the intro to Ana? Unblocked A customer A hire An investor Nothing yet Anything to add? (optional, one line)');
+    expect(text(d14)).toContain('What came of the intro to Priya? Unblocked A customer A hire An investor Nothing yet Anything to add? (optional, one line)');
     expect(d14).toMatch(/class="ck-choice"[^>]*>A customer/);
     const wont = text(renderCk(ck('d1-preselected', {}, { v: 'wont' })));
     expect(wont).toContain('Why? Optional. No reply Wrong person Timing');

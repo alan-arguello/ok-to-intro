@@ -45,7 +45,7 @@ export default async function AskStatusPage({ params, searchParams }: { params: 
   const [{ id }, sp] = await Promise.all([params, searchParams]);
   const qaState = resolveQaState('askStatus', first(sp.state), qaEnabled());
 
-  // QA: the REAL example (Lucía's fictional ask), on any id, never fetched.
+  // QA: the REAL example (Maya's fictional ask), on any id, never fetched.
   if (qaState === 'real') {
     const a = OFFER_SAMPLE.asker;
     return <RealStatus initial={exampleRealView()} from={[a.name, a.company, a.stage, a.city].join(' · ')} example />;

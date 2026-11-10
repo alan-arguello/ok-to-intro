@@ -73,7 +73,7 @@ export interface SampleMemberName {
   name: string;
   first: string;
   line: string;
-  /** Shown without the scheme, e.g. `cal.com/ana-ruiz/20min`. */
+  /** Shown without the scheme, e.g. `cal.com/priya-shah/20min`. */
   scheduling: string;
 }
 

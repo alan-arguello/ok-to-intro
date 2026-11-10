@@ -11,7 +11,7 @@ import { localDay } from './budget';
  * this module gives the friendly reset time from a Postgres counter keyed by HMAC(ip, daily salt)
  * (public.hit_rate_limit), falling back to an in-memory limiter when that query fails or takes over 300 ms.
  *
- * - The key is never the raw IP: HMAC-SHA256 over the IP with a salt that changes every Mexico City day
+ * - The key is never the raw IP: HMAC-SHA256 over the IP with a salt that changes every Pacific-time day
  *   (RATE_LIMIT_SALT_SECRET + the date). Without that secret the salt is random per server process, the counter is
  *   kept in memory only (per instance), and the key starts with `m`.
  * - Windows are fixed and aligned the way the SQL aligns them (epoch / window), so both counters agree on reset times.

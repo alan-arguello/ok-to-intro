@@ -46,7 +46,7 @@ beforeAll(async () => {
   net = await createNetworkDb();
   __setNetworkDbForTests(net.transport);
   __setEmailTransportForTests(captureEmails().transport);
-  target = await net.member('target@example.com', { name: 'Sofía Peralta', rules: RULES, cap: 2 });
+  target = await net.member('target@example.com', { name: 'Hannah Kim', rules: RULES, cap: 2 });
   // One free slot left this month.
   await net.db.pg.query(`insert into public.cap_usage (member_id, month, used) values ($1, public.cap_month(now()), 1)`, [target]);
   for (let i = 0; i < 20; i++) {

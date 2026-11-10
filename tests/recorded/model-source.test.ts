@@ -29,20 +29,20 @@ const ENGINEER = presetById('engineer').rules;
 const HAND_WRITTEN = /written by hand|example verdicts|example results|not a model run/i;
 
 describe('the recorded presets (S1 playground)', () => {
-  const run = recordedRunFor('engineer', ENGINEER, Date.parse('2026-11-09T16:00:00Z'));
+  const run = recordedRunFor('engineer', ENGINEER, Date.parse('2026-11-09T18:00:00Z'));
   const { map, reachDays } = computeDisplays(run, [], 2, false);
 
   it('the file is a model recording, and its label says recorded, with date, model, wall time and cost', () => {
     expect(PRESET_RECORDINGS.source).toBe('model');
     const pr = presetRun('engineer');
     const label = recordedLabel(PRESET_RECORDINGS, { gates: pr.gates.length, wall_ms: pr.wall_ms, cost_usd: pr.cost_usd });
-    expect(label).toBe('Recorded run · Nov 9, 15:02 · claude-haiku-5-5 · 12 gates in 3.2 s · $0.001');
+    expect(label).toBe('Recorded run · Nov 9, 16:59 · claude-haiku-5-5 · 12 gates in 2.0 s · $0.001');
     expect(label).not.toBe(AUTHORED_LABEL);
   });
 
   it('rows show their recorded latency and say model, never hand-written', () => {
     expect(run.source).toBe('recorded');
-    expect(latencyText(map.a01)).toBe('2.1 s · recorded');
+    expect(latencyText(map.a01)).toBe('2.0 s · recorded');
     expect(chainText(map.a01, 2)).toBe('model accept → code 2 of 2 quotes found → cap 1 of 2');
     expect(gateOutput(map.a01.gate as RowGate).summary).toBe('Gate output (model)');
     for (const d of Object.values(map)) {
@@ -55,10 +55,11 @@ describe('the recorded presets (S1 playground)', () => {
     const rows = traceRows(run, map, 2, reachDays);
     expect(rows.every((r) => r.time !== null)).toBe(true);
     const text = rows.map((r) => r.segs.map((s) => s.text).join(''));
-    expect(text[0]).toBe('plan  run r_64d8 · recorded Nov 9, 15:02 · 12 gates · rules 196 chars');
+    expect(text[0]).toBe('plan  run r_64d8 · recorded Nov 9, 16:59 · 12 gates · rules 196 chars');
     // The last gate arrives at the run's wall time; its check and cap lines still come before done.
     expect(text.at(-1)).toBe('done  3 accept · 1 ask_back · 8 decline · 0 failed · $0.0014');
-    expect(text.at(-2)).toBe('cap   #9 over_cap · used day 2, day 4 (code)');
+    expect(text.at(-2)).toMatch(/^(check|cap) /);
+    expect(text).toContain('cap   #9 over_cap · used day 2, day 4 (code)');
     expect(text.join('\n')).not.toMatch(HAND_WRITTEN);
   });
 
@@ -150,7 +151,7 @@ describe('MCP on a model recording', () => {
   it('try_rules on a preset says recorded, with date and model, and no hand-written copy', async () => {
     const { text, isError } = await callTool('try_rules', { rules: ENGINEER });
     expect(isError).toBe(false);
-    expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 15:02 · claude-haiku-5-5');
+    expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 16:59 · claude-haiku-5-5');
     expect(text).toContain('Recorded run, replayed from a file');
     expect(text).not.toMatch(HAND_WRITTEN);
   });

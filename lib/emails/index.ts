@@ -89,14 +89,14 @@ function message(subject: string, preheader: string, title: string, rows: string
 const MUTED_15 = { color: EMAIL_COLOR.ink2 };
 const MUTED_14 = { size: 14, line: 20, color: EMAIL_COLOR.ink2 };
 
-/** “Orvella Health (Seed, Guadalajara)”, dropping whatever the asker's profile leaves empty. */
+/** “Oakline Health (Seed, Chicago)”, dropping whatever the asker's profile leaves empty. */
 export function companyLine(a: { company: string; stage: string; city: string }): string {
   const where = [a.stage, a.city].map((x) => (x ?? '').trim()).filter(Boolean).join(', ');
   const company = (a.company ?? '').trim();
   return company && where ? `${company} (${where})` : company || where;
 }
 
-/** “Lucía Ferrer, Orvella Health (Seed, Guadalajara)” or just the name. */
+/** “Maya Bennett, Oakline Health (Seed, Chicago)” or just the name. */
 function personLine(a: { name: string; company: string; stage: string; city: string }, sep: string): string {
   const rest = companyLine(a);
   return rest ? `${a.name}${sep}${rest}` : a.name;
@@ -176,7 +176,7 @@ export function offerEmail(input: OfferEmailInput): EmailMessage {
  * S5 · the intro email (To and Reply-To: both people; the service is not in the thread)
  * ======================================================================== */
 
-/** “Intro: Lucía Ferrer (Orvella Health) and Ana Ruiz (public hospital procurement)” (the parenthetical is optional). */
+/** “Intro: Maya Bennett (Oakline Health) and Priya Shah (public hospital procurement)” (the parenthetical is optional). */
 export function introSubject(input: Pick<IntroEmailInput, 'asker' | 'member' | 'member_context'>): string {
   const member = input.member_context ? `${input.member.name} (${input.member_context})` : input.member.name;
   const company = (input.asker.company ?? '').trim();
@@ -188,9 +188,9 @@ export function introSubject(input: Pick<IntroEmailInput, 'asker' | 'member' | '
  * The REAL email uses the defaults.
  */
 export interface IntroWording {
-  /** How the asker is named mid-sentence (“The ask Lucía approved”). Default: the asker's first name. */
+  /** How the asker is named mid-sentence (“The ask Maya approved”). Default: the asker's first name. */
   askerRef?: string;
-  /** `comma`: “Lucía, Ana: you both said yes” (default). `and`: “Sample founder and you: you both said yes”. */
+  /** `comma`: “Maya, Priya: you both said yes” (default). `and`: “Sample founder and you: you both said yes”. */
   greeting?: 'comma' | 'and';
   /** Shown instead of the scheduling-link line when the member has no link. Default: no line. */
   noLinkLine?: string | null;
@@ -265,7 +265,7 @@ export function introEmail(input: IntroEmailInput): EmailMessage {
   return renderIntro(input);
 }
 
-/** “Ana” → “Ana’s”, “you” → “Your” at the start of a sentence. */
+/** “Priya” → “Priya’s”, “you” → “Your” at the start of a sentence. */
 function possessive(first: string): string {
   if (/^you$/i.test(first)) return 'Your';
   return `${first}’s`;

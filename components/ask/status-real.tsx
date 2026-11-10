@@ -4,8 +4,8 @@
  * S2 · /ask/a_… — a REAL ask's status, owner only, rendered from BE2's serialized AskerAskView (four asker states,
  * checkpointed times; docs/CONTRACT.md §d). The send, end to end (§c): outcome `ready` → POST /api/asks/[id]/send
  * once and render the stream; 409 already_sent → read the view and tail it; `gating` → EventSource tail on
- * GET /api/asks/[id], closed on `end`; at `done`, re-read the view. Asker-visible changes land at 09:00/21:00 Mexico
- * City, so the page re-reads at `next_checkpoint` and when the tab comes back.
+ * GET /api/asks/[id], closed on `end`; at `done`, re-read the view. Asker-visible changes land at 09:00/21:00 Pacific
+ * time, so the page re-reads at `next_checkpoint` and when the tab comes back.
  */
 
 import { useCallback, useEffect, useReducer, useRef, useState, type ReactNode } from 'react';

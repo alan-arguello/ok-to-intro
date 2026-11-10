@@ -11,7 +11,7 @@ const a02 = SAMPLE_ASKS.find((a) => a.id === 'a02')!;
 
 describe('askFacts: one card everywhere (ux-spec Revision 3)', () => {
   it('reads Problem, Needs (“20 minutes with …”), Tried, By, Offers, then Price, as on the sample offer', () => {
-    const facts = askFacts(a02.parts, '$18k a year per hospital (Lucía told your gate)');
+    const facts = askFacts(a02.parts, '$18k a year per hospital (Maya told your gate)');
     expect(facts).toEqual(OFFER_SAMPLE.facts);
   });
 
@@ -77,9 +77,9 @@ describe('suggestRuleEdit: templated, additive, never copies the ask', () => {
   });
 
   it('never names a company and never copies 6+ words of the ask', () => {
-    expect(suggestRuleEdit('not_my_area', { rules: health, matchedLine: null, topic: 'Orvella Health deals', askText: a02.text, companies: ['Orvella Health'] })).toBeNull();
-    expect(sharesWords('No asks about public hospital procurement committee in Mexico.', a02.text)).toBe(true);
-    expect(topicPhrase('Hospital procurement, Mexico')).toBe('hospital procurement');
+    expect(suggestRuleEdit('not_my_area', { rules: health, matchedLine: null, topic: 'Oakline Health deals', askText: a02.text, companies: ['Oakline Health'] })).toBeNull();
+    expect(sharesWords('No asks about public hospital procurement committee in the US.', a02.text)).toBe(true);
+    expect(topicPhrase('Hospital procurement, US')).toBe('hospital procurement');
     expect(topicPhrase('First SOC 2 audit')).toBe('first SOC 2 audit');
   });
 });

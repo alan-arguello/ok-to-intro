@@ -1,5 +1,5 @@
 /**
- * The /me SAMPLE preview for QA states only (`?state=…` with QA enabled): the sample member Ana Ruiz with the
+ * The /me SAMPLE preview for QA states only (`?state=…` with QA enabled): the sample member Priya Shah with the
  * Health operator rules and the prototype's example numbers (lib/sample/examples.ts EXAMPLE_ME), always under the
  * dashed “Prototype: example numbers for layout…” note. Never rendered without an explicit QA state
  * (docs/CONTRACT.md §e.4). Pure.
@@ -63,7 +63,7 @@ export function sampleMe(state: QaState<'me'>, nowMs: number): MeInitial {
     pausedUntil: state === 'paused' ? nextMonthStart(month).toISOString() : null,
     profile: first
       ? { name: '', one_line: '', company: '', stage: '', city: '', scheduling_url: '', cap: me.cap, show_matched: false }
-      : { name: me.name, one_line: me.oneLine, company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara', scheduling_url: me.scheduling, cap: me.cap, show_matched: me.showMatched },
+      : { name: me.name, one_line: me.oneLine, company: 'Oakline Health', stage: 'Seed', city: 'Chicago', scheduling_url: me.scheduling, cap: me.cap, show_matched: me.showMatched },
     rules,
     rulesVersion: first ? 0 : state === 'saved' ? me.version + 1 : me.version,
     saved: first ? null : { iso: null, label: state === 'saved' ? '21:16' : me.saved, fmt: 'clock' },
@@ -78,7 +78,7 @@ export function sampleMe(state: QaState<'me'>, nowMs: number): MeInitial {
           state: 'ok',
           example: true,
           items: [
-            { id: 'sa_health', subject: 'Hospital procurement in Mexico', outcome: 'offered', created: { iso: null, label: 'Nov 9', fmt: 'day' }, href: '/ask/sa_health' },
+            { id: 'sa_health', subject: 'Hospital procurement in the US', outcome: 'offered', created: { iso: null, label: 'Nov 9', fmt: 'day' }, href: '/ask/sa_health' },
             { id: 'sa_founder', subject: 'First SOC 2 in 60 days', outcome: 'question', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_founder' },
             { id: 'sa_eng', subject: 'Postgres p95 at 40M rows', outcome: 'intro', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_eng' },
           ],

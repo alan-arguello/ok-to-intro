@@ -104,7 +104,7 @@ describe('/mcp', () => {
   });
 
   it('draft_ask refuses vague asks and YC application asks by code, without a key', async () => {
-    const vague = await callTool('draft_ask', { text: 'Need intros to people who could help us grow in Mexico.' });
+    const vague = await callTool('draft_ask', { text: 'Need intros to people who could help us grow in the US.' });
     expect(vague.isError).toBe(false);
     expect(vague.text.split('\n')[0]).toBe('ok-to-intro · draft refused · too vague · nothing stored');
     const yc = await callTool('draft_ask', { text: 'Can someone review my YC application before the interview next week please?' });

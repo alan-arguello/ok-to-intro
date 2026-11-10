@@ -16,14 +16,14 @@ import { askerFooter, displayName, firstName, linkToken, linkTokenHash, memberFo
  * with Resend scheduled send; the daily cron sends any the scheduler never took.
  */
 
-/** Check-ins land at 10:00 in Mexico City: the next day (d1) and two weeks after the intro (d14). */
+/** Check-ins land at 10:00 in Pacific time: the next day (d1) and two weeks after the intro (d14). */
 const CHECKIN_HOUR = 10;
 /** A check-in can be answered (and changed) for 30 days after the intro (tech.md: check-in tokens live 30 days). */
 const CHECKIN_WINDOW_MS = 30 * DAY_MS;
 /** “We haven't talked yet” → one reminder, 3 days later. */
 export const REMINDER_DAYS = 3;
 
-/** `days` local days after `at` in Mexico City, at `hour`:00 there. */
+/** `days` local days after `at` in Pacific time, at `hour`:00 there. */
 export function localDayAt(at: Date | number, days: number, hour: number): Date {
   const p = zonedParts(toMs(at), NETWORK_TZ);
   const d = new Date(Date.UTC(p.year, p.month - 1, p.day + days));
@@ -198,7 +198,7 @@ export async function deliverCheckinEmail(checkinId: string, now: Date = new Dat
  * Outcome note (Should): the asker reported something useful at +14 days
  * ========================================================================== */
 
-/** To the member, once per intro (key `outcome:<intro_id>`): “Lucía reported a customer from your intro (Nov 23).” */
+/** To the member, once per intro (key `outcome:<intro_id>`): “Maya reported a customer from your intro (Nov 23).” */
 export async function deliverOutcomeNote(introId: string, outcome: Exclude<D14Outcome, 'nothing_yet'>, now: Date = new Date()): Promise<void> {
   const row = await readIntro(introId);
   if (!row) return;

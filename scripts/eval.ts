@@ -314,7 +314,7 @@ async function pool<T>(items: T[], limit: number, work: (item: T, i: number) => 
 
 function fmtDate(iso: string): string {
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Mexico_City' });
+  return Number.isNaN(d.getTime()) ? iso : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' });
 }
 
 async function main() {

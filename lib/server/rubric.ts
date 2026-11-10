@@ -258,7 +258,7 @@ RULES
 - suggested: only for needs, when the message makes clear what kind of person could help but does not say it. Write it as "someone who …" in at most 120 characters, drawn only from the message. sources holds 1 to 3 exact spans of the message it is drawn from.
 - missing: text is "" and sources is []. Use it for any fact the message does not state. Never fill challenge, tried, by or offers with a guess, and never invent a number, a date, a name or an offer.
 - subject: what a member sees in their inbox, at most 45 characters, ending with ", 20 min?", specific, with the founder's key number when there is one, for example "Postgres p95 at 40M rows, 20 min?".
-- topic: a coarse topic of 2 to 5 words for the board of unanswered demand, for example "Hospital procurement, Mexico" or "Postgres at scale". No company or person names.
+- topic: a coarse topic of 2 to 5 words for the board of unanswered demand, for example "Hospital procurement, US" or "Postgres at scale". No company or person names.
 - For "vague" and "yc_application", every part is missing, subject is "" and topic is "".
 
 Return only the JSON object the schema describes.`;

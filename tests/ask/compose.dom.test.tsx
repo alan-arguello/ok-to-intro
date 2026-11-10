@@ -49,7 +49,7 @@ describe('/ask compose', () => {
     const html = renderToString(<AskCompose {...BASE} />).replace(/<!-- -->/g, '');
     expect(html).toContain('Ask the network');
     expect(html).toContain('Sample · 40 fictional members');
-    expect(html).toContain('Sent as a sample founder at Arrecife Data (Seed, Mexico City).');
+    expect(html).toContain('Sent as a sample founder at Tidewell Data (Seed, San Francisco).');
     expect(html).toContain('0 / 600');
     expect(html).toMatch(/data-primary=""[^>]*>Check my ask/);
   });
@@ -216,9 +216,9 @@ describe('/ask compose', () => {
   });
 
   it('signed in with a profile: REAL shows who it is sent as', async () => {
-    setup({ real: { kind: 'allowed', profile: { name: 'Ana Ruiz', first: 'Ana', company: 'Clínica Norte', stage: 'Seed', city: 'Monterrey' } }, live: { state: 'ok', until: null } });
+    setup({ real: { kind: 'allowed', profile: { name: 'Priya Shah', first: 'Priya', company: 'Northside Clinic', stage: 'Seed', city: 'Seattle' } }, live: { state: 'ok', until: null } });
     fireEvent.click(screen.getByRole('radio', { name: 'Real' }));
-    expect(document.getElementById('ask-as')!.textContent).toContain('Sent as Ana Ruiz, Clínica Norte (Seed, Monterrey).');
+    expect(document.getElementById('ask-as')!.textContent).toContain('Sent as Priya Shah, Northside Clinic (Seed, Seattle).');
     expect(document.getElementById('ask-samples')!.hidden).toBe(true);
   });
 
@@ -227,7 +227,7 @@ describe('/ask compose', () => {
     setup({ from: 'playground' });
     await flush();
     expect((screen.getByLabelText('What do you need?') as HTMLTextAreaElement).value).toBe(SAMPLE_NETWORK_ASKS.health.partial);
-    expect(document.getElementById('ask-as')!.textContent).toContain('Orvella Health (Seed, Guadalajara)');
+    expect(document.getElementById('ask-as')!.textContent).toContain('Oakline Health (Seed, Chicago)');
   });
 
   it('keeps what you typed in this tab', async () => {

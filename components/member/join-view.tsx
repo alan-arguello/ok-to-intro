@@ -30,7 +30,7 @@ type EmailErr = { kind: 'invalid' | 'offline' | 'down' | 'not_authorized' | 'not
 type CodeErr = { kind: 'incomplete' | 'wrong' | 'no_tries' | 'expired' | 'offline' | 'down' | 'limited'; tries: number; retryAt?: number | null };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const QA_EMAIL = 'ana@example.com';
+const QA_EMAIL = 'priya@example.com';
 const QA_CLOCK = '10:40';
 
 function defaultCarried(): CarriedRules {
@@ -84,7 +84,7 @@ export function JoinView({ available, qa }: { available: boolean; qa: boolean })
         setCodeErr({ kind: 'expired', tries: 0 });
       }
     } else if (qaState === 'email-invalid') {
-      setEmail('ana@example');
+      setEmail('priya@example');
       setEmailErr({ kind: 'invalid', retryAt: null });
     }
   }

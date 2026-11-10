@@ -73,7 +73,7 @@ describe('scripts/check-links.mjs', () => {
     expect(normalizeLink('https://github.com/alan-arguello/ok-to-intro).')).toBe('https://github.com/alan-arguello/ok-to-intro');
     expect(normalizeLink('http://localhost:3200/board')).toBeNull();
     expect(normalizeLink('https://fonts.googleapis.com/css2')).toBeNull();
-    expect(normalizeLink('https://cal.com/ana-ruiz/20min')).toBeNull();
+    expect(normalizeLink('https://cal.com/priya-shah/20min')).toBeNull();
     expect(normalizeLink('https://www.example.com/x')).toBeNull();
     expect(linksIn('const a = `https://github.com/${SLUG}`;\nconst b = "https://resend.com/docs";')).toEqual(['https://resend.com/docs']);
   });

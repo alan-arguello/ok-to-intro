@@ -7,21 +7,21 @@
 -- Facts the public board counts live in `audit`, which survives member deletion (ids there are set null),
 -- so “Board counts stay, without your name” (ux-spec S3) holds.
 --
--- Time: cap months are calendar months in America/Mexico_City (public.cap_month). Timestamps are timestamptz.
+-- Time: cap months are calendar months in America/Los_Angeles (public.cap_month). Timestamps are timestamptz.
 -- Ids: public ids are short text with a type prefix (a_, o_, q_, i_, c_, t_), minted by lib/oti/ids.ts.
 
 -- ============================================================================================================
 -- Helpers
 -- ============================================================================================================
 
--- First day of the cap month in Mexico City for an instant.
+-- First day of the cap month in Pacific time for an instant.
 create or replace function public.cap_month(ts timestamptz default now())
 returns date
 language sql
 stable
 set search_path = ''
 as $$
-  select date_trunc('month', ts at time zone 'America/Mexico_City')::date
+  select date_trunc('month', ts at time zone 'America/Los_Angeles')::date
 $$;
 
 create or replace function public.touch_updated_at()
@@ -529,7 +529,7 @@ create table public.drafts (
 create index drafts_expires on public.drafts (expires_at);
 create trigger drafts_touch before update on public.drafts for each row execute function public.touch_updated_at();
 
--- Model spend per local day in Mexico City, across every server instance: the app-level daily budget
+-- Model spend per local day in Pacific time, across every server instance: the app-level daily budget
 -- (DAILY_BUDGET_USD) is checked against this before live calls. Server only.
 create table public.model_usage (
   day         date primary key,
@@ -546,7 +546,7 @@ security definer
 set search_path = ''
 as $$
   insert into public.model_usage as u (day, usd, calls, updated_at)
-  values ((p_at at time zone 'America/Mexico_City')::date, greatest(coalesce(p_usd, 0), 0), greatest(coalesce(p_calls, 0), 0), now())
+  values ((p_at at time zone 'America/Los_Angeles')::date, greatest(coalesce(p_usd, 0), 0), greatest(coalesce(p_calls, 0), 0), now())
   on conflict (day) do update set usd = u.usd + excluded.usd, calls = u.calls + excluded.calls, updated_at = now()
   returning usd
 $$;
@@ -723,7 +723,7 @@ as $$
   ),
   per_member as (
     select member_id, count(*) as n from ev
-    where action = 'offer_delivered' and at >= (select (public.cap_month(now()) at time zone 'America/Mexico_City'))
+    where action = 'offer_delivered' and at >= (select (public.cap_month(now()) at time zone 'America/Los_Angeles'))
     group by member_id
   )
   select jsonb_build_object(

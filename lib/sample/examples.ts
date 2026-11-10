@@ -10,7 +10,7 @@ export const EXAMPLE_REAL_LINE = { since: 'Nov 9', members: 23, asks: 12, intros
 
 export const EXAMPLE_BOARD = {
   since: 'Nov 9, 2026',
-  updated: 'Nov 10, 14:02 CST',
+  updated: 'Nov 10, 14:02 PT',
   headline: { interrupted: 11, useful: 5, ratio: '2.2' },
   funnel: [
     ['Members with rules', '23', ''],
@@ -34,7 +34,7 @@ export const EXAMPLE_BOARD = {
   ] as readonly (readonly [string, string, string])[],
   /** [topic, asks, asks that reached a person, distinct askers]. Listed only with 3 or more distinct askers. */
   demand: [
-    ['Hospital procurement, Mexico', 4, 1, 3],
+    ['Hospital procurement, US', 4, 1, 3],
     ['First SOC 2 audit', 3, 0, 3],
   ] as readonly (readonly [string, number, number, number])[],
   demandOther: 5,
@@ -57,11 +57,11 @@ export const EXAMPLE_BOARD = {
   sample: { playgroundRuns: 214, liveGateCalls: 1980, rulesStored: 0, sampleAsks: 37 },
 } as const;
 
-/** /me example (member Ana Ruiz, Health operator rules), for QA states of S3. */
+/** /me example (member Priya Shah, Health operator rules), for QA states of S3. */
 export const EXAMPLE_ME = {
-  name: 'Ana Ruiz',
-  email: 'ana@example.com',
-  oneLine: 'Ran procurement for a public hospital network in Jalisco.',
+  name: 'Priya Shah',
+  email: 'priya@example.com',
+  oneLine: 'Ran procurement for a public hospital network in Illinois.',
   presetRules: 'health',
   cap: 2,
   used: 1,
@@ -69,11 +69,11 @@ export const EXAMPLE_ME = {
   resets: 'Dec 1',
   version: 3,
   saved: '21:14',
-  scheduling: 'https://cal.com/ana-ruiz/20min',
+  scheduling: 'https://cal.com/priya-shah/20min',
   showMatched: false,
   guests: false,
   ledger: { reached_gate: 23, reached_you: 1, stopped: 22 },
   lineTallies: ['1 let in · 1 question', '1 let in · 1 question · 3 kept out', 'not used this month', '2 kept out'],
   noLine: 16,
-  pending: { title: 'Hospital procurement in Mexico', from: 'Lucía Ferrer', hours_left: 61 },
+  pending: { title: 'Hospital procurement in the US', from: 'Maya Bennett', hours_left: 61 },
 } as const;

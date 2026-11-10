@@ -33,7 +33,7 @@ as $$
   ),
   per_member as (
     select member_id, count(*) as n from ev
-    where action = 'offer_delivered' and at >= (select (public.cap_month(p_as_of) at time zone 'America/Mexico_City'))
+    where action = 'offer_delivered' and at >= (select (public.cap_month(p_as_of) at time zone 'America/Los_Angeles'))
     group by member_id
   ),
   members_then as (

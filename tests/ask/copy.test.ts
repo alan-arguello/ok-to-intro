@@ -11,7 +11,7 @@ function strings(value: unknown, out: string[] = []): string[] {
   else if (typeof value === 'function') {
     // Copy builders: call with representative arguments.
     const f = value as (...args: unknown[]) => unknown;
-    for (const args of [[3, 40], ['Thu Nov 12, 21:04 CST'], ['down', 'Dec 1'], ['off', null], ['budget', 'Dec 1'], [2, 3, 'Thu Nov 12, 21:04 CST'], ['A question?', 2], [1, 1, false], [2, 2, false], [2, 1, true], [0, 0, false]]) {
+    for (const args of [[3, 40], ['Thu Nov 12, 21:04 PT'], ['down', 'Dec 1'], ['off', null], ['budget', 'Dec 1'], [2, 3, 'Thu Nov 12, 21:04 PT'], ['A question?', 2], [1, 1, false], [2, 2, false], [2, 1, true], [0, 0, false]]) {
       try {
         const r = f(...args);
         if (typeof r === 'string') out.push(r);

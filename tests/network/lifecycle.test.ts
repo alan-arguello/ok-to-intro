@@ -40,9 +40,9 @@ let seq = 0;
 const RULES = [
   'Happy to talk about tender templates for hospitals.',
   'Hospital procurement questions are welcome here.',
-  'Happy to talk about hospital buyers in Mexico.',
+  'Happy to talk about hospital buyers in the US.',
   'Happy to talk about public hospital pilots.',
-  'Happy to talk about health founders in Jalisco.',
+  'Happy to talk about health founders in Illinois.',
 ];
 
 async function settle() {
@@ -60,7 +60,7 @@ function allAccept() {
 let askers = 0;
 async function freshAsker(): Promise<MemberRef> {
   const email = `asker${++askers}@example.com`;
-  const id = await net.member(email, { name: `Founder ${askers}`, company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' });
+  const id = await net.member(email, { name: `Founder ${askers}`, company: 'Oakline Health', stage: 'Seed', city: 'Chicago' });
   asker = { id, email };
   return asker;
 }
@@ -99,7 +99,7 @@ beforeAll(async () => {
   __setNetworkDbForTests(net.transport);
   mail = captureEmails();
   __setEmailTransportForTests(flaky(mail.transport));
-  const id = await net.member('asker@example.com', { name: 'Lucía Ferrer', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' });
+  const id = await net.member('asker@example.com', { name: 'Maya Bennett', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' });
   asker = { id, email: 'asker@example.com' };
   for (const [i, rules] of RULES.entries()) m[`g${i}`] = await net.member(`g${i}@example.com`, { name: `Gate ${i}`, rules, cap: 5 });
 });
@@ -116,8 +116,8 @@ beforeEach(async () => {
 });
 
 describe('parseDeadline', () => {
-  const now = new Date('2026-11-09T21:04:00-06:00');
-  it('reads the dates founders write, as the next such date in Mexico City', () => {
+  const now = new Date('2026-11-09T21:04:00-08:00');
+  it('reads the dates founders write, as the next such date in Pacific time', () => {
     expect(parseDeadline('Nov 20', now)).toBe('2026-11-20');
     expect(parseDeadline('before November 21, 2026', now)).toBe('2026-11-21');
     expect(parseDeadline('21 Nov', now)).toBe('2026-11-21');
@@ -157,7 +157,7 @@ describe('withdraw', () => {
 describe('fail closed', () => {
   it('offers nothing when more than 1 in 5 gates fail, says so, and a retry sends it again', async () => {
     const id = await newAsk();
-    h.gate = async (input) => (input.rules === RULES[2] ? accepts(input.rules, 'Happy to talk about hospital buyers in Mexico') : fails('timeout'));
+    h.gate = async (input) => (input.rules === RULES[2] ? accepts(input.rules, 'Happy to talk about hospital buyers in the US') : fails('timeout'));
     const events = await sendAll(id);
     const done = events.at(-1);
     expect(done?.event).toBe('done');
@@ -227,8 +227,8 @@ describe('deadlines and settling', () => {
   it('past its deadline the ask closes instead of moving on', async () => {
     const id = await newAsk();
     await sendAll(id);
-    // The deadline (a Mexico City date) passes while the first person holds it.
-    await net.db.pg.query(`update public.asks set deadline = (now() at time zone 'America/Mexico_City')::date - 1 where id = $1`, [id]);
+    // The deadline (a Pacific-time date) passes while the first person holds it.
+    await net.db.pg.query(`update public.asks set deadline = (now() at time zone 'America/Los_Angeles')::date - 1 where id = $1`, [id]);
     const offer = await net.one<{ id: string }>(`select id from public.offers where ask_id = $1 and state = 'pending'`, [id]);
     const at = new Date();
     await respondToOffer({ token: tokenFor(`offer:${offer!.id}`) }, 'no', { idempotency_key: 'n' }, at);

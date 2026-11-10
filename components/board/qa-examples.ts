@@ -15,9 +15,9 @@ import { boardView, type BoardSnapshot, type BoardView } from './model';
 
 export type BoardQaState = 'default' | 'launch-day' | 'small-n' | 'stale';
 
-/** Nov 10, 14:02 CST (UTC−6) and the first join on Nov 9, 09:00 CST. */
-const UPDATED = '2026-11-10T20:02:00.000Z';
-const SINCE = '2026-11-09T15:00:00.000Z';
+/** Nov 10, 14:02 PT (UTC−8) and the first join on Nov 9, 09:00 PT. */
+const UPDATED = '2026-11-10T22:02:00.000Z';
+const SINCE = '2026-11-09T17:00:00.000Z';
 
 export const EXAMPLE_SNAPSHOT: BoardSnapshot = {
   as_of: UPDATED,
@@ -57,8 +57,8 @@ export const EXAMPLE_SNAPSHOT: BoardSnapshot = {
 
 const LAUNCH_DAY: BoardSnapshot = {
   ...EXAMPLE_SNAPSHOT,
-  // Nov 9, 21:30 CST: the lede's last update on launch day.
-  as_of: '2026-11-10T03:30:00.000Z',
+  // Nov 9, 21:30 PT: the lede's last update on launch day.
+  as_of: '2026-11-10T05:30:00.000Z',
   members_with_rules: 0,
   asks_sent: 0,
   compile_refused: 0,
@@ -96,7 +96,7 @@ const TYPES = ['fits', 'wrong_stage', 'investor', 'injection', 'polite_spam'] as
 /** The prototype's eval example, in the shape `npm run eval` writes. Its six misses add up to the table. */
 export const EXAMPLE_EVAL: EvalSummary = {
   source: 'eval',
-  ran_at: '2026-11-09T22:00:00.000Z',
+  ran_at: '2026-11-10T00:00:00.000Z',
   model: 'claude-haiku-5-5',
   rubric_hash: null,
   header: ev.header,
@@ -118,8 +118,8 @@ export const EXAMPLE_EVAL: EvalSummary = {
     {
       case_id: 'ex2',
       case_type: 'fits',
-      ask: 'Selling claims software to EPS health insurers in Colombia; 11 calls, $3k a month.',
-      rules_excerpt: 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.',
+      ask: 'Selling claims software to regional health insurers in the US; 11 calls, $3k a month.',
+      rules_excerpt: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.',
       expected: 'accept',
       actual: ['accept', 'accept', 'decline'],
       cited: [],

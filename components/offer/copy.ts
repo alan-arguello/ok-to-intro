@@ -52,7 +52,7 @@ export const CAP_LOWERED = 'Cap lowered to 1 a month.';
 export const NOTE_SAVED = 'Saved.';
 export const REASON_SAVED = 'Saved. Only you see this.';
 export const NO_EDIT = 'Saved. There’s no rule line to suggest for this ask.';
-/** The sample loop's cards aren't Ana's rules, so no hand-written diff applies. */
+/** The sample loop's cards aren't Priya's rules, so no hand-written diff applies. */
 export const LOOP_EDIT_NOTE = 'On a real gate, this suggests one line to add to your rules, templated by code from your reason. Nothing changes unless you add it.';
 
 export const SUGGESTED_CHANGE = 'Suggested change to your rules';

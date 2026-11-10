@@ -14,7 +14,7 @@ export const ONE_TAP_EDITS: Readonly<Record<PresetId, readonly OneTapEdit[]>> = 
       kind: 'add',
       line: 'No asks from health companies.',
       expected_flips: {
-        a09: { verdict: 'decline', cited: ['No asks from health companies.'], reason_code: 'rule_says_no', reason: 'Guadua Health is a health company.' },
+        a09: { verdict: 'decline', cited: ['No asks from health companies.'], reason_code: 'rule_says_no', reason: 'Wrenby Health is a health company.' },
       },
     },
     { id: 'cap', kind: 'cap', from: 2, to: 1 },
@@ -37,7 +37,7 @@ export const ONE_TAP_EDITS: Readonly<Record<PresetId, readonly OneTapEdit[]>> = 
       kind: 'add',
       line: 'No asks from fintech companies.',
       expected_flips: {
-        a07: { verdict: 'decline', cited: ['No asks from fintech companies.'], reason_code: 'rule_says_no', reason: 'Corrida Pay builds a payouts API, a fintech product.' },
+        a07: { verdict: 'decline', cited: ['No asks from fintech companies.'], reason_code: 'rule_says_no', reason: 'Coppice Pay builds a payouts API, a fintech product.' },
       },
     },
     { id: 'cap', kind: 'cap', from: 2, to: 1 },

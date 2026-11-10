@@ -156,7 +156,7 @@ export function captureEmails(): { transport: EmailTransport; sent: SentEmail[];
 
 /* ---------- asks ---------- */
 
-export const HEALTH_RULES = 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.\nNo asks to review a deck.';
+export const HEALTH_RULES = 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.\nNo asks to review a deck.';
 export const PG_RULES = 'Happy to talk about Postgres or Kafka at scale.';
 
 export function compiledAsk(overrides: Partial<CompiledAsk> = {}): CompiledAsk {
@@ -164,14 +164,14 @@ export function compiledAsk(overrides: Partial<CompiledAsk> = {}): CompiledAsk {
     parts: {
       challenge: 'Public hospital committees stall at technical review',
       tried: '14 buyer calls; 2 committees reached review',
-      needs: 'someone who has sat on a public hospital procurement committee in Mexico',
+      needs: 'someone who has sat on a public hospital procurement committee in the US',
       by: 'Nov 20',
       offers: 'our tender templates',
     },
-    subject: 'Hospital procurement in Mexico, 20 min?',
-    text: 'Selling inventory software to public hospitals in Jalisco. 14 buyer calls; 2 committees stalled at technical review. Need 20 minutes with someone who has sat on a public hospital procurement committee in Mexico, before Nov 20. Offer: our tender templates.',
+    subject: 'Hospital procurement in the US, 20 min?',
+    text: 'Selling inventory software to public hospitals in Illinois. 14 buyer calls; 2 committees stalled at technical review. Need 20 minutes with someone who has sat on a public hospital procurement committee in the US, before Nov 20. Offer: our tender templates.',
     price: null,
-    topic: 'Hospital procurement, Mexico',
+    topic: 'Hospital procurement, US',
     ...overrides,
   };
 }

@@ -28,7 +28,7 @@ import { OFFER_SAMPLE } from '@/lib/sample/offer';
 import { PRESETS } from '@/lib/sample/presets';
 import type { OfferView } from '@/lib/types';
 
-const NOW = Date.parse('2026-11-10T15:00:00Z');
+const NOW = Date.parse('2026-11-10T17:00:00Z');
 const NONE: SampleStores = { sampleAsk: null, sampleOffer: null, playground: null };
 const q = (sp: Record<string, string>, qa = false): OfferQuery => parseOfferQuery(sp, qa);
 
@@ -37,24 +37,24 @@ function record(over: Partial<OfferView> = {}): OfferView {
     offer_id: 'o_3Fp9kL',
     state: 'pending',
     sample: false,
-    title: 'Hospital procurement in Mexico',
-    subject: 'Hospital procurement in Mexico, 20 min?',
-    asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' },
-    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.' },
+    title: 'Hospital procurement in the US',
+    subject: 'Hospital procurement in the US, 20 min?',
+    asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
+    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.' },
     rules_version: 3,
-    topic: 'Hospital procurement, Mexico',
-    scheduling_url: 'https://cal.com/ana-ruiz/20min',
+    topic: 'Hospital procurement, US',
+    scheduling_url: 'https://cal.com/priya-shah/20min',
     facts: [...OFFER_SAMPLE.facts],
     cap: 2,
     nth: 1,
-    offered_at: '2026-11-09T21:04:00-06:00',
-    expires_at: '2026-11-12T21:04:00-06:00',
+    offered_at: '2026-11-09T21:04:00-08:00',
+    expires_at: '2026-11-12T21:04:00-08:00',
     responded_at: null,
     answer: null,
     no_reason: null,
     paused_until: null,
     ask_withdrawn_at: null,
-    member_first: 'Ana',
+    member_first: 'Priya',
     ...over,
   };
 }
@@ -117,10 +117,10 @@ describe('the URL (GET renders, never changes anything)', () => {
 describe('REAL: the offer’s state decides', () => {
   it('pending: open, preselected, paused, and past its deadline reads as expired', () => {
     expect(uiFromRecord(record(), q({ choice: 'ok' }), NOW).view).toBe('confirm');
-    expect(uiFromRecord(record({ paused_until: '2026-12-01T06:00:00Z' }), q({}), NOW)).toMatchObject({ view: 'open', paused: true });
-    expect(uiFromRecord(record({ paused_until: '2026-11-01T06:00:00Z' }), q({}), NOW).paused).toBe(false);
-    expect(uiFromRecord(record({ expires_at: '2026-11-10T14:00:00Z' }), q({ choice: 'ok' }), NOW).view).toBe('expired');
-    expect(uiFromRecord(record({ ask_withdrawn_at: '2026-11-10T10:00:00Z' }), q({}), NOW).view).toBe('withdrawn');
+    expect(uiFromRecord(record({ paused_until: '2026-12-01T08:00:00Z' }), q({}), NOW)).toMatchObject({ view: 'open', paused: true });
+    expect(uiFromRecord(record({ paused_until: '2026-11-01T08:00:00Z' }), q({}), NOW).paused).toBe(false);
+    expect(uiFromRecord(record({ expires_at: '2026-11-10T16:00:00Z' }), q({ choice: 'ok' }), NOW).view).toBe('expired');
+    expect(uiFromRecord(record({ ask_withdrawn_at: '2026-11-10T12:00:00Z' }), q({}), NOW).view).toBe('withdrawn');
   });
 
   it('acted: “just did it” only right after the POST, “you did this before” on any later visit', () => {
@@ -169,7 +169,7 @@ describe('the 2-line answer and the private note', () => {
 describe('the card copy', () => {
   it('fine print and cap usage, first names, never pronouns', () => {
     const c = canonicalCard();
-    expect(fineText(c)).toBe('Lucía sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer.');
+    expect(fineText(c)).toBe('Maya sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer.');
     expect(capText(c)).toBe('1 of your 2 this month');
     expect(fineText({ ...c, who: 'the founder' }).startsWith('The founder sees your name')).toBe(true);
     expect(c.facts.map(([k]) => k)).toEqual(['Problem', 'Needs', 'Tried', 'By', 'Offers', 'Price']);
@@ -182,7 +182,7 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
     expect(loop).not.toBeNull();
     const card = cardFromLoop(loop!);
     expect(card.title).toBe('Postgres p95 at 40M rows');
-    expect(card.from).toBe('Sample founder · Arrecife Data · Seed · Mexico City');
+    expect(card.from).toBe('Sample founder · Tidewell Data · Seed · San Francisco');
     expect(card.facts[0]?.[0]).toBe('Problem');
     expect(card.facts.find(([k]) => k === 'Needs')?.[1]).toBe('20 minutes with someone who has run Postgres past 100M rows');
     const rules = PRESETS.find((p) => p.id === 'engineer')!.rules;
@@ -209,7 +209,7 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
     expect(live?.card.matched).toBe('Happy to talk about Postgres or Kafka at scale');
     expect(live?.card).toMatchObject({ cap: 2, nth: 2 });
     expect(live?.hours).toBe(70);
-    expect(live?.loop.member.name).toBe('Sofía Peralta');
+    expect(live?.loop.member.name).toBe('Hannah Kim');
   });
 
   it('a custom sample id needs the tab; without it the page falls back to the canonical sample', () => {
@@ -237,7 +237,7 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
     const loop = loopForPlayground({ ...NONE, playground: pg }, NOW);
     expect(loop?.askId).toBe('a03');
     const card = cardFromLoop(loop!);
-    expect(card.from).toBe('Lumbre AI · Seed · Bogotá');
+    expect(card.from).toBe('Tallow AI · Seed · Austin');
     expect(card.matched).toBe('founders about Postgres, queues or LLM evals in production');
     expect(loopForPlayground(NONE, NOW)).toBeNull();
   });
@@ -273,7 +273,7 @@ describe('the templated rule edit after a No, tested on the 12 sample asks', () 
   });
 
   it('only the reasons that map to a rule suggest a line', () => {
-    const ctx = { rules: PRESETS[1]!.rules, matchedLine: null, topic: 'Hospital procurement, Mexico', askText: 'x', companies: ['Orvella Health'] };
+    const ctx = { rules: PRESETS[1]!.rules, matchedLine: null, topic: 'Hospital procurement, US', askText: 'x', companies: ['Oakline Health'] };
     expect(suggestRuleEdit('not_my_area', ctx)?.add).toBe('No asks about hospital procurement.');
     expect(suggestRuleEdit('wrong_stage', ctx)?.add).toBe('Only after a first paying customer.');
     for (const r of ['not_specific', 'no_time', 'other'] as const) expect(suggestRuleEdit(r, ctx)).toBeNull();

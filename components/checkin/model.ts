@@ -241,7 +241,7 @@ export interface CheckinPageModel {
   source: CheckinSource;
   /** The other person, by full and first name. */
   other: { name: string; first: string } | null;
-  /** “Hospital procurement in Mexico” (the intro's ask, without “, 20 min?”). */
+  /** “Hospital procurement in the US” (the intro's ask, without “, 20 min?”). */
   subject: string | null;
   introMade: CkTimeLabel | null;
   /** +14 days check-in date (“One more question on Nov 23”). */

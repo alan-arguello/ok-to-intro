@@ -80,7 +80,7 @@ describe('copy', () => {
     expect(carriedMeta('a\nb\n\nc\nd', 2, 'Engineer')).toBe('4 lines · cap 2 · Engineer');
   });
 
-  it('pause labels: chips, titles and the paused status, in Mexico City dates', () => {
+  it('pause labels: chips, titles and the paused status, in Pacific-time dates', () => {
     expect(pauseChipLabel('2w', NOV9)).toBe('2 weeks');
     expect(pauseChipLabel('month', NOV9)).toBe('Until Dec 1');
     expect(pauseChipLabel('off', NOV9)).toBe('Until I turn it back on');
@@ -139,10 +139,10 @@ describe('/me (SAMPLE preview, QA states only)', () => {
     expect(out).toContain(ME_COPY.protoNote);
     expect(out).toContain('Cap 2 a month · 1 of 2 used in November · resets Dec 1');
     expect(out).toContain('1 let in · 1 question · 3 kept out');
-    expect(out).toContain('<mark class="mark">B2B founders selling to public hospitals or insurers in Mexico or Colombia</mark>');
+    expect(out).toContain('<mark class="mark">B2B founders selling to public hospitals or insurers in the US or Canada</mark>');
     expect(out).toContain('16 asks matched no line and were declined.');
     expect(out).toContain('Saved 21:14 · version 3');
-    expect(out).toContain('When you ask, the member who gets it sees “Ana Ruiz · Orvella Health · Seed · Guadalajara”.');
+    expect(out).toContain('When you ask, the member who gets it sees “Priya Shah · Oakline Health · Seed · Chicago”.');
     expect(out).toContain('Token created Nov 9 · last used 21:04 from Claude Code');
     for (const anchor of ['id="asks"', 'id="settings"', 'id="token"', 'id="delete"']) expect(out).toContain(anchor);
     // The guest path is cut (ux-spec §10 “Later”), so its toggle doesn't ship.
@@ -163,7 +163,7 @@ describe('/me (SAMPLE preview, QA states only)', () => {
     expect(html(<MeView initial={sampleMe('paused', NOV9)} />)).toContain('Until Dec 1 · offers go to others');
     const pending = html(<MeView initial={sampleMe('offer-pending', NOV9)} />);
     expect(pending).toContain('1 ask is waiting on you');
-    expect(pending).toContain(' · Hospital procurement in Mexico · from Lucía Ferrer · 61 h left');
+    expect(pending).toContain(' · Hospital procurement in the US · from Maya Bennett · 61 h left');
     expect(html(<MeView initial={sampleMe('empty-ledger', NOV9)} />)).toContain('Your gate checked 6 asks this month and declined all 6. None reached you.');
     const created = html(<MeView initial={sampleMe('token-created', NOV9)} />);
     expect(created).toContain(SAMPLE_TOKEN);
@@ -236,14 +236,14 @@ describe('/pause/[token]', () => {
 
   it('maps BE2’s redirects onto the member’s real state', () => {
     const on = { status: 'on' as const, paused_until: null, can_undo: false };
-    const pausedDec1 = { status: 'paused' as const, paused_until: '2026-12-01T06:00:00.000Z', can_undo: true };
+    const pausedDec1 = { status: 'paused' as const, paused_until: '2026-12-01T08:00:00.000Z', can_undo: true };
     // GET with no query: the question, “until Dec 1” preselected; ?until=2w preselects from a no-JS chip.
     expect(pauseViewState(on, {})).toEqual({ kind: 'confirm', choice: 'month', error: null, undone: false });
     expect(pauseViewState(on, { until: '2w' })).toMatchObject({ kind: 'confirm', choice: '2w' });
     expect(pauseViewState(on, { until: 'forever' })).toMatchObject({ kind: 'confirm', choice: 'month' });
     // After the POST: the real end date, focus on the heading, Undo while this link may.
     expect(pauseViewState(pausedDec1, { done: 'month' })).toEqual({ kind: 'paused', phrase: 'until Dec 1', canUndo: true, focus: true, error: null });
-    expect(pauseViewState({ ...pausedDec1, paused_until: '2026-11-23T16:15:00.000Z' }, { done: '2w' })).toMatchObject({ phrase: 'for 2 weeks' });
+    expect(pauseViewState({ ...pausedDec1, paused_until: '2026-11-23T18:15:00.000Z' }, { done: '2w' })).toMatchObject({ phrase: 'for 2 weeks' });
     expect(pauseViewState({ ...pausedDec1, paused_until: null }, { done: 'off' })).toMatchObject({ phrase: 'until you turn them back on' });
     // Visiting the link again while paused: no focus jump.
     expect(pauseViewState(pausedDec1, {})).toMatchObject({ kind: 'paused', focus: false });

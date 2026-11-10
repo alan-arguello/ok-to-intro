@@ -245,13 +245,13 @@ export interface AskParts {
 /** What the asker approved on /ask. Stored in `asks.compiled`. */
 export interface CompiledAsk {
   parts: AskParts;
-  /** ≤ 45 characters, e.g. “Hospital procurement in Mexico, 20 min?”. */
+  /** ≤ 45 characters, e.g. “Hospital procurement in the US, 20 min?”. */
   subject: string;
   /** The ask as members will see it (the founder's text, possibly with the parts they added). */
   text: string;
   /** Known only after a gate asked and the asker answered (type `price`). */
   price: string | null;
-  /** A coarse topic the compiler assigns (e.g. “Hospital procurement, Mexico”), for the board's unanswered demand. */
+  /** A coarse topic the compiler assigns (e.g. “Hospital procurement, US”), for the board's unanswered demand. */
   topic: string | null;
 }
 
@@ -443,7 +443,7 @@ export interface AskerAskView {
   compiled: CompiledAsk;
   sent_at: string | null;
   outcome: AskerOutcome;
-  /** The moment this view reflects: max(send finished, last 09:00/21:00 CST checkpoint). Intros show at once. */
+  /** The moment this view reflects: max(send finished, last 09:00/21:00 PT checkpoint). Intros show at once. */
   as_of: string;
   next_checkpoint: string;
   /** Fixed shuffled positions; length = network size at send time. */
@@ -485,7 +485,7 @@ export interface AskListItem {
   subject: string;
   network: Network;
   outcome: AskerOutcome;
-  /** One short status phrase, e.g. “offered · reply by Thu Nov 12, 21:04 CST”. */
+  /** One short status phrase, e.g. “offered · reply by Thu Nov 12, 21:04 PT”. */
   status_line: string;
   created_at: string;
 }
@@ -517,7 +517,7 @@ export interface OfferView {
   matched: { text: string; start: number; end: number; line: string } | null;
   /** The rules version the gate read (S4 “Rules updated, version 4”). */
   rules_version: number;
-  /** The compiler's coarse topic for the ask (e.g. “Hospital procurement, Mexico”), for the templated No edit. */
+  /** The compiler's coarse topic for the ask (e.g. “Hospital procurement, US”), for the templated No edit. */
   topic: string | null;
   /** The member's own scheduling link (“with your scheduling link” after OK), or null. */
   scheduling_url: string | null;
@@ -696,7 +696,7 @@ export interface OfferEmailInput {
   /** The member's own words. */
   matched: string;
   facts: Fact[];
-  /** e.g. “Thu Nov 12, 21:04 CST” and “Thu”. */
+  /** e.g. “Thu Nov 12, 21:04 PT” and “Thu”. */
   reply_by_label: string;
   reply_by_day: string;
   footer: Extract<EmailFooter, { role: 'member' }>;
@@ -704,8 +704,8 @@ export interface OfferEmailInput {
 
 export interface IntroEmailInput {
   /**
-   * Optional lower-case phrase after the member's name in the subject: “Intro: Lucía Ferrer (Orvella Health) and
-   * Ana Ruiz (public hospital procurement)”. Null drops the parenthetical (“… and Ana Ruiz”). R builds the subject.
+   * Optional lower-case phrase after the member's name in the subject: “Intro: Maya Bennett (Oakline Health) and
+   * Priya Shah (public hospital procurement)”. Null drops the parenthetical (“… and Priya Shah”). R builds the subject.
    */
   member_context: string | null;
   member: { name: string; first: string; one_line: string; scheduling_url: string | null; email: string };
@@ -714,7 +714,7 @@ export interface IntroEmailInput {
   facts: Fact[];
   /** Only if the member turned “Show askers the line that matched” on. */
   matched_line: string | null;
-  /** “Tomorrow we'll ask each of you one question, and Lucía one more in two weeks”: the two check-in dates. */
+  /** “Tomorrow we'll ask each of you one question, and Maya one more in two weeks”: the two check-in dates. */
   checkin_d1_label: string;
   checkin_d14_label: string;
   member_footer: Extract<EmailFooter, { role: 'member' }>;

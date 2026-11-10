@@ -23,7 +23,7 @@ export const PRESETS: readonly Preset[] = [
     label: 'Health operator',
     cap: 2,
     rules: [
-      'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.',
+      'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.',
       'Only if they have talked to 10+ buyers and have a price.',
       'No fundraising asks.',
       'No asks to review a deck.',

@@ -93,7 +93,7 @@ describe('QA example runs (canonical sample data, never stored)', () => {
     const you = youCell(run)!;
     expect(you.state).toBe('ask_back');
     expect(you.question?.type).toBe('price');
-    expect(you.cited).toBe('B2B founders selling to public hospitals or insurers in Mexico or Colombia');
+    expect(you.cited).toBe('B2B founders selling to public hospitals or insurers in the US or Canada');
     // One question per type; your gate's wording leads and both gates count.
     expect(pendingQuestions(run)[0]).toMatchObject({ type: 'price', gates: 2 });
   });
@@ -183,7 +183,7 @@ describe('labels by source (docs/CONTRACT.md §e)', () => {
     const run = exampleRun('sa_eng', 'offered', pg('engineer'), NOW);
     const stored = { ...run, example: false };
     expect(sourceLine({ ...stored, plan: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'authored' } }, true)).toBe(`${AUTHORED_FANOUT_LABEL} + your gate (${youCell(run)?.state === 'failed' ? 'not checked: live checks are off on this instance' : 'live'})`);
-    expect(sourceLine({ ...stored, plan: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'model', recorded_at: '2026-11-09T09:00:00-06:00' } }, false)).toBe('39 recorded sample members (Nov 9, replayed at recorded speed) + your gate (live)');
+    expect(sourceLine({ ...stored, plan: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'model', recorded_at: '2026-11-09T09:00:00-08:00' } }, false)).toBe('39 recorded sample members (Nov 9, replayed at recorded speed) + your gate (live)');
     const noYou = exampleRun('sa_eng', 'offered', null, NOW);
     expect(sourceLine(noYou, true)).toBe('Example results for 40 sample members, written by hand · not a model run');
     expect(sourceLine(noYou, true)).not.toMatch(/recorded|model run ·|\$/);
@@ -192,7 +192,7 @@ describe('labels by source (docs/CONTRACT.md §e)', () => {
   it('the SAMPLE trace never claims Postgres decided anything (§e.9)', () => {
     for (const state of ['offered', 'moved-on', 'failed-closed'] as const) {
       const run = exampleRun('sa_health', state, pg('health'), NOW);
-      const text = traceRows(run, true, () => 'Thu Nov 12, 10:04 CST', 47)
+      const text = traceRows(run, true, () => 'Thu Nov 12, 10:04 PT', 47)
         .map((r) => r.parts.map((p) => (typeof p === 'string' ? p : p.text)).join(''))
         .join('\n');
       expect(text).not.toMatch(/Postgres|reserve_slot/);

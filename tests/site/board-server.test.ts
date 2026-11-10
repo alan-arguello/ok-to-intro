@@ -38,8 +38,8 @@ import { EXAMPLE_SNAPSHOT } from '@/components/board/qa-examples';
 import { __resetBoardForTests, getBoard, getEvalSummary, getRealLine, parseEvalSummary } from '@/lib/server/board';
 import heldout from '@/data/eval/heldout-summary.json';
 
-const NOW = new Date('2026-11-10T20:02:00Z'); // 14:02 in Mexico City: the last checkpoint is 09:00 (15:00Z)
-const CHECKPOINT = '2026-11-10T15:00:00.000Z';
+const NOW = new Date('2026-11-10T22:02:00Z'); // 14:02 in Pacific time: the last checkpoint is 09:00 (15:00Z)
+const CHECKPOINT = '2026-11-10T17:00:00.000Z';
 const NOT_FOUND = { code: 'PGRST202', message: 'Could not find the function public.board_snapshot(p_as_of) in the schema cache' };
 
 beforeEach(() => {
@@ -61,7 +61,7 @@ describe('getBoard', () => {
     const r = await getBoard(NOW);
     expect(h.calls).toEqual([{ name: 'board_snapshot', args: { p_as_of: CHECKPOINT } }]);
     expect(r).toMatchObject({ ok: true, asOfKind: 'checkpoint' });
-    if (r.ok) expect(boardView({ snapshot: r.snapshot, asOfKind: r.asOfKind, evalSummary: getEvalSummary() }).lede).toContain('Last update Nov 10, 09:00 CST.');
+    if (r.ok) expect(boardView({ snapshot: r.snapshot, asOfKind: r.asOfKind, evalSummary: getEvalSummary() }).lede).toContain('Last update Nov 10, 09:00 PT.');
   });
 
   it('falls back to the current counts while the database has no p_as_of yet, and remembers it', async () => {
@@ -76,11 +76,11 @@ describe('getBoard', () => {
   it('tries p_as_of again after 10 minutes, so a warm instance picks up the migration', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     try {
-      vi.setSystemTime(new Date('2026-11-10T20:00:00Z'));
+      vi.setSystemTime(new Date('2026-11-10T22:00:00Z'));
       h.respond = (_name, args) => (args ? { data: null, error: NOT_FOUND } : { data: EXAMPLE_SNAPSHOT, error: null });
       await getBoard(NOW);
       h.calls = [];
-      vi.setSystemTime(new Date('2026-11-10T20:11:00Z'));
+      vi.setSystemTime(new Date('2026-11-10T22:11:00Z'));
       h.respond = () => ({ data: { ...EXAMPLE_SNAPSHOT, as_of: CHECKPOINT }, error: null });
       expect(await getBoard(NOW)).toMatchObject({ ok: true, asOfKind: 'checkpoint' });
       expect(h.calls).toEqual([{ name: 'board_snapshot', args: { p_as_of: CHECKPOINT } }]);
@@ -114,10 +114,10 @@ describe('getRealLine', () => {
     expect(await getRealLine()).toEqual({ ok: false, reason: 'not_configured' });
   });
 
-  it('dates the line by the first join in Mexico City, or says nobody joined yet', async () => {
+  it('dates the line by the first join in Pacific time, or says nobody joined yet', async () => {
     h.respond = () => ({ data: { since: '2026-11-09T22:15:00+00:00', members: 23, asks: '12', intros: 7, as_of: '2026-11-10T20:02:00+00:00' }, error: null });
     expect(await getRealLine()).toEqual({ ok: true, line: { since: 'Nov 9', members: 23, asks: 12, intros: 7, as_of: '2026-11-10T20:02:00.000Z' } });
-    h.respond = () => ({ data: { since: null, members: 0, asks: 0, intros: 0, as_of: '2026-11-09T15:00:00Z' }, error: null });
+    h.respond = () => ({ data: { since: null, members: 0, asks: 0, intros: 0, as_of: '2026-11-09T17:00:00Z' }, error: null });
     expect(await getRealLine()).toMatchObject({ ok: true, line: { since: null, members: 0 } });
   });
 
@@ -138,7 +138,7 @@ describe('the eval file', () => {
   it('accepts a well-formed eval and refuses anything else', () => {
     const good = {
       source: 'eval',
-      ran_at: '2026-11-09T22:00:00Z',
+      ran_at: '2026-11-10T00:00:00Z',
       model: 'claude-haiku-5-5',
       rubric_hash: 'abc',
       header: '20 cases',
@@ -166,13 +166,13 @@ describe('end to end on PGlite: SQL → getBoard → boardView', () => {
     db = await createTestDb();
     await db.pg.exec(readFileSync(fileURLToPath(new URL('../../supabase/migrations/0003_board_as_of.sql', import.meta.url)), 'utf8'));
     const m = await db.createMember('e2e@example.com', { rules: 'No fundraising asks.' });
-    await db.pg.query(`update public.members set created_at = '2026-11-09T12:00:00Z'`);
+    await db.pg.query(`update public.members set created_at = '2026-11-09T14:00:00Z'`);
     await db.pg.query(
       `insert into public.audit (at, action, member_id, asker_id, ask_id, offer_id, detail) values
-        ('2026-11-09T16:00:00Z', 'member_joined', $1, null, null, null, '{}'),
-        ('2026-11-10T14:00:00Z', 'ask_sent', null, $1, 'a_e2e1', null, '{}'),
-        ('2026-11-10T14:00:01Z', 'gate_checked', $1, $1, 'a_e2e1', null, '{"verdict":"decline","decided_by":"gate","attempt":1}'),
-        ('2026-11-10T16:00:00Z', 'ask_sent', null, $1, 'a_e2e2', null, '{}')`,
+        ('2026-11-09T18:00:00Z', 'member_joined', $1, null, null, null, '{}'),
+        ('2026-11-10T16:00:00Z', 'ask_sent', null, $1, 'a_e2e1', null, '{}'),
+        ('2026-11-10T16:00:01Z', 'gate_checked', $1, $1, 'a_e2e1', null, '{"verdict":"decline","decided_by":"gate","attempt":1}'),
+        ('2026-11-10T18:00:00Z', 'ask_sent', null, $1, 'a_e2e2', null, '{}')`,
       [m],
     );
     const pg = db.pg;
@@ -188,7 +188,7 @@ describe('end to end on PGlite: SQL → getBoard → boardView', () => {
     // The second ask was sent after the 09:00 checkpoint: it shows at 21:00, not now.
     expect(r.snapshot.asks_sent).toBe(1);
     const v = boardView({ snapshot: r.snapshot, asOfKind: r.asOfKind, evalSummary: getEvalSummary() });
-    expect(v.lede).toBe('Real counts since Nov 9, 2026. Every number has its denominator. Last update Nov 10, 09:00 CST.');
+    expect(v.lede).toBe('Real counts since Nov 9, 2026. Every number has its denominator. Last update Nov 10, 09:00 PT.');
     expect(v.funnel.find((x) => x.label === 'Gate checks')).toMatchObject({ value: '1', note: 'at most 1 ask × 1 member, plus 0 reruns' });
   });
 });

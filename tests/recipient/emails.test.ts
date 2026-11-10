@@ -30,15 +30,15 @@ const asker = { role: 'asker' as const, ask_url: 'https://oki.example/ask/a_91xQ
 function offerInput(over: Partial<OfferEmailInput> = {}): OfferEmailInput {
   return {
     offer_url: 'https://oki.example/o/3Fp9Kx7QmW2cAbCdEfGhIj',
-    member_first: 'Ana',
+    member_first: 'Priya',
     cap: 2,
     nth: 1,
-    asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' },
-    subject: 'Hospital procurement in Mexico, 20 min?',
-    title: 'Hospital procurement in Mexico',
+    asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
+    subject: 'Hospital procurement in the US, 20 min?',
+    title: 'Hospital procurement in the US',
     matched: OFFER_SAMPLE.matched,
     facts: [...OFFER_SAMPLE.facts].reverse(),
-    reply_by_label: 'Thu Nov 12, 21:04 CST',
+    reply_by_label: 'Thu Nov 12, 21:04 PT',
     reply_by_day: 'Thu',
     footer: member,
     ...over,
@@ -123,9 +123,9 @@ describe('offer email', () => {
   it('reads in the spec order: cap line, title, from, matched rule, facts, three buttons, the two notes', () => {
     const order = [
       '>An ask matched your rules. It’s 1 of your 2 this month.<',
-      '>Hospital procurement in Mexico</h1>',
-      '>From Lucía Ferrer, Orvella Health (Seed, Guadalajara)<',
-      'Matched your rule: <span style="background:#fbe9b7;color:#16140f;padding:0 2px">“B2B founders selling to public hospitals or insurers in Mexico or Colombia”</span>',
+      '>Hospital procurement in the US</h1>',
+      '>From Maya Bennett, Oakline Health (Seed, Chicago)<',
+      'Matched your rule: <span style="background:#fbe9b7;color:#16140f;padding:0 2px">“B2B founders selling to public hospitals or insurers in the US or Canada”</span>',
       '>Problem</td>',
       '>Needs</td>',
       '>Price</td>',
@@ -133,7 +133,7 @@ describe('offer email', () => {
       '>Answer in 2 lines</a>',
       '>No</a>',
       '>Each button opens a page where you confirm. Nothing happens from this email.<',
-      '>Lucía sees your name only if you choose OK. If you say No or don’t reply by Thu Nov 12, 21:04 CST, it goes to the next person and Lucía isn’t told it reached you.<',
+      '>Maya sees your name only if you choose OK. If you say No or don’t reply by Thu Nov 12, 21:04 PT, it goes to the next person and Maya isn’t told it reached you.<',
     ].map((s) => m.html.indexOf(s));
     expect(order.every((v, i) => v >= 0 && (i === 0 || v > (order[i - 1] as number)))).toBe(true);
   });
@@ -160,7 +160,7 @@ describe('offer email', () => {
     // The quote is cut at a word so the cap and the reply-by day survive an inbox's preview length.
     expect(m.preheader).toBe('Matched your rule “B2B founders selling to public hospitals…” · 1 of your 2 this month · reply by Thu');
     expect(m.preheader.length).toBeLessThanOrEqual(105);
-    expect(m.subject).toBe('Hospital procurement in Mexico, 20 min?');
+    expect(m.subject).toBe('Hospital procurement in the US, 20 min?');
   });
 
   it('escapes everything the asker wrote', () => {
@@ -173,14 +173,14 @@ describe('offer email', () => {
   });
 
   it('a partial asker profile never prints empty parentheses, and a missing quote never prints an empty one', () => {
-    const partial = offerEmail(offerInput({ asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: '', city: 'Guadalajara' }, matched: '' }));
-    expect(partial.text).toContain('From Lucía Ferrer, Orvella Health (Guadalajara)');
+    const partial = offerEmail(offerInput({ asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: '', city: 'Chicago' }, matched: '' }));
+    expect(partial.text).toContain('From Maya Bennett, Oakline Health (Chicago)');
     expect(partial.text).toContain('\nMatched your rules.\n');
     expect(partial.text).not.toContain('“”');
     expect(partial.preheader).toBe('Matched your rules · 1 of your 2 this month · reply by Thu');
     expect(htmlText(partial.html)).not.toMatch(/\(\s*,|,\s*\)|\(\s*\)/);
     expect(companyLine({ company: '', stage: 'Seed', city: '' })).toBe('Seed');
-    expect(companyLine({ company: 'Orvella Health', stage: '', city: '' })).toBe('Orvella Health');
+    expect(companyLine({ company: 'Oakline Health', stage: '', city: '' })).toBe('Oakline Health');
   });
 
   it('keeps an existing query string when it adds the choice (SAMPLE loop links)', () => {
@@ -192,8 +192,8 @@ describe('offer email', () => {
 describe('intro email', () => {
   const input = {
     member_context: 'public hospital procurement',
-    member: { name: 'Ana Ruiz', first: 'Ana', one_line: 'Ran procurement for a public hospital network in Jalisco.', scheduling_url: 'https://cal.com/ana-ruiz/20min', email: 'ana@example.com' },
-    asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara', email: 'lucia@orvella.example' },
+    member: { name: 'Priya Shah', first: 'Priya', one_line: 'Ran procurement for a public hospital network in Illinois.', scheduling_url: 'https://cal.com/priya-shah/20min', email: 'priya@example.com' },
+    asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', email: 'maya@oakline.example' },
     facts: [...OFFER_SAMPLE.facts],
     matched_line: OFFER_SAMPLE.matched,
     checkin_d1_label: 'Tue Nov 10',
@@ -203,20 +203,20 @@ describe('intro email', () => {
 
   it('opens with both names and one-liners, quotes the approved facts and the scheduling link', () => {
     const m = introEmail(input);
-    expect(m.subject).toBe('Intro: Lucía Ferrer (Orvella Health) and Ana Ruiz (public hospital procurement)');
-    expect(introSubject({ ...input, member_context: null })).toBe('Intro: Lucía Ferrer (Orvella Health) and Ana Ruiz');
+    expect(m.subject).toBe('Intro: Maya Bennett (Oakline Health) and Priya Shah (public hospital procurement)');
+    expect(introSubject({ ...input, member_context: null })).toBe('Intro: Maya Bennett (Oakline Health) and Priya Shah');
     expect(m.text.split('\n').slice(0, 4)).toEqual([
-      'Ana Ruiz · Ran procurement for a public hospital network in Jalisco.',
-      'Lucía Ferrer · Orvella Health (Seed, Guadalajara)',
+      'Priya Shah · Ran procurement for a public hospital network in Illinois.',
+      'Maya Bennett · Oakline Health (Seed, Chicago)',
       '',
-      'Lucía, Ana: you both said yes, so here is the intro.',
+      'Maya, Priya: you both said yes, so here is the intro.',
     ]);
-    expect(m.text).toContain('The ask Lucía approved:\nProblem:');
-    expect(m.text).toContain('Ana’s link for 20 minutes: https://cal.com/ana-ruiz/20min');
-    expect(m.html).toContain('<a href="https://cal.com/ana-ruiz/20min"');
-    expect(m.text).toContain('Ana’s rules include “B2B founders selling to public hospitals or insurers in Mexico or Colombia”.');
-    expect(m.text).toContain('Reply all to pick a time. We’re not on this thread. Tomorrow we’ll ask each of you one question, and Lucía one more in two weeks. That’s all.');
-    expect(m.preheader).toBe('Reply all to pick a time. Ana’s link: cal.com/ana-ruiz/20min');
+    expect(m.text).toContain('The ask Maya approved:\nProblem:');
+    expect(m.text).toContain('Priya’s link for 20 minutes: https://cal.com/priya-shah/20min');
+    expect(m.html).toContain('<a href="https://cal.com/priya-shah/20min"');
+    expect(m.text).toContain('Priya’s rules include “B2B founders selling to public hospitals or insurers in the US or Canada”.');
+    expect(m.text).toContain('Reply all to pick a time. We’re not on this thread. Tomorrow we’ll ask each of you one question, and Maya one more in two weeks. That’s all.');
+    expect(m.preheader).toBe('Reply all to pick a time. Priya’s link: cal.com/priya-shah/20min');
   });
 
   it('never hands the asker the member’s pause token, and has no one-click header (it goes to both people)', () => {
@@ -229,8 +229,8 @@ describe('intro email', () => {
 
   it('names the asker without empty parentheses when the profile is partial', () => {
     const m = introEmail({ ...input, asker: { ...input.asker, company: '', stage: 'Seed', city: '' } });
-    expect(m.subject).toBe('Intro: Lucía Ferrer and Ana Ruiz (public hospital procurement)');
-    expect(m.text.split('\n')[1]).toBe('Lucía Ferrer · Seed');
+    expect(m.subject).toBe('Intro: Maya Bennett and Priya Shah (public hospital procurement)');
+    expect(m.text.split('\n')[1]).toBe('Maya Bennett · Seed');
     expect(htmlText(m.html)).not.toMatch(/\(\s*,|,\s*\)|\(\s*\)/);
   });
 
@@ -244,10 +244,10 @@ describe('intro email', () => {
 
 describe('check-in emails', () => {
   it('+1 day, asker: 1–5, not yet, won’t happen; asker footer; no one-click header', () => {
-    const m = checkinEmail({ kind: 'd1', role: 'asker', to_first: 'Lucía', other_name: 'Ana Ruiz', other_first: 'Ana', checkin_url: 'https://oki.example/c/c88Lq2Hd7AbCdEfGhIjKlM', footer: asker });
-    expect(m.subject).toBe('Did you and Ana talk?');
-    expect(m.preheader).toBe('One tap: how useful was the call with Ana?');
-    expect(m.text.startsWith('How useful was the call with Ana?\n\n1: https://oki.example/c/c88Lq2Hd7AbCdEfGhIjKlM?v=1')).toBe(true);
+    const m = checkinEmail({ kind: 'd1', role: 'asker', to_first: 'Maya', other_name: 'Priya Shah', other_first: 'Priya', checkin_url: 'https://oki.example/c/c88Lq2Hd7AbCdEfGhIjKlM', footer: asker });
+    expect(m.subject).toBe('Did you and Priya talk?');
+    expect(m.preheader).toBe('One tap: how useful was the call with Priya?');
+    expect(m.text.startsWith('How useful was the call with Priya?\n\n1: https://oki.example/c/c88Lq2Hd7AbCdEfGhIjKlM?v=1')).toBe(true);
     expect(m.text).toContain('We haven’t talked yet: https://oki.example/c/c88Lq2Hd7AbCdEfGhIjKlM?v=notyet');
     expect(m.text).toContain('It won’t happen: https://oki.example/c/c88Lq2Hd7AbCdEfGhIjKlM?v=wont');
     expect(m.text).toContain('1 = not at all · 5 = it unblocked me\nOne tap opens a page where you confirm.');
@@ -257,15 +257,15 @@ describe('check-in emails', () => {
   });
 
   it('+1 day, member: its own question, the member footer and the one-click pause header', () => {
-    const m = checkinEmail({ kind: 'd1', role: 'member', to_first: 'Ana', other_name: 'Lucía Ferrer', other_first: 'Lucía', checkin_url: 'https://oki.example/c/c88Ma4Rt9BbCdEfGhIjKlM', footer: member });
-    expect(m.subject).toBe('Did you and Lucía talk?');
-    expect(m.text.startsWith('Was the call with Lucía worth your 20 minutes?')).toBe(true);
+    const m = checkinEmail({ kind: 'd1', role: 'member', to_first: 'Priya', other_name: 'Maya Bennett', other_first: 'Maya', checkin_url: 'https://oki.example/c/c88Ma4Rt9BbCdEfGhIjKlM', footer: member });
+    expect(m.subject).toBe('Did you and Maya talk?');
+    expect(m.text.startsWith('Was the call with Maya worth your 20 minutes?')).toBe(true);
     expect(m.headers['List-Unsubscribe-Post']).toBe('List-Unsubscribe=One-Click');
   });
 
   it('+14 days: the five outcomes', () => {
-    const m = checkinEmail({ kind: 'd14', role: 'asker', to_first: 'Lucía', other_name: 'Ana Ruiz', other_first: 'Ana', checkin_url: 'https://oki.example/c/c91Vk3Np5CbCdEfGhIjKlM', footer: asker });
-    expect(m.subject).toBe('What came of the intro to Ana?');
+    const m = checkinEmail({ kind: 'd14', role: 'asker', to_first: 'Maya', other_name: 'Priya Shah', other_first: 'Priya', checkin_url: 'https://oki.example/c/c91Vk3Np5CbCdEfGhIjKlM', footer: asker });
+    expect(m.subject).toBe('What came of the intro to Priya?');
     expect([...m.text.matchAll(/^([A-Z][\w ]+): https\S+\?v=/gm)].map((x) => x[1])).toEqual(['Unblocked', 'A customer', 'A hire', 'An investor', 'Nothing yet']);
     expect(m.text).toContain('?v=nothing_yet');
   });
@@ -273,25 +273,25 @@ describe('check-in emails', () => {
 
 describe('question, outcome note, withdrawn and the sign-in code', () => {
   it('question: one gate or several, a button to the ask', () => {
-    const one = questionEmail({ asker_first: 'Lucía', ask_subject: 'Hospital procurement in Mexico, 20 min?', question: { type: 'price', text: 'What do you charge per hospital, per year?' }, gates: 1, ask_url: 'https://oki.example/ask/a_91xQ2', footer: asker });
-    expect(one.subject).toBe('One question about your ask: Hospital procurement in Mexico');
+    const one = questionEmail({ asker_first: 'Maya', ask_subject: 'Hospital procurement in the US, 20 min?', question: { type: 'price', text: 'What do you charge per hospital, per year?' }, gates: 1, ask_url: 'https://oki.example/ask/a_91xQ2', footer: asker });
+    expect(one.subject).toBe('One question about your ask: Hospital procurement in the US');
     expect(one.text).toContain('A member’s gate has one question before deciding: “What do you charge per hospital, per year?” Your answer goes only to the gate that asked, and it reruns once.');
     expect(one.text).toContain('Answer it:\nhttps://oki.example/ask/a_91xQ2#question');
-    const two = questionEmail({ asker_first: 'Lucía', ask_subject: 'X', question: { type: 'price', text: 'Q?' }, gates: 2, ask_url: 'https://oki.example/ask/a_1', footer: asker });
+    const two = questionEmail({ asker_first: 'Maya', ask_subject: 'X', question: { type: 'price', text: 'Q?' }, gates: 2, ask_url: 'https://oki.example/ask/a_1', footer: asker });
     expect(two.text).toContain('Your answer goes only to the gates that asked (2), and each reruns once.');
   });
 
   it('outcome note', () => {
-    const m = outcomeNoteEmail({ member_first: 'Ana', asker_first: 'Lucía', outcome: 'customer', reported_on: 'Nov 23', footer: member });
-    expect(m.subject).toBe('What came of your intro to Lucía');
-    expect(m.text.split('\n')[0]).toBe('Lucía reported a customer from your intro (Nov 23). Thanks for the 20 minutes.');
-    expect(m.preheader).toBe('Lucía reported a customer.');
+    const m = outcomeNoteEmail({ member_first: 'Priya', asker_first: 'Maya', outcome: 'customer', reported_on: 'Nov 23', footer: member });
+    expect(m.subject).toBe('What came of your intro to Maya');
+    expect(m.text.split('\n')[0]).toBe('Maya reported a customer from your intro (Nov 23). Thanks for the 20 minutes.');
+    expect(m.preheader).toBe('Maya reported a customer.');
   });
 
   it('withdrawn: nothing to do, and it still counted', () => {
-    const m = withdrawnEmail({ member_first: 'Ana', asker_first: 'Lucía', title: 'Hospital procurement in Mexico', withdrawn_on: 'Tue Nov 10', cap: 2, nth: 1, footer: member });
-    expect(m.subject).toBe('No longer needed: Hospital procurement in Mexico');
-    expect(m.text.split('\n')[0]).toBe('Lucía withdrew the ask “Hospital procurement in Mexico” on Tue Nov 10. Nothing to do. It still counted as 1 of your 2 this month.');
+    const m = withdrawnEmail({ member_first: 'Priya', asker_first: 'Maya', title: 'Hospital procurement in the US', withdrawn_on: 'Tue Nov 10', cap: 2, nth: 1, footer: member });
+    expect(m.subject).toBe('No longer needed: Hospital procurement in the US');
+    expect(m.text.split('\n')[0]).toBe('Maya withdrew the ask “Hospital procurement in the US” on Tue Nov 10. Nothing to do. It still counted as 1 of your 2 this month.');
   });
 
   it('code: the code in the subject and the first line; the Supabase template keeps {{ .Token }}', () => {
@@ -309,36 +309,36 @@ describe('SAMPLE emails from the visitor’s loop', () => {
     subject: 'Postgres p95 at 40M rows, 20 min?',
     parts: { challenge: 'Postgres p95 went from 40 ms to 900 ms past 40M rows', tried: 'Monthly partitions and a read replica', needs: 'Someone who has run Postgres past 100M rows', by: 'Nov 21', offers: 'Our load-test harness' },
     price: null,
-    asker: { name: 'Sample founder', first: 'the founder', company: 'Arrecife Data', stage: 'Seed', city: 'Mexico City' },
-    member: { you: false, name: 'Sofía Peralta', first: 'Sofía', line: 'Runs data infrastructure at a payments company in Mexico City.', scheduling: 'https://cal.com/sofia-peralta/20min' },
+    asker: { name: 'Sample founder', first: 'the founder', company: 'Tidewell Data', stage: 'Seed', city: 'San Francisco' },
+    member: { you: false, name: 'Hannah Kim', first: 'Hannah', line: 'Runs data infrastructure at a payments company in San Francisco.', scheduling: 'https://cal.com/hannah-kim/20min' },
     matched: 'Happy to talk about Postgres or Kafka at scale',
     cap: 2,
     nth: 2,
-    offeredAt: Date.parse('2026-11-09T16:00:00Z'),
-    introAt: Date.parse('2026-11-09T16:05:00Z'),
+    offeredAt: Date.parse('2026-11-09T18:00:00Z'),
+    introAt: Date.parse('2026-11-09T18:05:00Z'),
     question: null,
   };
 
   it('the intro names the member who held the offer and quotes the ask that was sent', () => {
-    const e = buildSampleEmail('intro', { loop, tz: 'America/Mexico_City' });
-    expect(e.message.subject).toBe('Intro: Sample founder (Arrecife Data) and Sofía Peralta');
-    expect(e.message.text).toContain('Sample founder and Sofía: you both said yes, so here is the intro.');
+    const e = buildSampleEmail('intro', { loop, tz: 'America/Los_Angeles' });
+    expect(e.message.subject).toBe('Intro: Sample founder (Tidewell Data) and Hannah Kim');
+    expect(e.message.text).toContain('Sample founder and Hannah: you both said yes, so here is the intro.');
     expect(e.message.text).toContain('The ask the founder approved:');
     expect(e.message.text).toContain('Needs:   20 minutes with someone who has run Postgres past 100M rows');
     expect(e.message.text).toContain('The rule that matched stays private unless the member turns it on.');
-    expect(e.to).toContain('sofia@example.com');
+    expect(e.to).toContain('hannah@example.com');
   });
 
   it('when the visitor’s own gate held it, the intro says you and has no link yet', () => {
-    const e = buildSampleEmail('intro', { loop: { ...loop, member: { you: true, name: 'You', first: 'you', line: 'the member whose gate accepted (your one line goes here when you join)', scheduling: null } }, tz: 'America/Mexico_City' });
-    expect(e.message.subject).toBe('Intro: Sample founder (Arrecife Data) and you');
+    const e = buildSampleEmail('intro', { loop: { ...loop, member: { you: true, name: 'You', first: 'you', line: 'the member whose gate accepted (your one line goes here when you join)', scheduling: null } }, tz: 'America/Los_Angeles' });
+    expect(e.message.subject).toBe('Intro: Sample founder (Tidewell Data) and you');
     expect(e.message.text).toContain('Your link for 20 minutes: the scheduling link you add when you join.');
   });
 
   it('the offer email keeps the loop’s ask id in every button', () => {
-    const e = buildSampleEmail('offer', { loop, tz: 'America/Mexico_City' });
+    const e = buildSampleEmail('offer', { loop, tz: 'America/Los_Angeles' });
     expect(e.message.text).toMatch(/\/o\/sample\?ask=sa_eng&choice=ok/);
-    expect(e.message.text).toContain('reply by Thu Nov 12, 10:00 CST');
+    expect(e.message.text).toContain('reply by Thu Nov 12, 10:00 PT');
   });
 
   it('every kind builds with and without a loop', () => {

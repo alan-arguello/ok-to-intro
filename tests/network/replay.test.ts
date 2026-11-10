@@ -23,7 +23,7 @@ vi.mock('@/lib/recorded', async (importOriginal) => {
     sampleNetworkRun: async (id: Parameters<typeof real.sampleNetworkRun>[0]) => {
       const { file, run } = await real.sampleNetworkRun(id);
       return {
-        file: { ...file, source: 'model' as const, recorded_at: '2026-11-09T09:00:00-06:00', model: 'claude-haiku-5-5', rubric_hash: 'test' },
+        file: { ...file, source: 'model' as const, recorded_at: '2026-11-09T09:00:00-08:00', model: 'claude-haiku-5-5', rubric_hash: 'test' },
         run: { ...run, members: run.members.map((m, i) => ({ ...m, ms: m.state === 'na' ? null : 20 + ((i * 37) % 160) })) },
       };
     },
@@ -51,7 +51,7 @@ async function timed(replay: boolean) {
 describe('a recorded (model) sample network', () => {
   it('replays the 39 members at their recorded latency, labelled recorded, SQL skips first', async () => {
     const events = await timed(true);
-    expect(events[0]?.e).toEqual({ event: 'plan', data: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'model', recorded_at: '2026-11-09T09:00:00-06:00' } });
+    expect(events[0]?.e).toEqual({ event: 'plan', data: { ask_id: 'sa_eng', network: 'sample', total: 40, sample_source: 'model', recorded_at: '2026-11-09T09:00:00-08:00' } });
     const cells = events.filter((x) => x.e.event === 'cell').map((x) => ({ c: x.e.data as FanoutCellEventSample, at: x.at }));
     expect(cells).toHaveLength(40);
     // Every sample member is labelled by the file's source; only the 40th cell (no playground rules) is hand-written.

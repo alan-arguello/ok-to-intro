@@ -246,7 +246,7 @@ export const DEFS = {
   d14: "count(distinct ask_id) from audit where action = 'checkin_answered' and detail->>'kind' = 'd14' and detail->>'role' = 'asker' ÷ intros",
   stopped: "count(*) from audit where action = 'gate_checked' and detail->>'verdict' <> 'accept' ÷ gate checks",
   perMember:
-    "median and max, over members with rules, of count(*) from audit where action = 'offer_delivered' since the 1st of the month in Mexico City, per member",
+    "median and max, over members with rules, of count(*) from audit where action = 'offer_delivered' since the 1st of the month in Pacific time, per member",
   overruns: 'count(*) of (member, month) pairs in offers with more offers than that member’s cap',
   overruled: "count(*) from audit where action = 'gate_checked' and detail->>'decided_by' = 'clause_check' ÷ gate checks",
   median: "percentile_cont(0.5) of (answered at − delivered at) over audit 'offer_ok', 'offer_answered' and 'offer_passed'",
@@ -266,7 +266,7 @@ export const DEFS = {
 
 /* ---------- formatting ---------- */
 
-/** “Nov 10, 14:02 CST” in the network's zone (server pages pass NETWORK_TZ; so do QA examples). */
+/** “Nov 10, 14:02 PT” in the network's zone (server pages pass NETWORK_TZ; so do QA examples). */
 export function fmtUpdated(iso: string, tz: string = NETWORK_TZ, withZone = true): string {
   const ms = Date.parse(iso);
   const p = zonedParts(ms, tz);
@@ -479,7 +479,7 @@ export function clauseExample(): ClauseExampleView {
   const cited = checkQuotes(rules, t.cited);
   const found = cited.filter((c) => c.found).length;
   return {
-    company: ask?.company ?? 'Mezquite Health',
+    company: ask?.company ?? 'Sagefen Health',
     what: 'the ask told the gate what to quote',
     quoted: cited.map((c) => ({ text: c.text, found: c.found })),
     found,

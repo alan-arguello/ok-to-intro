@@ -150,7 +150,7 @@ describe('scoring', () => {
         { actual: ['decline', 'decline', 'accept'], cited: [[], [], ['y']], baseline: 'accept' },
         { actual: ['decline', 'decline', 'decline'], cited: [[], [], []], baseline: 'decline' },
       ],
-      { ran_at: '2026-11-10T00:00:00Z', model: GATE_MODEL, rubric_hash: RUBRIC_HASH, header: 'h' },
+      { ran_at: '2026-11-10T02:00:00Z', model: GATE_MODEL, rubric_hash: RUBRIC_HASH, header: 'h' },
     );
     expect(s.rows).toEqual([
       { case_type: 'fits', label: 'Fits the rules', n: 1, runs: [1, 0, 1], baseline: 1 },

@@ -257,7 +257,7 @@ export function idempotencyKey(offerId: string, action: OfferAction): string {
 
 export interface OfferCardModel {
   title: string;
-  /** “Lucía Ferrer · Orvella Health · Seed · Guadalajara”. */
+  /** “Maya Bennett · Oakline Health · Seed · Chicago”. */
   from: string;
   /** The member's own words at the offsets code found, or null. */
   matched: string | null;
@@ -367,7 +367,7 @@ export interface OfferPageModel {
   rulesVersion: number | null;
   /** [already-acted]. */
   acted: TimeLabel | null;
-  /** [ok-sent] “We emailed you and Lucía at 21:16”. */
+  /** [ok-sent] “We emailed you and Maya at 21:16”. */
   okAt: TimeLabel | null;
   /** [expired] “on Thu Nov 12 at 21:04”. */
   expiredAt: TimeLabel | null;
@@ -375,7 +375,7 @@ export interface OfferPageModel {
   withdrawnOn: TimeLabel | null;
   /** [ok-sent] “with your scheduling link”. */
   scheduling: boolean;
-  /** True on the canonical SAMPLE card and the QA example (Ana's rules): the hand-written edits apply. */
+  /** True on the canonical SAMPLE card and the QA example (Priya's rules): the hand-written edits apply. */
   base: boolean;
   forms: OfferForms | null;
   /** The page was reached by a POST (focus moves to the result, which is announced). */

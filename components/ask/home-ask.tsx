@@ -31,7 +31,7 @@ const LIVE_STATES: readonly LiveState[] = ['ok', 'slow', 'down', 'budget', 'off'
 function untilLabel(raw: unknown): string | null {
   if (typeof raw !== 'string') return null;
   const ms = Date.parse(raw);
-  return Number.isNaN(ms) ? null : new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Mexico_City' });
+  return Number.isNaN(ms) ? null : new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/Los_Angeles' });
 }
 
 export function HomeAsk({ realLine, liveConfigured, real, qa }: HomeAskProps) {

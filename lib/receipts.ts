@@ -16,7 +16,7 @@
  * - Honest sources: a live run says `live` and its measured time; a recorded model run says `recorded` and its date;
  *   hand-written data says it was written by hand and carries no latency, cost or confidence (docs/CONTRACT.md §e).
  *
- * Pure: no server-only imports. Times are formatted in the network's zone (CST), because the MCP server can't know
+ * Pure: no server-only imports. Times are formatted in the network's zone (PT), because the MCP server can't know
  * the caller's; every time carries its zone abbreviation.
  */
 
@@ -203,13 +203,13 @@ export function errorText(...lines: (string | null | undefined | false)[]): stri
 
 /* ---------- small vocab ---------- */
 
-/** “21:16 CST” in the network's zone. */
+/** “21:16 PT” in the network's zone. */
 export function clockAt(iso: string | number): string {
   const ms = toMs(iso);
   return `${fmtClock(ms, NETWORK_TZ)} ${zoneAbbr(ms, NETWORK_TZ)}`;
 }
 
-/** “Thu Nov 12, 21:04 CST”. */
+/** “Thu Nov 12, 21:04 PT”. */
 export function whenAt(iso: string | number): string {
   return fmtWhen(toMs(iso), NETWORK_TZ);
 }
@@ -625,7 +625,7 @@ export function sendRealReceipt(v: RealSendView): string {
   return receipt({ head, blocks: [details, closing] });
 }
 
-/** “Already sent as a_91x at 21:04 CST.” */
+/** “Already sent as a_91x at 21:04 PT.” */
 export function alreadySentLine(askId: string, at: string): string {
   return `Already sent as ${askId} at ${clockAt(at)}.`;
 }
@@ -694,7 +694,7 @@ export interface MyAskRow {
   id: string;
   subject: string;
   outcome: AskerOutcome;
-  /** One short status phrase (BE2's askerStatusLine), e.g. “offered · reply by Thu Nov 12, 21:04 CST”. */
+  /** One short status phrase (BE2's askerStatusLine), e.g. “offered · reply by Thu Nov 12, 21:04 PT”. */
   status: string;
   /** The open question on that ask, when the outcome is `question` and it was read. */
   question?: { id: string; type: QuestionType; text: string } | null;
@@ -739,7 +739,7 @@ export function myAsksReceipt(rows: readonly MyAskRow[], opts: { example?: boole
   });
 }
 
-/** “Hospital procurement in Mexico, 20 min?” → “Hospital procurement in Mexico”. */
+/** “Hospital procurement in the US, 20 min?” → “Hospital procurement in the US”. */
 function bareTitle(subject: string): string {
   return String(subject || '').replace(/,\s*20 min\?\s*$/, '');
 }

@@ -118,7 +118,7 @@ describe('profile', () => {
   it('is null for a signed-in person without a members row, and a full profile with rules otherwise', async () => {
     expect(await getMemberProfile('00000000-0000-4000-8000-000000000000')).toEqual({ ok: true, member: null });
     expect(await getMemberProfile('not-a-uuid')).toEqual({ ok: true, member: null });
-    const id = await db.createMember(email('ana'), { rules: HEALTH, cap: 2 });
+    const id = await db.createMember(email('priya'), { rules: HEALTH, cap: 2 });
     const res = await getMemberProfile(id);
     expect(res.ok && res.member).toMatchObject({ id, status: 'on', rules: HEALTH, rules_version: 1, cap: 2, company: '', one_line: '' });
   });
@@ -198,7 +198,7 @@ describe('pause links', () => {
 
   it('pauses without sign-in, shows Undo for 24 hours, and Undo restores the state before', async () => {
     const id = await db.createMember(email('link'), { rules: ENGINEER });
-    await db.pg.query(`update public.members set name = 'Ana Ruiz' where id = $1`, [id]);
+    await db.pg.query(`update public.members set name = 'Priya Shah' where id = $1`, [id]);
     const url = await createPauseLink(id);
     expect(url).toMatch(/^http:\/\/localhost:3200\/pause\/[A-Za-z0-9_-]{22}$/);
     const token = tokenOf(url as string);
@@ -207,7 +207,7 @@ describe('pause links', () => {
     expect(stored.rows[0]?.token_hash).not.toContain(token);
 
     const view = await getPauseLinkView(token);
-    expect(view).toEqual({ ok: true, view: { member_name: 'Ana Ruiz', cap: 2, status: 'on', paused_until: null, can_undo: false } });
+    expect(view).toEqual({ ok: true, view: { member_name: 'Priya Shah', cap: 2, status: 'on', paused_until: null, can_undo: false } });
 
     const until = new Date(Date.now() + 14 * 86_400_000).toISOString();
     expect(await pauseByToken(token, until)).toEqual({ ok: true, paused_until: until });
@@ -259,13 +259,13 @@ describe('join, settings, turning on, delete', () => {
 
   it('saves settings and makes a rules version only when the text changed', async () => {
     const id = await db.createMember(email('settings'), { rules: HEALTH });
-    const base = { name: 'Ana Ruiz', one_line: 'Ran procurement for a public hospital network in Jalisco.', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara', scheduling_url: 'https://cal.com/ana-ruiz/20min', cap: 3, show_matched: true, rules: HEALTH };
+    const base = { name: 'Priya Shah', one_line: 'Ran procurement for a public hospital network in Illinois.', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', scheduling_url: 'https://cal.com/priya-shah/20min', cap: 3, show_matched: true, rules: HEALTH };
     const a = await saveMemberSettings(id, base);
     expect(a).toMatchObject({ ok: true, version: 1, rules_changed: false, status: 'on' });
     const b = await saveMemberSettings(id, { ...base, rules: `${HEALTH}\nNo asks about hiring.` });
     expect(b).toMatchObject({ ok: true, version: 2, rules_changed: true });
     const res = await getMemberProfile(id);
-    expect(res.ok && res.member).toMatchObject({ name: 'Ana Ruiz', company: 'Orvella Health', cap: 3, show_matched: true, scheduling_url: 'https://cal.com/ana-ruiz/20min' });
+    expect(res.ok && res.member).toMatchObject({ name: 'Priya Shah', company: 'Oakline Health', cap: 3, show_matched: true, scheduling_url: 'https://cal.com/priya-shah/20min' });
     expect(await saveMemberSettings(id, { ...base, scheduling_url: 'http://cal.com/x' })).toMatchObject({ ok: false, field: 'scheduling_url' });
     expect(await saveMemberSettings(id, { ...base, cap: 9 })).toMatchObject({ ok: false, field: 'cap' });
     expect(await saveMemberSettings(id, { ...base, rules: ' ' })).toMatchObject({ ok: false, field: 'rules' });
@@ -278,7 +278,7 @@ describe('join, settings, turning on, delete', () => {
     const id = await db.createUser(mail);
     const input = { name: '', one_line: '', company: '', stage: '', city: '', scheduling_url: '', cap: 2, show_matched: false, rules: ENGINEER };
     expect(await turnOnGate({ id, email: mail }, input)).toMatchObject({ ok: false, field: 'name' });
-    const on = await turnOnGate({ id, email: mail }, { ...input, name: 'Tomás Ibarra' });
+    const on = await turnOnGate({ id, email: mail }, { ...input, name: 'Marcus Reed' });
     expect(on).toMatchObject({ ok: true, version: 1, status: 'on' });
     expect(h.audit.map((a) => a.action)).toEqual(['member_joined', 'rules_saved', 'member_gate_on']);
   });
@@ -307,28 +307,28 @@ describe('the monthly ledger', () => {
   it('tallies the final decision per ask on the current rules lines', () => {
     const rules = HEALTH;
     const decisions = [
-      { ask_id: 'a1', attempt: 1, verdict: 'ask_back' as const, cited: cited('B2B founders selling to public hospitals or insurers in Mexico or Colombia', 'have a price'), created_at: at('2026-11-02T10:00:00Z') },
-      { ask_id: 'a1', attempt: 2, verdict: 'accept' as const, cited: cited('B2B founders selling to public hospitals or insurers in Mexico or Colombia', 'talked to 10+ buyers and have a price'), created_at: at('2026-11-02T11:00:00Z') },
-      { ask_id: 'a2', attempt: 1, verdict: 'ask_back' as const, cited: cited('talked to 10+ buyers'), created_at: at('2026-11-03T10:00:00Z') },
-      { ask_id: 'a3', attempt: 1, verdict: 'decline' as const, cited: cited('No asks to review a deck.'), created_at: at('2026-11-04T10:00:00Z') },
-      { ask_id: 'a4', attempt: 1, verdict: 'decline' as const, cited: [], created_at: at('2026-11-05T10:00:00Z') },
-      { ask_id: 'a5', attempt: 1, verdict: 'decline' as const, cited: [{ text: 'Happy to take any intro', found: false }], created_at: at('2026-11-05T11:00:00Z') },
-      { ask_id: 'a6', attempt: 1, verdict: null, cited: [], created_at: at('2026-11-06T10:00:00Z') },
-      { ask_id: 'a7', attempt: 1, verdict: 'decline' as const, cited: cited('No asks about crypto.'), created_at: at('2026-11-07T10:00:00Z') },
+      { ask_id: 'a1', attempt: 1, verdict: 'ask_back' as const, cited: cited('B2B founders selling to public hospitals or insurers in the US or Canada', 'have a price'), created_at: at('2026-11-02T12:00:00Z') },
+      { ask_id: 'a1', attempt: 2, verdict: 'accept' as const, cited: cited('B2B founders selling to public hospitals or insurers in the US or Canada', 'talked to 10+ buyers and have a price'), created_at: at('2026-11-02T13:00:00Z') },
+      { ask_id: 'a2', attempt: 1, verdict: 'ask_back' as const, cited: cited('talked to 10+ buyers'), created_at: at('2026-11-03T12:00:00Z') },
+      { ask_id: 'a3', attempt: 1, verdict: 'decline' as const, cited: cited('No asks to review a deck.'), created_at: at('2026-11-04T12:00:00Z') },
+      { ask_id: 'a4', attempt: 1, verdict: 'decline' as const, cited: [], created_at: at('2026-11-05T12:00:00Z') },
+      { ask_id: 'a5', attempt: 1, verdict: 'decline' as const, cited: [{ text: 'Happy to take any intro', found: false }], created_at: at('2026-11-05T13:00:00Z') },
+      { ask_id: 'a6', attempt: 1, verdict: null, cited: [], created_at: at('2026-11-06T12:00:00Z') },
+      { ask_id: 'a7', attempt: 1, verdict: 'decline' as const, cited: cited('No asks about crypto.'), created_at: at('2026-11-07T12:00:00Z') },
     ];
     const l = buildLedger(rules, decisions, 1, '2026-11-01');
     expect(l).toMatchObject({ reached_gate: 7, reached_you: 1, declined: 4, failed: 1, no_line: 2, old_lines: 1 });
     expect(l.tallies).toEqual(['1 let in', '1 let in · 1 question', 'not used this month', '1 kept out']);
-    expect(l.example).toBe('B2B founders selling to public hospitals or insurers in Mexico or Colombia');
+    expect(l.example).toBe('B2B founders selling to public hospitals or insurers in the US or Canada');
     for (const r of l.ranges) expect(rules.slice(r.start, r.end).length).toBeGreaterThan(3);
     expect(buildLedger(rules, [], 0, '2026-11-01')).toMatchObject({ reached_gate: 0, tallies: null, example: null });
   });
 
-  it('reads the member’s own decisions for this Mexico City month and the cap used', async () => {
+  it('reads the member’s own decisions for this Pacific-time month and the cap used', async () => {
     const asker = await db.createMember(email('asker'), { rules: ENGINEER });
     const id = await db.createMember(email('ledger'), { rules: HEALTH });
     const month = capMonth(new Date());
-    await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L1x', $1, 'raw', '{}'::jsonb, 'Hospital procurement in Mexico', 'open')`, [asker]);
+    await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L1x', $1, 'raw', '{}'::jsonb, 'Hospital procurement in the US', 'open')`, [asker]);
     await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L2x', $1, 'raw', '{}'::jsonb, 'Old ask', 'closed')`, [asker]);
     await db.pg.query(`insert into public.ask_members (ask_id, member_id, position) values ('a_L1x', $1, 0), ('a_L2x', $1, 0)`, [id]);
     await db.pg.query(
@@ -415,7 +415,7 @@ describe('email-code sign-in', () => {
 
   it('validates, sends a code, and limits codes per email to 3 in 15 minutes', async () => {
     const { auth, calls } = fakeAuth();
-    expect(await requestSignInCode(auth, { email: 'ana@example', ip: '203.0.113.9' })).toMatchObject({ ok: false, error: 'invalid_email' });
+    expect(await requestSignInCode(auth, { email: 'priya@example', ip: '203.0.113.9' })).toMatchObject({ ok: false, error: 'invalid_email' });
     const mail = email('otp');
     for (let i = 0; i < 3; i++) expect(await requestSignInCode(auth, { email: mail, ip: '203.0.113.9' })).toMatchObject({ ok: true, resend_in_s: 60 });
     const limited = await requestSignInCode(auth, { email: mail, ip: '203.0.113.9' });

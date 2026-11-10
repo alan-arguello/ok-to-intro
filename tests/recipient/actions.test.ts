@@ -61,31 +61,31 @@ const realOffer = (): OfferView => ({
   offer_id: 'o_3Fp9kL',
   state: 'passed',
   sample: false,
-  title: 'Hospital procurement in Mexico',
-  subject: 'Hospital procurement in Mexico, 20 min?',
-  asker: { name: 'Lucía Ferrer', first: 'Lucía', company: 'Orvella Health', stage: 'Seed', city: 'Guadalajara' },
-  matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in Mexico or Colombia.' },
+  title: 'Hospital procurement in the US',
+  subject: 'Hospital procurement in the US, 20 min?',
+  asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
+  matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.' },
   rules_version: 3,
-  topic: 'Hospital procurement, Mexico',
+  topic: 'Hospital procurement, US',
   scheduling_url: null,
   facts: [...OFFER_SAMPLE.facts],
   cap: 2,
   nth: 1,
-  offered_at: '2026-11-09T21:04:00-06:00',
-  expires_at: '2026-11-12T21:04:00-06:00',
-  responded_at: '2026-11-09T21:16:00-06:00',
+  offered_at: '2026-11-09T21:04:00-08:00',
+  expires_at: '2026-11-12T21:04:00-08:00',
+  responded_at: '2026-11-09T21:16:00-08:00',
   answer: null,
   no_reason: 'not_my_area',
   paused_until: null,
   ask_withdrawn_at: null,
-  member_first: 'Ana',
+  member_first: 'Priya',
 });
 
 const csrfFor = (scope: string) => csrfToken(scope) as string;
 
 beforeEach(() => {
   vi.clearAllMocks();
-  session.getUser.mockResolvedValue({ ok: true, user: { id: 'u-ana', email: 'ana@example.com' } });
+  session.getUser.mockResolvedValue({ ok: true, user: { id: 'u-priya', email: 'priya@example.com' } });
 });
 afterEach(() => vi.unstubAllEnvs());
 
@@ -147,9 +147,9 @@ describe('offerRespond', () => {
 
   it('an offer id is the signed-in member’s; signed out goes to /join; no Supabase renders not-set-up', async () => {
     offers.respondToOffer.mockResolvedValue({ ok: true, offer: realOffer(), repeated: false });
-    const scope = 'o:i:o_3Fp9kL:u-ana';
+    const scope = 'o:i:o_3Fp9kL:u-priya';
     expect(await landing(offerRespond(form({ ref: 'o_3Fp9kL', csrf: csrfFor(scope), mode: 'real', action: 'ok' })))).toBe('/o/o_3Fp9kL?done=ok');
-    expect(offers.respondToOffer.mock.calls[0]?.[0]).toEqual({ offer_id: 'o_3Fp9kL', member_id: 'u-ana' });
+    expect(offers.respondToOffer.mock.calls[0]?.[0]).toEqual({ offer_id: 'o_3Fp9kL', member_id: 'u-priya' });
 
     session.getUser.mockResolvedValueOnce({ ok: false, reason: 'signed_out' });
     session.requireMember.mockImplementationOnce(async () => {
@@ -186,26 +186,26 @@ describe('offerReason and offerFollow (the private Why after a No)', () => {
   });
 
   it('Add to my rules appends the one templated line; Undo removes exactly that line', async () => {
-    offers.memberForOffer.mockResolvedValue({ member_id: 'u-ana' });
+    offers.memberForOffer.mockResolvedValue({ member_id: 'u-priya' });
     offers.getOffer.mockResolvedValue({ found: true, offer: realOffer() });
     member.appendRuleLine.mockResolvedValue({ ok: true, version: 4 });
     expect(await landing(offerFollow(real({ step: 'add', why: 'area' })))).toBe(`/o/${TOKEN}?done=no&why=area&step=applied`);
-    expect(member.appendRuleLine).toHaveBeenCalledWith('u-ana', 'No asks about hospital procurement.', 'offer_edit');
+    expect(member.appendRuleLine).toHaveBeenCalledWith('u-priya', 'No asks about hospital procurement.', 'offer_edit');
 
     const rules = `${PRESETS[1]!.rules}\nNo asks about hospital procurement.`;
     member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules, rules_version: 4 } });
     member.saveRules.mockResolvedValue({ ok: true, version: 5 });
     expect(await landing(offerFollow(real({ step: 'undo', why: 'area' })))).toBe(`/o/${TOKEN}?done=no&why=area&step=undone`);
-    expect(member.saveRules).toHaveBeenCalledWith('u-ana', PRESETS[1]!.rules, 'offer_edit');
+    expect(member.saveRules).toHaveBeenCalledWith('u-priya', PRESETS[1]!.rules, 'offer_edit');
   });
 
   it('No time this month: cap 1 or a pause until the next cap month; Other: a private note', async () => {
-    offers.memberForOffer.mockResolvedValue({ member_id: 'u-ana' });
+    offers.memberForOffer.mockResolvedValue({ member_id: 'u-priya' });
     member.setCap.mockResolvedValue({ ok: true });
     member.pauseMember.mockResolvedValue({ ok: true, paused_until: null });
     offers.setNoReason.mockResolvedValue({ ok: true });
     expect(await landing(offerFollow(real({ step: 'cap', why: 'busy' })))).toBe(`/o/${TOKEN}?done=no&why=busy&step=cap`);
-    expect(member.setCap).toHaveBeenCalledWith('u-ana', 1);
+    expect(member.setCap).toHaveBeenCalledWith('u-priya', 1);
     expect(await landing(offerFollow(real({ step: 'pause', why: 'busy' })))).toBe(`/o/${TOKEN}?done=no&why=busy&step=pause`);
     const until = member.pauseMember.mock.calls[0]?.[1] as string;
     expect(new Date(until).getTime()).toBeGreaterThan(Date.now());

@@ -40,7 +40,7 @@ describe('/board page', () => {
   it('renders the counts it read', async () => {
     h.result = { ok: true, snapshot: EXAMPLE_SNAPSHOT, asOfKind: 'checkpoint' };
     const out = await render();
-    expect(out).toContain('Last update Nov 10, 14:02 CST.');
+    expect(out).toContain('Last update Nov 10, 14:02 PT.');
     expect(out).toContain('231 of 254');
   });
 

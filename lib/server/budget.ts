@@ -11,9 +11,9 @@ import { MODELS } from '@/lib/site';
  *
  * 1. Anthropic's own stops. A 429 whose error code is `enforced_spend_limit_reached` (the tier cap, no retry-after),
  *    a 400 saying the workspace reached its usage limits, or a 402 billing error. Never retried: live checks pause
- *    until the 1st of next month (Mexico City), presets keep their recorded run.
+ *    until the 1st of next month (Pacific time), presets keep their recorded run.
  * 2. The app's daily dollar cap (DAILY_BUDGET_USD, default $10, below the workspace limit): measured from token
- *    usage after every call, summed per Mexico City day across instances in `public.model_usage`
+ *    usage after every call, summed per Pacific-time day across instances in `public.model_usage`
  *    (`add_model_usage`). At the cap, live checks pause until the next local midnight.
  *
  * A pause is held in memory and, when the database is configured, in `public.app_state` (key `live_pause`), so every
@@ -98,20 +98,20 @@ export function retryAfterSeconds(headers: Headers | null | undefined, now: numb
  * Dates
  * ========================================================================== */
 
-/** `YYYY-MM-DD`, the Mexico City day (model_usage.day). */
+/** `YYYY-MM-DD`, the Pacific-time day (model_usage.day). */
 export function localDay(now: number = Date.now()): string {
   const p = zonedParts(now, NETWORK_TZ);
   return `${p.year}-${String(p.month).padStart(2, '0')}-${String(p.day).padStart(2, '0')}`;
 }
 
-/** The next local midnight in Mexico City (when the daily cap resets). */
+/** The next local midnight in Pacific time (when the daily cap resets). */
 export function nextLocalMidnight(now: number = Date.now()): Date {
   const p = zonedParts(now, NETWORK_TZ);
   const d = new Date(Date.UTC(p.year, p.month - 1, p.day + 1));
   return new Date(zonedTimeToUtc(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), 0, 0, NETWORK_TZ));
 }
 
-/** The 1st of next month, local midnight in Mexico City (when an Anthropic monthly limit is assumed to reset). */
+/** The 1st of next month, local midnight in Pacific time (when an Anthropic monthly limit is assumed to reset). */
 export function nextMonthStartFrom(now: number = Date.now()): Date {
   return nextMonthStart(capMonth(now));
 }
@@ -283,7 +283,7 @@ async function readTotal(day: string, now: number): Promise<void> {
   }
 }
 
-/** Best estimate of today's network-wide spend in USD (Mexico City day). */
+/** Best estimate of today's network-wide spend in USD (Pacific-time day). */
 export async function spentToday(now: number = Date.now()): Promise<number> {
   rollDay(now);
   const day = local.day;

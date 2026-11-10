@@ -25,8 +25,8 @@ describe('the /agents examples on hand-written recordings', () => {
 
   it('show the hand-written verdicts: the Engineer quotes and question, the Health price question', () => {
     const tryText = examples.try_rules[0] as string;
-    expect(tryText).toContain(' 1 reach    Arrecife Data    “founders about Postgres, queues or LLM evals in production” +1');
-    expect(tryText).toContain(' 6 ask      Pinole Labs      question: How many jobs a day do you run, and what share gets dropped?');
+    expect(tryText).toContain(' 1 reach    Tidewell Data    “founders about Postgres, queues or LLM evals in production” +1');
+    expect(tryText).toContain(' 6 ask      Fernby Labs      question: How many jobs a day do you run, and what share gets dropped?');
     const health = transcripts().ask.rows.map((r) => r.text);
     expect(health).toContain('ok-to-intro · ask sa_health · sent · SAMPLE · example results');
     expect(health).toContain('40 members · 2 accepted · 1 question · 30 declined');

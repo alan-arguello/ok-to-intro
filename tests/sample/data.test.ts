@@ -111,7 +111,7 @@ describe('S4 suggested edits (check-data.mjs §4)', () => {
   const askWords = words(SAMPLE_ASKS.find((a) => a.id === 'a02')!.text).join(' ');
   for (const [k, e] of Object.entries(OFFER_SAMPLE.suggested_edits)) {
     it(`${k}: additive, never 6+ words from the ask, never a company name, honest expected line`, () => {
-      expect(norm(health.rules).includes(norm(e.context)), 'context is one of Ana’s rules').toBe(true);
+      expect(norm(health.rules).includes(norm(e.context)), 'context is one of Priya’s rules').toBe(true);
       const w = words(e.add);
       for (let i = 0; i + 6 <= w.length; i++) expect(askWords.includes(w.slice(i, i + 6).join(' '))).toBe(false);
       for (const a of SAMPLE_ASKS) expect(norm(e.add).includes(norm(a.company))).toBe(false);

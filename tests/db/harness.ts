@@ -10,9 +10,9 @@
  *
  * Usage (any owner's tests may import this file; it is frozen with the foundation):
  *   const db = await createTestDb();
- *   const ana = await db.createUser('ana@example.com');
- *   await db.asService((tx) => tx.query('select public.reserve_slot($1)', [ana]));
- *   const rows = await db.asUser(ana, (tx) => tx.query('select * from public.members'));
+ *   const priya = await db.createUser('priya@example.com');
+ *   await db.asService((tx) => tx.query('select public.reserve_slot($1)', [priya]));
+ *   const rows = await db.asUser(priya, (tx) => tx.query('select * from public.members'));
  *   await db.close();
  *
  * PGlite is one connection in WASM: it proves logic, constraints and RLS, not concurrency. The cap race test

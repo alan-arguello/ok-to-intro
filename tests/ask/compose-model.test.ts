@@ -250,7 +250,7 @@ describe('the vague rule the page runs while live checks are off', () => {
       ...PRESETS.flatMap((p) => [SAMPLE_NETWORK_ASKS[p].vague, `  ${SAMPLE_NETWORK_ASKS[p].vague.toUpperCase()}  `, SAMPLE_NETWORK_ASKS[p].partial, SAMPLE_NETWORK_ASKS[p].complete]),
       'Need help please',
       'Need intros to investors',
-      'Need intros to investors in Mexico City soon',
+      'Need intros to investors in Pacific time soon',
       'Our checkout drops 4% of card payments at 3DS. Tried two processors.',
       'one two three four five',
       'one two three four five six',

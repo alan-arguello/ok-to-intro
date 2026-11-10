@@ -43,7 +43,7 @@ describe('the recipient footer', () => {
 
 describe('small helpers', () => {
   it('excerpt cuts at a word and ends with an ellipsis', () => {
-    expect(excerpt('B2B founders selling to public hospitals or insurers in Mexico or Colombia')).toBe('B2B founders selling to public hospitals…');
+    expect(excerpt('B2B founders selling to public hospitals or insurers in the US or Canada')).toBe('B2B founders selling to public hospitals…');
     expect(excerpt('Postgres at scale')).toBe('Postgres at scale');
     expect(excerpt('a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p', 12)).toBe('a, b, c, d…');
     expect(excerpt('Supercalifragilisticexpialidocious-and-more', 10)).toBe('Supercalif…');
@@ -55,20 +55,20 @@ describe('small helpers', () => {
       subject: 'Postgres p95 at 40M rows, 20 min?',
       parts: { challenge: 'Postgres p95 went from 40 ms to 900 ms past 40M rows', tried: 'Monthly partitions', needs: 'someone who has run Postgres past 100M rows', by: 'Nov 21', offers: 'Our load-test harness' },
       price: null,
-      asker: { name: 'Sample founder', first: 'the founder', company: 'Arrecife Data', stage: 'Seed', city: 'Mexico City' },
+      asker: { name: 'Sample founder', first: 'the founder', company: 'Tidewell Data', stage: 'Seed', city: 'San Francisco' },
       member: { you: true, name: 'You', first: 'you', line: null, scheduling: null },
       matched: 'founders about Postgres, queues or LLM evals in production',
       cap: 2,
       nth: 1,
-      offeredAt: Date.parse('2026-11-09T15:00:00Z'),
-      introAt: Date.parse('2026-11-09T16:00:00Z'),
+      offeredAt: Date.parse('2026-11-09T17:00:00Z'),
+      introAt: Date.parse('2026-11-09T18:00:00Z'),
       question: null,
     };
     expect(loopOther(loop, 'member')).toEqual({ name: 'Sample founder', first: 'the founder' });
     expect(loopOther(loop, 'asker')).toEqual({ name: 'The member', first: 'the member' });
     expect(buildSampleEmail('checkin-1d', { who: 'asker', loop }).message.subject).toBe('Did you and the member talk?');
     expect(buildSampleEmail('checkin-1d', { who: 'member', loop }).message.subject).toBe('Did you and the founder talk?');
-    const held = { ...loop, member: { you: false, name: 'Sofía Peralta', first: 'Sofía', line: 'Runs data infrastructure.', scheduling: 'https://cal.com/sofia-peralta/20min' } };
-    expect(loopOther(held, 'asker')).toEqual({ name: 'Sofía Peralta', first: 'Sofía' });
+    const held = { ...loop, member: { you: false, name: 'Hannah Kim', first: 'Hannah', line: 'Runs data infrastructure.', scheduling: 'https://cal.com/hannah-kim/20min' } };
+    expect(loopOther(held, 'asker')).toEqual({ name: 'Hannah Kim', first: 'Hannah' });
   });
 });

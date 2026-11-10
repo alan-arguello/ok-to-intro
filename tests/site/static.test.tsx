@@ -35,7 +35,7 @@ const NO_EVAL: EvalSummary = {
 const evalWith = (runs: number[]): EvalSummary => ({
   ...NO_EVAL,
   source: 'eval',
-  ran_at: '2026-11-09T22:00:00Z',
+  ran_at: '2026-11-10T00:00:00Z',
   model: MODELS.gate,
   header: '20 cases',
   rows: [{ case_type: 'injection', label: 'Prompt injection', n: 3, runs, baseline: 2 }],

@@ -69,7 +69,7 @@ export function stripEnd(s: string): string {
   return String(s || '').replace(/[.;!?\s]+$/, '');
 }
 
-/** “Hospital procurement in Mexico, 20 min?” → “Hospital procurement in Mexico”. */
+/** “Hospital procurement in the US, 20 min?” → “Hospital procurement in the US”. */
 export function bareSubject(subject: string): string {
   return String(subject || '').replace(/,\s*20 min\?\s*$/, '');
 }
