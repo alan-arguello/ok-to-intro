@@ -24,7 +24,7 @@ export function sourceLine(run: Run): string {
 }
 
 /**
- * Step 2, “12 asks from other founders”: one summary sentence, the source line, any notice, then the rows. When
+ * Below, “Active asks from founders”: one summary sentence, the source line, any notice, then the rows. When
  * the rules changed since the run, the rows go back to unchecked (an answer for other rules would mislead).
  */
 export function ListSection({ s, actions }: { s: PgState; actions: ListActions }) {

@@ -82,8 +82,9 @@ describe('static HTML (what the CDN serves)', () => {
     const html = renderToString(<Playground qa={false} liveConfigured={false} />);
     expect(html).toContain('<h1 class="h1">What would you agree to help with?</h1>');
     expect(html).toContain('You’re the one being asked. Write what you’d agree to help with; see which asks would reach you.');
-    expect(html).toContain('1. Your rules');
-    expect(html).toContain('2. 12 asks from other founders');
+    expect(html).toContain('What I can help with');
+    expect(html).toContain('Active asks from founders');
+    expect(html).not.toContain('grid-rail');
     expect(html.match(/class="row pg-row"/g)).toHaveLength(12);
     expect(html.match(/data-primary=""/g)).toHaveLength(1);
     expect(html.match(/btn--primary/g)).toHaveLength(1);

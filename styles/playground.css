@@ -1,21 +1,20 @@
-/* OK to Intro · styles/playground.css · /rules (“Be asked”): two steps, your rules and the 12 asks.
+/* OK to Intro · styles/playground.css · /rules (“Be asked”): one column, your rules on top and the 12 asks below.
    Prefixed `pg-` classes only; colours only through tokens (app/tokens.css). */
 
 .pg-head .pg-lede { max-width: 680px; }
 .pg-step { margin: 0; }
 
-/* Step 1: the rules panel */
+/* The rules panel */
 .pg-rail > * + * { margin-top: var(--s5); }
 .pg-presets { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s2); }
 @media (max-width: 400px) { .pg-presets .chip { padding: 0 12px; } .pg-presets { gap: 6px; } }
 .pg-textarea { min-height: 150px; }
 .pg-cap-row { display: flex; }
 .pg-run { width: 100%; min-height: 44px; }
-@media (min-width: 961px) {
-  .pg-rail { max-height: calc(100vh - var(--header-h) - 32px); overflow-y: auto; overscroll-behavior: contain; }
-}
+.pg-main { margin-top: var(--s8); }
+@media (min-width: 761px) { .pg-run { width: auto; min-width: 260px; } .pg-textarea { min-height: 132px; } }
 
-/* Step 2: the asks */
+/* The asks */
 .pg-main__head { align-items: center; }
 .pg-step:focus { outline: none; }
 .pg-summary { margin-top: var(--s2); font-size: var(--fs-body); line-height: 1.45; color: var(--ink-2); }

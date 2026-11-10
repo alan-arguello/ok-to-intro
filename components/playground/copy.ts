@@ -6,8 +6,8 @@
 export const H1 = 'What would you agree to help with?';
 export const LEDE = 'You’re the one being asked. Write what you’d agree to help with; see which asks would reach you.';
 
-export const STEP_RULES = '1. Your rules';
-export const STEP_ASKS = '2. 12 asks from other founders';
+export const STEP_RULES = 'What I can help with';
+export const STEP_ASKS = 'Active asks from founders';
 export const RUN = 'See what reaches you';
 export const BACK_TO_ASK = 'Need help yourself? Write an ask ›';
 

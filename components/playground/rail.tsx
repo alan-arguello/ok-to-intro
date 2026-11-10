@@ -20,7 +20,7 @@ export interface RailActions {
   run(): void;
 }
 
-/** Step 1, “Your rules”: three examples to start from, the textarea, the monthly limit and the page's one button. */
+/** On top, “What I can help with”: three examples to start from, the textarea, the monthly limit and the page's one button. */
 export function Rail({ s, actions }: { s: PgState; actions: RailActions }) {
   const empty = isEmpty(s);
   const over = isOver(s);
@@ -32,7 +32,7 @@ export function Rail({ s, actions }: { s: PgState; actions: RailActions }) {
   const progress = s.run && s.plan ? s.plan.filter((id) => s.run?.gates[id] || s.run?.errors[id]).length : 0;
 
   return (
-    <section className="panel is-sticky pg-rail" aria-labelledby="pg-rail-title">
+    <section className="panel pg-rail" aria-labelledby="pg-rail-title">
       <h2 className="h2 pg-step" id="pg-rail-title">
         {STEP_RULES}
       </h2>

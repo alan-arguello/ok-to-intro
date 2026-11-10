@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * `/rules` (“Be asked”): two steps. Left, your rules and a monthly limit; right, 12 asks from other founders and
+ * `/rules` (“Be asked”): one stacked column. On top, your rules and a monthly limit; below, 12 asks from other founders and
  * whether each would reach you. A client island over a static page: the server renders the default state (the
  * first example's rules, 12 unchecked asks); after hydration the engine restores the tab's rules, applies a QA
  * state, reads /api/health and takes over.
@@ -93,13 +93,13 @@ export function Playground({ qa, liveConfigured }: PlaygroundProps) {
   );
 
   return (
-    <div className="container">
+    <div className="container container--col">
       <header className="page-head pg-head">
         <h1 className="h1">{H1}</h1>
         <p className="lede pg-lede">{LEDE}</p>
       </header>
 
-      <div className="grid-rail pg-grid">
+      <div className="pg-grid">
         <Rail s={s} actions={actions} />
         <ListSection s={s} actions={actions} />
       </div>
