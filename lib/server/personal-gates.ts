@@ -20,8 +20,8 @@ import { capMonth, NETWORK_TZ, zonedTimeToUtc } from '@/lib/oti/time';
 import { getAdminClient } from '@/lib/supabase/admin';
 import type { Json, PersonalGateAskRow, PersonalGateRow } from '@/lib/supabase/database.types';
 import type { QuestionType } from '@/lib/types';
-import { runGate } from './gate';
 import { hashOwnerToken, newOwnerToken, ownerTokenMatches } from './gate-token';
+import { runPersonalGate } from './personal-gate-prompt';
 import { checkRateLimit } from './ratelimit';
 
 /**
@@ -136,6 +136,18 @@ export async function getPublicGate(slug: string): Promise<{ ok: true; gate: Pub
   return { ok: true, gate: { id, slug: res.gate.slug, name, headline, cap } };
 }
 
+/** What the share image may show: name and headline, read alone (never the rules, the cap or the token hash). Never throws. */
+export async function getGateCard(slug: string): Promise<{ name: string; headline: string | null } | null> {
+  const client = db();
+  if (!client || !isValidSlug(slug)) return null;
+  try {
+    const { data, error } = await client.from('personal_gates').select('name, headline').eq('slug', slug).abortSignal(timeout()).maybeSingle();
+    return error || !data ? null : { name: data.name, headline: data.headline };
+  } catch {
+    return null;
+  }
+}
+
 /** The UTC instant this cap month started (local midnight on the 1st, Pacific time). */
 export function monthStart(now: Date = new Date()): Date {
   const m = capMonth(now);
@@ -204,7 +216,7 @@ export async function submitGateAsk(slug: string, input: unknown, rateKey: strin
   if (!limit.ok) return { ok: false, reason: 'rate_limited' };
 
   const a = parsed.data;
-  const result = await runGate({
+  const result = await runPersonalGate({
     rules: gate.rules,
     ask: { text: a.text },
     answers: a.followup ? [{ type: a.followup.type as QuestionType, text: a.followup.answer }] : undefined,

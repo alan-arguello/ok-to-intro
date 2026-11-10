@@ -12,6 +12,8 @@
   .how-step { grid-template-columns: 1.5rem minmax(0, 1fr); }
   .how-by { grid-column: 2; white-space: normal; flex-wrap: wrap; }
 }
+.how-gate { margin-top: var(--s4); }
+.how-gate__link { margin-top: var(--s2); }
 .how-meta { margin-top: var(--s4); }
 .how-meta > * + * { margin-top: var(--s1); }
 

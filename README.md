@@ -1,121 +1,90 @@
 # OK to Intro
 
-A founder asks a network of members for one specific person. Each member's gate, a small model running rules that
-member wrote, checks the ask, and only asks that pass the gate and fit under the member's monthly cap ever reach them.
+A way to ask a busy person for one specific thing: the ask is checked against rules that person wrote, and it reaches
+them only if their own words let it through. Live demo: https://ok-to-intro.vercel.app
 
 > Independent project, not affiliated with Y Combinator.
 
-## How it works
+## The two sides
 
-- **The gate.** Every member writes plain-text rules (“founders about churn, activation or support load”).
-  For each ask, `claude-haiku-5-5` returns a structured verdict: accept, decline or ask back one short question.
-  It must quote the line of the rules it relied on. The ask is passed to the model as quoted data, never as
-  instructions.
-- **The clause check.** Code looks for every quote in the member's rules with one shared finder
-  (`lib/oti/clause.ts`: NFKC, straight quotes, collapsed whitespace, case-folded, one contiguous span, widened to
-  whole words). A quote that isn't there turns the verdict into a decline (“decided by code”). The read view
-  highlights the member's own words at the offsets the server found.
-- **Caps.** Each member sets how many asks a month they'll take (1–5). Postgres enforces it: `create_offer` calls
-  `reserve_slot` under a row lock in the same transaction, so two asks can't take a member's last slot.
-- **One person at a time.** Of the members who accept, the one with the most unused cap gets the offer. They have
-  72 hours to say OK, answer in 2 lines, or pass. A pass is private. The next accept gets the ask, and the asker
-  only learns at the next 09:00/21:00 checkpoint, so a pass can't be told from an expiry. Names are exchanged only
-  after an OK, in one intro email to both people.
-- **The compiler.** `/` (and `/ask`) turns a founder's text into 5 parts (the challenge, what they tried, who they need, by
-  when, what they offer) with `claude-sonnet-5-5`. Each part is marked found, suggested or missing; facts are never
-  invented. Vague asks and YC-application asks are refused.
-- **Check-ins.** At +1 day both people say whether the call happened and how useful it was. At +14 days the asker
-  reports the outcome. Those answers are the only source of the public board's outcome counts.
-- **Fail closed.** A gate that fails counts as “not checked”, never as an accept. If more than 1 in 5 gates fail, the
-  ask offers nothing.
+**Ask** (`/`). You write what you need: a short call, an intro, an answer or one concrete action.
 
-## Architecture
+- The compiler (one model call) splits the ask into 5 parts: the challenge, what you tried, who you need, a deadline
+  and an offer back. It never invents facts: code checks each part against your message; a missing part is asked.
+- Each member's gate is one small-model call. It reads the ask against the rules that member wrote and must quote
+  the rule line it used. Code then checks that the quote is in the rules; if it is not, the answer is a decline.
+- Each member sets a monthly cap. An ask that matches after the cap is reached does not reach them.
+- One person at a time: one member who matched sees the ask. A no, or 72 quiet hours, moves it to the next one.
 
-- Next.js 16 (App Router, Turbopack), React 19, TypeScript strict, meant for Vercel (Node runtime).
-- Supabase Postgres with RLS on every table and email-code (OTP) sign-in. All writes go through the service role
-  and `net_*` SQL functions (`supabase/migrations`). The asker serializer (`lib/server/serializer.ts`) is the only
-  path from internal state to an asker.
-- Anthropic: `claude-haiku-5-5` for gates, `claude-sonnet-5-5` for the compiler, `claude-opus-5-5` only in offline
-  scripts. A daily budget and per-address rate limits are enforced in the app.
-- Resend for email (idempotency keys, scheduled check-ins), with a daily Vercel Cron as the backstop.
-- `/mcp` is a stateless MCP server (Streamable HTTP, `mcp-handler`). `plugins/ok-to-intro` is a Claude Code
-  plugin with an `/ask` skill and a SessionStart hook.
-- `/` (the ask composer), `/rules` (the playground), `/how`, `/privacy` and `/agents` are static; `/board` regenerates every 60 s; token pages (`/o`, `/c`,
-  `/pause`) work without JavaScript.
+On `/rules` (“Be asked”) you write your own rules and a monthly limit, and see which of 12 sample asks would
+reach you.
 
-More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (layout, flows, decisions) and
-[docs/CONTRACT.md](docs/CONTRACT.md) (interfaces, event shapes, privacy and honesty rules).
+**Personal gate link** (`/g/<slug>`). From `/rules` you can save your rules and cap as a public link.
 
-## Run locally
+- Anyone can send an ask to the link. It is checked against your rules and your monthly cap before it reaches you.
+- Asks that pass land in a private inbox, opened with an unguessable link. Only a SHA-256 of its key is stored.
+- No accounts and no email. You read the inbox and reply to the asker yourself.
+- Deleting the gate from the inbox deletes every ask sent to it.
 
-Requires Node 22.22+ or 24.15+ and npm.
+## What is fictional and what is real
 
-```sh
-npm install
-cp .env.example .env.local   # optional
-npm run dev                  # http://localhost:3200
-```
+- Fictional: the 40 members, their rules and companies, and the sample asks (`lib/sample`). In the demo, nothing is
+  sent to anyone.
+- Real model runs: the recorded example runs in `data/recorded`, labelled with their date and model. A row labelled
+  “live” came from a model call made for that visitor.
+- Real and stored in Postgres: personal gates and the asks sent to them (name, email, text, verdict). See `/privacy`.
 
-Every page works without keys: the SAMPLE flows run fully, and every REAL feature shows its own “not set up on this
-instance” state. Features switch on when their variables appear.
+## Limits
+
+- The gate checks what an ask says. It cannot detect lies.
+- Losing the private inbox link loses access to that inbox. It cannot be recovered.
+- Nothing is emailed: an accepted ask waits in the inbox until its owner opens it.
+- Live checks stop at a daily model budget and at per-address rate limits.
+
+## Stack and models
+
+- Next.js 16 (App Router), React 19, TypeScript. Plain CSS with tokens in `app/tokens.css`.
+- Postgres on Supabase, reached only from the server with the service role (`supabase/migrations`).
+- Anthropic API: gates run on `claude-haiku-5-5` and the compiler on `claude-sonnet-5-5`, both with a fixed JSON
+  schema. `claude-opus-5-5` is used only offline, to draft sample data and eval candidates.
+- zod for input validation, Vitest for tests (PGlite for the SQL), Vercel for hosting.
 
 ## Environment variables
 
-| Variable | Turns on |
-|---|---|
-| `NEXT_PUBLIC_SITE_URL` | The origin used for every absolute URL, email link, install command and receipt |
-| `ANTHROPIC_API_KEY` | Live gates on the playground, the live compiler, your own gate in the SAMPLE fan-out |
-| `DAILY_BUDGET_USD` | The app's daily model budget (default 10) |
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Sign-in, Your gate, the board |
-| `TOKEN_HMAC_SECRET` | Email-link and Claude Code tokens (only HMACs are stored) |
-| `RESEND_API_KEY`, `EMAIL_FROM` | Email. The REAL network needs the database, the token secret and email together |
-| `CRON_SECRET` | `/api/cron/daily` and `/api/cron/warm` |
-| `RATE_LIMIT_SALT_SECRET` | Rate limits shared across server instances (otherwise per instance) |
-| `REAL_ASKERS` | Unset or `*`: every signed-in member can ask the REAL network. A list of emails: only those |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | The contact line on /privacy |
-| `QA_STATES` | `1` honours `?state=` and `?degraded=` QA controls in production (always on in dev) |
+Copy `.env.example` to `.env.local`. Each feature switches on when its variables are present.
+
+| Variable | Needed for |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | Live compiler and gate calls. Without it, only the recorded example runs play. |
+| `ANTHROPIC_WORKSPACE_ID` | Optional. The workspace to bill, for keys not scoped to one. |
+| `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Personal gates, with the API key for the checks. Apply `supabase/migrations` first. |
+| `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_CONTACT_EMAIL` | Optional. The origin used in links and previews; the contact on `/privacy`. |
+| `DAILY_BUDGET_USD`, `RATE_LIMIT_SALT_SECRET`, `QA_STATES` | Optional. Daily model budget (default 10), shared rate-limit counters, QA states. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `TOKEN_HMAC_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `CRON_SECRET`, `REAL_ASKERS` | Only the parts listed under “Also in the repo”. The demo does not use them. |
+
+## Run locally
+
+```bash
+npm install                  # Node ^22.22.2 or >=24.15.0
+cp .env.example .env.local   # optional: the demo runs without keys
+npm run dev                  # http://localhost:3200
+```
 
 ## Scripts
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Dev server on :3200 (dist dir `.next-dev`) |
-| `npm run check` | Typecheck, lint and tests (vitest; PGlite runs the real migrations for the database tests) |
-| `npm run build:check` | A production build in a throwaway dist dir |
-| `npm run record:presets` | Records the 3 playground presets and the 39 sample members with the production gate (needs `ANTHROPIC_API_KEY`). `--check` verifies recordings against the current rubric |
-| `npm run eval` | The held-out eval; writes `data/eval/heldout-summary.json`, which /board and /how read |
-| `npm run bench` | Measures gate latency and cost |
-| `npm run race` | 20 concurrent offers for 1 free slot must produce exactly 1 (needs a Supabase dev project; otherwise it runs a logical check, prints SKIPPED and exits 2) |
-| `npm run smoke` | Pre-deploy smoke test: the home composer, the playground on /rules, ask → offered (from / and /ask), offer → intro, board, degraded banners, links |
-| `npm run audit` | Headless-Chrome audit of every route and QA state at 1280×900 and 375×812 (console errors, overflow, contrast, labels, primaries) |
-| `npm run check:links` | Fails on placeholder domains and links to missing repo files |
-| `npm run plugin:build` / `plugin:check` | Regenerates or checks the plugin JSON for `NEXT_PUBLIC_SITE_URL` |
+- `npm run check`: typecheck, lint and tests (`npm run typecheck`, `npm run lint`, `npm test` run one each).
+- `npm run build:check`: a production build in its own folder, so a running dev server is left alone.
+- `npm run record:presets`: records the example runs again with the current rubric and model.
+- `npm run eval`, `npm run bench`, `npm run race`: the gate eval, gate latency and cost, and the cap race test.
+- `npm run smoke`, `npm run check:links`: checks against a running instance.
+- `npm run plugin:build`: builds the Claude Code plugin in `plugins/ok-to-intro`.
 
-## Honesty notes
+## Also in the repo, not in the demo
 
-- **SAMPLE data is fictional.** The 12 playground asks, the 39 sample members, their companies and every email
-  shown at `/emails` are made up (`lib/sample`). Pages that use them carry a Sample tag.
-- **No verdict in this repo comes from a model yet.** `data/recorded/presets.json` and
-  `data/recorded/sample-network.json` are `"source": "authored"`: hand-written expectations, labelled “written by
-  hand · not a model run” wherever they show. `npm run record:presets` replaces them with real recordings
-  (`"source": "model"`, with model, rubric hash, timings and cost); the UI then labels them “recorded” and replays
-  them at their recorded speed.
-- **Live means live.** A row labelled live came from a model call made for that visitor, in that moment.
-- **The board shows only database counts.** Without a database it says the real network isn't connected and shows
-  no numbers. The example numbers in its QA states are labelled as prototype layout. The eval section reads
-  `"No eval run yet"` until `npm run eval` writes a summary.
-- **Costs are estimates** (“about …, estimated from published prices”) until `npm run bench` measures them.
-- **The /agents transcripts are written by hand.** Every tool result in them is rendered by the server's own
-  receipt formatter from SAMPLE data.
-
-## What needs keys
-
-- Live playground runs, the live compiler and your own gate in the SAMPLE fan-out: `ANTHROPIC_API_KEY`.
-- Sign-in, Your gate, REAL asks, offers, intros, check-ins, pause links, Claude Code tokens and board numbers: the
-  three Supabase variables, `TOKEN_HMAC_SECRET`, `RESEND_API_KEY` and `EMAIL_FROM`. Supabase Auth must send a
-  6-digit code (`{{ .Token }}`) in both the Magic Link and Confirm signup templates.
-- The daily backstop: `CRON_SECRET` (see `vercel.json`).
+- The multi-member network with sign-in, where each member keeps their own rules, cap and pause.
+- Email offers and check-ins, and a board of counts from the database.
+- The MCP server (`/mcp`) and the Claude Code plugin, to write and send asks from an editor.
 
 ## License
 
-MIT © 2026 Alan Arguello. See [LICENSE](LICENSE).
+MIT. See `LICENSE`.

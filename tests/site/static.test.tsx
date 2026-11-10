@@ -104,10 +104,11 @@ describe('share metadata, robots and sitemap', () => {
   it('keeps the OG image on pages that set their own share title', () => {
     const m = shareMetadata({ title: 'Board', description: 'd', path: '/board' });
     expect(m.openGraph).toMatchObject({ title: 'Board · OK to Intro', url: '/board', images: [OG_IMAGE] });
-    expect(m.twitter).toMatchObject({ card: 'summary_large_image', images: [{ url: '/opengraph-image.png' }] });
+    expect(m.twitter).toMatchObject({ card: 'summary_large_image', images: [{ url: '/opengraph-image' }] });
     expect(howMetadata.openGraph).toMatchObject({ images: [OG_IMAGE] });
     expect(privacyMetadata.title).toBe('Privacy');
-    expect(existsSync(`${ROOT}app/opengraph-image.png`)).toBe(true);
+    expect(existsSync(`${ROOT}app/opengraph-image.tsx`)).toBe(true);
+    expect(existsSync(`${ROOT}app/opengraph-image.png`)).toBe(false);
   });
 
   it('opens robots.txt only on the production deployment', () => {

@@ -11,7 +11,8 @@ import { createTestDb, type TestDb } from '../db/harness';
 type RpcResult = { data: unknown; error: { code?: string; message?: string } | null };
 
 const h = vi.hoisted(() => ({
-  flags: { hasSupabaseAdmin: true },
+  // The board needs the whole real network (database, token secret, email), not the service role alone: personal gates use that by itself.
+  flags: { hasSupabaseAdmin: true, realNetwork: true, hasResend: true },
   calls: [] as { name: string; args: unknown }[],
   respond: (_name: string, _args: unknown): Promise<RpcResult> | RpcResult => ({ data: null, error: null }),
 }));

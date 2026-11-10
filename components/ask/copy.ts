@@ -18,6 +18,9 @@ export const HOME_DESCRIPTION =
 /** The second card under the composer: the member's side, on /rules. */
 export const OTHER_SIDE_LINK = 'On the other side? See what would reach you →';
 export const OTHER_SIDE_NOTE = 'Write what you’d agree to help with; 12 asks from other founders are checked against it.';
+/** The third card: your own gate link (/rules#make-gate). */
+export const GATE_LINK_CARD = 'Want asks to come to you? Make your own gate link →';
+export const GATE_LINK_NOTE = 'Like a booking link that only opens for asks you agreed to take.';
 export const COMPOSER_LABEL = 'What do you need?';
 export const ASK_PLACEHOLDER = 'We sell X to Y. We tried Z. Need [a call, an intro or an answer] from someone who has done W, before [date]. In return: …';
 

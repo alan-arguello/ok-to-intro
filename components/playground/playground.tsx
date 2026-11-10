@@ -16,7 +16,7 @@ import type { TryEvent } from '@/lib/types';
 import { BACK_TO_ASK, H1, LEDE } from './copy';
 import { isPhone, scrollToId } from './dom';
 import { PlaygroundEngine, type EngineDeps } from './engine';
-import { MakeGate, SavedGateLink } from '@/components/gates/make-gate';
+import { MakeGate } from '@/components/gates/make-gate';
 import { ListSection } from './list';
 import { Rail } from './rail';
 import { browserStorage } from './store';
@@ -104,12 +104,9 @@ export function Playground({ qa, liveConfigured, gatesConfigured = false }: Play
 
       <div className="pg-grid">
         <Rail s={s} actions={actions} />
+        <MakeGate rules={s.rules} cap={s.cap} configured={gatesConfigured} />
         <ListSection s={s} actions={actions} />
       </div>
-
-      {s.run && s.phase === 'done' ? <MakeGate rules={s.rules} cap={s.cap} configured={gatesConfigured} /> : null}
-
-      <SavedGateLink />
 
       <p className="small pg-back">
         <Link className="link" href="/" onClick={() => engine.save()}>

@@ -143,9 +143,14 @@ export interface GatePromptInput {
   rules: string;
   ask: { text: string; subject?: string; parts?: AskParts; asker_stage?: string };
   answers?: { type: QuestionType; text: string }[];
+  /**
+   * Personal gates only (lib/server/personal-gate-prompt.ts): one extra system block between the cached rubric and
+   * the rules. Absent on the default path, so the default request, RUBRIC_HASH and the recordings stay byte-identical.
+   */
+  addendum?: string;
 }
 
-/** system[1]: the member's rules, after the cached rubric. */
+/** The member's rules: the last system block, after the cached rubric. */
 export function gateRulesBlock(rules: string): string {
   return `Member's rules (the only standard; quote from these exact words):\n---\n${rules}\n---`;
 }
@@ -179,6 +184,7 @@ export function buildGateRequest(input: GatePromptInput) {
     max_tokens: GATE_MAX_TOKENS,
     system: [
       { type: 'text' as const, text: GATE_RUBRIC, cache_control: { type: 'ephemeral' as const } },
+      ...(input.addendum ? [{ type: 'text' as const, text: input.addendum }] : []),
       { type: 'text' as const, text: gateRulesBlock(input.rules) },
     ],
     messages: [{ role: 'user' as const, content: gateUserMessage(input) }],

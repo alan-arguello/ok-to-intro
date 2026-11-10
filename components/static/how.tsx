@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Tag } from '@/components/kit/pills';
+import { MAKE_GATE_HREF } from '@/lib/oti/personal-gate';
 import { REPO_DISPLAY, REPO_URL, ROUTES } from '@/lib/site';
 import { HOW_COPY, HOW_STEPS } from './copy';
 
@@ -31,6 +32,20 @@ export function HowContent() {
           </li>
         ))}
       </ol>
+
+      <section className="list how-gate" aria-labelledby="how-gate-title">
+        <div className="row">
+          <h2 className="row__name" id="how-gate-title">
+            {HOW_COPY.gateTitle}
+          </h2>
+          <p className="how-step__line">{HOW_COPY.gateLine}</p>
+          <p className="small how-gate__link">
+            <Link className="link" href={MAKE_GATE_HREF}>
+              {HOW_COPY.gateLink}
+            </Link>
+          </p>
+        </div>
+      </section>
 
       <div className="how-meta">
         <p className="small">

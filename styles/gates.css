@@ -1,6 +1,11 @@
 /* Personal gates: the /rules “Make this your gate” section, /g/<slug> and its private inbox. */
-.gate-make { margin-top: var(--s6); }
-.gate-make > * + * { margin-top: var(--s4); }
+.gate-make { margin-top: var(--s3); }
+.gate-make > * + * { margin-top: var(--s3); }
+.gate-make__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); }
+.gate-make__bar > .small { flex: 1 1 14rem; }
+.gate-make__panel > * + * { margin-top: var(--s4); }
+.gate-own { text-align: center; }
+.gate-own .link { display: inline-flex; align-items: center; min-height: 44px; }
 .gate-copy { display: flex; gap: var(--s2); align-items: stretch; }
 .gate-copy .input { flex: 1 1 auto; min-width: 0; font-family: var(--font-mono); font-size: 16px; }
 .gate-copy .btn { flex: 0 0 auto; }

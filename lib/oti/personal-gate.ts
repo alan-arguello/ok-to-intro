@@ -48,5 +48,9 @@ export function inboxPath(slug: string, token: string): string {
   return `/g/${encodeURIComponent(slug)}/inbox?k=${encodeURIComponent(token)}`;
 }
 
+/** The “Make this your gate link” section on /rules, and the link every other page uses to reach it. */
+export const MAKE_GATE_ID = 'make-gate';
+export const MAKE_GATE_HREF = `/rules#${MAKE_GATE_ID}`;
+
 /** localStorage key for the private inbox link on this browser. */
 export const GATE_STORAGE_KEY = 'oti.personal-gate';

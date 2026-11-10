@@ -128,7 +128,7 @@
 /* build: focusable cards (focus moves there after an action) show no ring for programmatic focus. */
 .st-outcome:focus:not(:focus-visible), .st-question:focus:not(:focus-visible) { outline: none; }
 .st-outcome .btn-row .link { display: inline-flex; align-items: center; min-height: 32px; }
-.ask-other { margin-top: var(--s8); padding-bottom: var(--s10); }
+.ask-other { display: grid; gap: var(--s3); margin-top: var(--s8); padding-bottom: var(--s10); }
 .ask-other__card { display: flex; flex-direction: column; gap: 2px; min-height: 44px; padding: var(--s4); border: 1px solid var(--line-soft); border-radius: var(--r-card); background: var(--panel); color: var(--ink); text-decoration: none; }
 .ask-other__card:hover { border-color: var(--line-input); }
 .ask-other__link { font-weight: 500; color: var(--link); }

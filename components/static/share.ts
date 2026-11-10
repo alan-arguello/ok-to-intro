@@ -13,14 +13,16 @@ export function isProductionSite(env: Record<string, string | undefined> = proce
  * Share metadata for pages that set their own Open Graph title (S7's pages; other owners may import it).
  *
  * Why: Next merges `metadata.openGraph` per key, so a page that sets `openGraph` replaces the root one and loses the
- * file-based image (app/opengraph-image.png) unless it lists the image again. Pages without their own `openGraph`
+ * file-based image (app/opengraph-image.tsx, generated with next/og) unless it lists the image again. Pages without their own `openGraph`
  * keep the image but share the root title. This helper sets both, with the image the file convention serves.
  */
 
-export const OG_IMAGE_ALT =
-  'OK to Intro: “What would you agree to be asked?” above one sample row, Reaches you · Tidewell Data, citing “founders about churn, activation or support load” as found in your rules.';
+/** The words on the site-wide share image (app/opengraph-image.tsx draws them; the alt text repeats them). */
+export const OG_HEADLINE = 'What do you need from the network?';
+export const OG_LINE = 'Write your ask. It’s checked against what each founder agreed to help with.';
+export const OG_IMAGE_ALT = `${PRODUCT_NAME}: “${OG_HEADLINE}” ${OG_LINE}`;
 
-export const OG_IMAGE = { url: '/opengraph-image.png', width: 1200, height: 630, type: 'image/png', alt: OG_IMAGE_ALT } as const;
+export const OG_IMAGE = { url: '/opengraph-image', width: 1200, height: 630, type: 'image/png', alt: OG_IMAGE_ALT } as const;
 
 /** `title` is the page's own title (the root template adds “ · OK to Intro” to <title>; shares get the full name). */
 export function shareMetadata(input: { title: string; description: string; path: string }): Pick<Metadata, 'title' | 'description' | 'alternates' | 'openGraph' | 'twitter'> {

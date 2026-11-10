@@ -25,6 +25,7 @@ import { Notice } from '@/components/kit/surfaces';
 import { announce } from '@/components/site/live-region';
 import { askFacts, isYcApplicationAsk, validateAsk } from '@/lib/oti/ask';
 import { publicId } from '@/lib/oti/ids';
+import { MAKE_GATE_HREF } from '@/lib/oti/personal-gate';
 import { readStore, type PlaygroundStore } from '@/lib/oti/storage';
 import { ASK_TEXT_MAX, bareSubject, fmtN, SUBJECT_MAX } from '@/lib/oti/text';
 import { fmtClock } from '@/lib/oti/time';
@@ -76,6 +77,8 @@ import {
   HOME_LEDE,
   HOME_TITLE,
   liveBlockedCopy,
+  GATE_LINK_CARD,
+  GATE_LINK_NOTE,
   OTHER_SIDE_LINK,
   OTHER_SIDE_NOTE,
   PART_LABEL,
@@ -726,13 +729,17 @@ export function AskCompose(props: AskComposeProps) {
 
 /* ---------- the other side (home only) ---------- */
 
-/** Under the composer on `/`: one card to the member's side (/rules). */
+/** Under the composer on `/`: one card to the member's side (/rules), one to your own gate link (/rules#make-gate). */
 function OtherSide() {
   return (
     <section className="ask-other" id="ask-other" aria-label="The other side">
       <Link className="ask-other__card" href="/rules">
         <span className="ask-other__link">{OTHER_SIDE_LINK}</span>
         <span className="meta">{OTHER_SIDE_NOTE}</span>
+      </Link>
+      <Link className="ask-other__card" href={MAKE_GATE_HREF}>
+        <span className="ask-other__link">{GATE_LINK_CARD}</span>
+        <span className="meta">{GATE_LINK_NOTE}</span>
       </Link>
     </section>
   );

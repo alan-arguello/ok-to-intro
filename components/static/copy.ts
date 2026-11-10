@@ -14,6 +14,10 @@ export const HOW_COPY = {
   tryAsk: 'Write an ask',
   tryRules: 'On the other side? See what would reach you ›',
   code: 'Code:',
+  gateTitle: 'Your own gate link',
+  gateLine:
+    'Write your rules and get two links: a public one to share and a private inbox. Asks sent to the public link are checked the same way, against your rules and your monthly limit; the ones that pass land in the inbox. No account and no notifications: you open the inbox to read them.',
+  gateLink: 'Make your gate link ›',
 } as const;
 
 export interface HowStep {

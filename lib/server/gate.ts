@@ -72,6 +72,8 @@ export interface GateInput {
   ask: { text: string; subject?: string; parts?: AskParts; asker_stage?: string };
   /** The one rerun after a question: the asker's approved answers. */
   answers?: { type: QuestionType; text: string }[];
+  /** Personal gates only: an extra system block after the cached rubric (lib/server/personal-gate-prompt.ts). Never set for the network. */
+  addendum?: string;
 }
 
 export interface GateUsage {
@@ -338,7 +340,7 @@ export async function runGateDetailed(input: GateInput, options: { signal?: Abor
 
   try {
     const { data, request_id } = await client.messages
-      .create(buildGateRequest({ rules, ask: input.ask, answers: input.answers }), { signal, timeout: timeoutMs + 1_000, maxRetries: SDK_MAX_RETRIES })
+      .create(buildGateRequest({ rules, ask: input.ask, answers: input.answers, addendum: typeof input.addendum === 'string' && input.addendum.trim() ? input.addendum : undefined }), { signal, timeout: timeoutMs + 1_000, maxRetries: SDK_MAX_RETRIES })
       .withResponse();
     const ms = Date.now() - started;
     const usage = usageOf(data.usage);
