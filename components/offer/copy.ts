@@ -34,7 +34,7 @@ export const CHECKIN_NOT_FOUND = 'Check-in not found';
 
 export const OFFER_INVALID_TITLE = 'This link doesn’t match an offer.';
 export const CHECKIN_INVALID_TITLE = 'This link doesn’t match a check-in.';
-export const INVALID_BODY = 'It may be mistyped or expired. Sign in to see asks waiting on you.';
+export const INVALID_BODY = 'It may be mistyped or expired. This site is a demo, so no real offers exist.';
 
 export const SAMPLE_OFFER_NOTE = 'Buttons show what happens; no email is sent.';
 export const SAMPLE_CHECKIN_NOTE = 'Buttons show what happens; nothing is saved.';

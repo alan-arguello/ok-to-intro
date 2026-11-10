@@ -34,7 +34,7 @@ export const EXAMPLE_BOARD = {
   ] as readonly (readonly [string, string, string])[],
   /** [topic, asks, asks that reached a person, distinct askers]. Listed only with 3 or more distinct askers. */
   demand: [
-    ['Hospital procurement, US', 4, 1, 3],
+    ['Enterprise sales, US', 4, 1, 3],
     ['First SOC 2 audit', 3, 0, 3],
   ] as readonly (readonly [string, number, number, number])[],
   demandOther: 5,
@@ -57,11 +57,11 @@ export const EXAMPLE_BOARD = {
   sample: { playgroundRuns: 214, liveGateCalls: 1980, rulesStored: 0, sampleAsks: 37 },
 } as const;
 
-/** /me example (member Priya Shah, Health operator rules), for QA states of S3. */
+/** /me example (member Priya Shah, Sales operator rules), for QA states of S3. */
 export const EXAMPLE_ME = {
   name: 'Priya Shah',
   email: 'priya@example.com',
-  oneLine: 'Ran procurement for a public hospital network in Illinois.',
+  oneLine: 'Closed the first 20 enterprise customers at a healthcare software company.',
   presetRules: 'health',
   cap: 2,
   used: 1,
@@ -75,5 +75,5 @@ export const EXAMPLE_ME = {
   ledger: { reached_gate: 23, reached_you: 1, stopped: 22 },
   lineTallies: ['1 let in · 1 question', '1 let in · 1 question · 3 kept out', 'not used this month', '2 kept out'],
   noLine: 16,
-  pending: { title: 'Hospital procurement in the US', from: 'Maya Bennett', hours_left: 61 },
+  pending: { title: 'Enterprise deals stuck 5 months', from: 'Maya Bennett', hours_left: 61 },
 } as const;

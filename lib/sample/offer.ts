@@ -24,17 +24,17 @@ export const OFFER_SAMPLE = {
   token: 'sample',
   member: { name: 'Priya Shah', first: 'Priya', scheduling: 'cal.com/priya-shah/20min', cap: 2, used_before: 0 },
   asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', email: 'maya@oakline.example' },
-  subject: 'Hospital procurement in the US, 20 min?',
-  title: 'Hospital procurement in the US',
+  subject: 'Enterprise deals stuck 5 months, 20 min?',
+  title: 'Enterprise deals stuck 5 months',
   facts: [
-    ['Problem', 'Public hospital committees stall at technical review'],
-    ['Needs', '20 minutes with someone who has sat on a public hospital procurement committee in the US'],
-    ['Tried', '14 buyer calls; 2 committees reached review'],
+    ['Problem', '2 enterprise deals have sat in procurement for 5 months'],
+    ['Needs', '20 minutes with someone who has closed a first enterprise deal through procurement'],
+    ['Tried', '14 buyer calls; 2 deals reached procurement'],
     ['By', 'Nov 20'],
-    ['Offers', 'Our tender templates'],
-    ['Price', '$18k a year per hospital (Maya told your gate)'],
+    ['Offers', 'Our procurement checklist'],
+    ['Price', '$18k a year per customer (Maya told your gate)'],
   ] as readonly Fact[],
-  matched: 'B2B founders selling to public hospitals or insurers in the US or Canada',
+  matched: 'B2B founders selling to enterprise customers',
   /** The fixed REAL example (QA only). */
   sent: 'Mon Nov 9, 21:04',
   reply_by: 'Thu Nov 12, 21:04 PT',
@@ -42,12 +42,12 @@ export const OFFER_SAMPLE = {
   reply_by_iso: '2026-11-12T21:04:00-08:00',
   hours_left: 71,
   cap_line: '1 of your 2 this month',
-  /** One templated edit per No reason for Priya's rules (the Health operator preset); `expected` is hand-written. */
+  /** One templated edit per No reason for Priya's rules (the Sales operator preset); `expected` is hand-written. */
   suggested_edits: {
     area: {
       reason: 'not_my_area',
-      context: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.',
-      add: 'No asks about public procurement.',
+      context: 'Happy to talk to B2B founders selling to enterprise customers.',
+      add: 'No asks about procurement.',
       expected: 'Expected on the 12 sample asks (written by hand, not a model run): 1 change (Oakline Health: question first → decline). Nothing else changes.',
     },
     stage: {
@@ -60,8 +60,8 @@ export const OFFER_SAMPLE = {
 } as const;
 
 export const INTRO_SAMPLE = {
-  subject: 'Intro: Maya Bennett (Oakline Health) and Priya Shah (public hospital procurement)',
-  member_line: 'Ran procurement for a public hospital network in Illinois.',
+  subject: 'Intro: Maya Bennett (Oakline Health) and Priya Shah (first enterprise customers)',
+  member_line: 'Closed the first 20 enterprise customers at a healthcare software company.',
   asker_line: 'Oakline Health (Seed, Chicago)',
   sent: 'Mon Nov 9, 21:16',
   checkin1: 'Tue Nov 10',

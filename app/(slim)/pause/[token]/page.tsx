@@ -82,7 +82,7 @@ export default async function PausePage({ params, searchParams }: Props) {
     return (
       <SlimPage mainClassName={MAIN}>
         {res.reason === 'invalid' ? (
-          <Message title={PAUSE_COPY.invalidTitle} body={PAUSE_COPY.invalidBody} action={{ href: '/me', label: PAUSE_COPY.yourGate }} />
+          <Message title={PAUSE_COPY.invalidTitle} body={PAUSE_COPY.invalidBody} action={{ href: '/pause/sample', label: 'See the demo pause page ›' }} />
         ) : res.reason === 'not_configured' ? (
           <Message title={PAUSE_COPY.offTitle} body={PAUSE_COPY.offBody} action={{ href: '/rules', label: 'Try the playground' }} />
         ) : (
@@ -97,7 +97,7 @@ export default async function PausePage({ params, searchParams }: Props) {
   if (view.status === 'pending') {
     return (
       <SlimPage meta={meta} mainClassName={MAIN}>
-        <Message title={PAUSE_COPY.pendingTitle} body={PAUSE_COPY.pendingBody} action={{ href: '/me', label: PAUSE_COPY.yourGate }} />
+        <Message title={PAUSE_COPY.pendingTitle} body={PAUSE_COPY.pendingBody} action={{ href: '/rules', label: 'Be asked ›' }} />
       </SlimPage>
     );
   }

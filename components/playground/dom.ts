@@ -1,5 +1,5 @@
 /**
- * Small browser helpers for the playground's focus, scroll and motion rules. Every call is guarded, so a missing
+ * Small browser helpers for the playground's scroll and motion rules. Every call is guarded, so a missing
  * API (jsdom, old browsers) never throws.
  */
 
@@ -23,14 +23,6 @@ export function reducedMotion(): boolean {
   } catch {
     return false;
   }
-}
-
-export function focusId(id: string, options?: FocusOptions): void {
-  afterPaint(() => document.getElementById(id)?.focus(options));
-}
-
-export function focusSelector(selector: string, options?: FocusOptions): void {
-  afterPaint(() => document.querySelector<HTMLElement>(selector)?.focus(options));
 }
 
 /** Brings an element to the top of the viewport, under the sticky header (html has scroll-padding-top). */

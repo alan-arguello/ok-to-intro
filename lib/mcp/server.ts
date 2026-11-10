@@ -36,7 +36,7 @@ export const SCHEMAS = {
       .max(10_000)
       .optional()
       .describe('The rules to test, one per line, 1 to 1,000 characters: what the user agrees to be asked about, and what not. Not stored.'),
-    preset: z.enum(['engineer', 'health', 'founder']).optional().describe('Instead of rules: a sample member’s rules (Engineer, Health operator or Founder).'),
+    preset: z.enum(['engineer', 'health', 'founder']).optional().describe('Instead of rules: a sample member’s rules (Product lead, Sales operator or Founder).'),
     cap: z.number().int().min(1).max(5).optional().describe('Asks a month that may reach the user (1 to 5, default 2).'),
   }),
   draft_ask: z.object({

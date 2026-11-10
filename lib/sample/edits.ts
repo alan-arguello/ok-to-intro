@@ -23,10 +23,9 @@ export const ONE_TAP_EDITS: Readonly<Record<PresetId, readonly OneTapEdit[]>> = 
     {
       id: 'add-line',
       kind: 'add',
-      line: 'No asks about claims software.',
+      line: 'No asks about onboarding or activation.',
       expected_flips: {
-        a04: { verdict: 'decline', cited: ['No asks about claims software.'], reason_code: 'rule_says_no', reason: 'Claims reconciliation is claims software.' },
-        a09: { verdict: 'decline', cited: ['No asks about claims software.'], reason_code: 'rule_says_no', reason: 'A claims-triage model is claims software.' },
+        a09: { verdict: 'decline', cited: ['No asks about onboarding or activation.'], reason_code: 'rule_says_no', reason: 'The ask is about activation after onboarding.' },
       },
     },
     { id: 'cap', kind: 'cap', from: 2, to: 1 },

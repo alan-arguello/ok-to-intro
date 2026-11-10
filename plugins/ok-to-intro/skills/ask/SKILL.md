@@ -20,12 +20,12 @@ OK to Intro sends a founder’s ask for 20 minutes with one specific person. Eac
 
 1. Read only what can describe the company and the blocker: README, docs/, notes/, and files the user names. Never read `.env` files, keys, tokens, credentials or anything that looks like a secret. Say which files you read, e.g. “I read README.md and notes/pipeline.md (not .env or keys).”
 2. Call `draft_ask` with `text`: the user’s sentence plus the facts you found, in plain words, at most 600 characters. Pass `sources` for every fact you took from a file, as `{ text, from: "<path> line <n>" }`. Every drafted fact cites file and line. Never invent a number, a name or a date.
-3. When parts are missing, ask with AskUserQuestion. Options: your proposal with its source (“Before Nov 20; offer our tender templates (notes/pipeline.md line 12)”), “I’ll type it”, and “Cancel”. Propose only what a file the user can check says. Then call `draft_ask` again with `draft_id` and `answers`.
+3. When parts are missing, ask with AskUserQuestion. Options: your proposal with its source (“Before Nov 20; offer our procurement checklist (notes/pipeline.md line 12)”), “I’ll type it”, and “Cancel”. Propose only what a file the user can check says. Then call `draft_ask` again with `draft_id` and `answers`.
 4. When the receipt says “ready, not sent”, show the ask exactly as the receipt prints it and ask whether to send it. Call `send_ask` only after an explicit yes in this conversation. Without a token the ask goes to the SAMPLE network (40 fictional members; nobody is emailed). If an AskUserQuestion times out or the user doesn’t answer, send nothing.
 
 ## After sending
 
-- If a gate asked a question, look for the answer in files the user can check. Ask with AskUserQuestion: the answer with its source (“$18k a year per hospital” (docs/pricing.md line 4)), “Edit” and “Skip”. Call `answer_question` only with the answer they approved.
+- If a gate asked a question, look for the answer in files the user can check. Ask with AskUserQuestion: the answer with its source (“$18k a year per customer” (docs/pricing.md line 4)), “Edit” and “Skip”. Call `answer_question` only with the answer they approved.
 - Nothing else to do until someone answers; `my_asks` shows the status later.
 
 ## When something waits on the user

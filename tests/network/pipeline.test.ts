@@ -36,12 +36,12 @@ import { accepts, asksBack, captureEmails, compiledAsk, createNetworkDb, decline
 const HOUR = 3_600_000;
 
 const RULES = {
-  priya: 'Happy to talk to B2B founders selling to public hospitals in the US.',
-  ingrid: 'Clinic groups and hospital networks in the US. Happy to help hospital founders.',
-  larsen: 'Public hospital procurement in the US. Only with a price.',
-  marcus: 'Happy to talk about Postgres or Kafka at scale.',
-  paused: 'Hospitals in Canada.',
-  full: 'Hospital buyers in Texas.',
+  priya: 'Happy to talk to B2B founders selling to hospital groups in the US.',
+  ingrid: 'Long sales cycles with hospital groups and health systems. Happy to help hospital founders.',
+  larsen: 'Enterprise procurement and security reviews. Only with a price.',
+  marcus: 'Happy to talk about churn and retention in B2B software.',
+  paused: 'Enterprise sales in Canada.',
+  full: 'Selling to hospital systems in Texas.',
 };
 
 let net: NetworkDb;
@@ -53,10 +53,10 @@ const ids: Record<string, string> = {};
 function gates() {
   h.gate = async (input) => {
     const rules = input.rules;
-    if (rules === RULES.priya) return accepts(rules, 'B2B founders selling to public hospitals in the US', 900);
-    if (rules === RULES.ingrid) return accepts(rules, 'Clinic groups and hospital networks in the US', 1200);
+    if (rules === RULES.priya) return accepts(rules, 'B2B founders selling to hospital groups in the US', 900);
+    if (rules === RULES.ingrid) return accepts(rules, 'Long sales cycles with hospital groups and health systems', 1200);
     if (rules === RULES.larsen) {
-      return input.answers?.length ? accepts(rules, 'Public hospital procurement in the US', 700) : asksBack(rules, { type: 'price', text: 'What do you charge per hospital, per year?' });
+      return input.answers?.length ? accepts(rules, 'Enterprise procurement and security reviews', 700) : asksBack(rules, { type: 'price', text: 'What do you charge per customer, per year?' });
     }
     return declines(rules, rules === RULES.marcus ? 'topic' : 'region');
   };
@@ -67,9 +67,9 @@ beforeAll(async () => {
   __setNetworkDbForTests(net.transport);
   mail = captureEmails();
   __setEmailTransportForTests(mail.transport);
-  const mayaId = await net.member('maya@oakline.example', { name: 'Maya Bennett', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', rules: 'Happy to talk about tender templates.' });
+  const mayaId = await net.member('maya@oakline.example', { name: 'Maya Bennett', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', rules: 'Happy to talk about procurement checklists.' });
   maya = { id: mayaId, email: 'maya@oakline.example' };
-  ids.priya = await net.member('priya@example.com', { name: 'Priya Shah', rules: RULES.priya, one_line: 'Ran procurement for a public hospital network in Illinois.', scheduling_url: 'https://cal.com/priya-shah/20min', show_matched: true });
+  ids.priya = await net.member('priya@example.com', { name: 'Priya Shah', rules: RULES.priya, one_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: 'https://cal.com/priya-shah/20min', show_matched: true });
   ids.ingrid = await net.member('ingrid@example.com', { name: 'Ingrid Larsen', rules: RULES.ingrid });
   ids.larsen = await net.member('q@example.com', { name: 'Quinn Rogers', rules: RULES.larsen, cap: 3 });
   ids.marcus = await net.member('marcus@example.com', { name: 'Marcus Reed', rules: RULES.marcus });
@@ -169,7 +169,7 @@ describe('the REAL send', () => {
     const offer = events.find((e) => e.event === 'offer');
     expect(offer && Object.keys(offer.data)).toEqual(['expires_at']);
     const question = events.find((e) => e.event === 'question');
-    expect(question?.data).toMatchObject({ type: 'price', text: 'What do you charge per hospital, per year?', gates: 1 });
+    expect(question?.data).toMatchObject({ type: 'price', text: 'What do you charge per customer, per year?', gates: 1 });
   });
 
   it('never streams a member id, email, name, cap or reason', () => {
@@ -214,9 +214,9 @@ describe('the offer page and its actions', () => {
     const res = await getOffer({ token: ids.priyaToken });
     expect(res.found).toBe(true);
     if (!res.found) return;
-    expect(res.offer.matched).toEqual({ text: 'B2B founders selling to public hospitals in the US', start: 17, end: 67, line: RULES.priya });
+    expect(res.offer.matched).toEqual({ text: 'B2B founders selling to hospital groups in the US', start: 17, end: 66, line: RULES.priya });
     expect(res.offer.facts.map(([k]) => k)).toEqual(['Problem', 'Needs', 'Tried', 'By', 'Offers']);
-    expect(res.offer).toMatchObject({ state: 'pending', nth: 1, cap: 2, title: 'Hospital procurement in the US', member_first: 'Priya', asker: { first: 'Maya', company: 'Oakline Health' } });
+    expect(res.offer).toMatchObject({ state: 'pending', nth: 1, cap: 2, title: 'Enterprise deals stuck 5 months', member_first: 'Priya', asker: { first: 'Maya', company: 'Oakline Health' } });
     expect(JSON.stringify(res.offer)).not.toContain(ids.priya);
     expect(await memberForOffer({ token: ids.priyaToken })).toEqual({ member_id: ids.priya });
     expect(await getOffer({ token: 'A'.repeat(22) })).toEqual({ found: false, reason: 'invalid' });
@@ -272,12 +272,12 @@ describe('the offer page and its actions', () => {
   it('listMyAsks and the hook data use the same serializer', async () => {
     const list = await listMyAsks(maya);
     expect(list.ok).toBe(true);
-    if (list.ok) expect(list.items.find((i) => i.id === ids.ask)).toMatchObject({ network: 'real', subject: 'Hospital procurement in the US, 20 min?' });
+    if (list.ok) expect(list.items.find((i) => i.id === ids.ask)).toMatchObject({ network: 'real', subject: 'Enterprise deals stuck 5 months, 20 min?' });
     const pending = await listPendingForMember(ids.ingrid);
     expect(pending.ok).toBe(true);
     if (pending.ok) {
       expect(pending.pending.offers).toHaveLength(1);
-      expect(pending.pending.offers[0]).toMatchObject({ title: 'Hospital procurement in the US', matched: 'Clinic groups and hospital networks in the US' });
+      expect(pending.pending.offers[0]).toMatchObject({ title: 'Enterprise deals stuck 5 months', matched: 'Long sales cycles with hospital groups and health systems' });
       expect(pending.pending.cap).toMatchObject({ cap: 2, used: 2 });
     }
     const asker = await listPendingForMember(maya.id);
@@ -306,9 +306,9 @@ describe('the offer page and its actions', () => {
 
   it('the answer reruns only the gate that asked, once, and the rerun accept gets the offer', async () => {
     const q = await net.one<{ id: string }>(`select id from public.questions where ask_id = $1`, [ids.ask]);
-    const res = await answerQuestion({ ask_id: ids.ask, question_id: q!.id, answer: '$18k a year per hospital', user: maya, idempotency_key: 'a1' });
+    const res = await answerQuestion({ ask_id: ids.ask, question_id: q!.id, answer: '$18k a year per customer', user: maya, idempotency_key: 'a1' });
     expect(res).toMatchObject({ ok: true, reran: 1, accepted: 1, repeated: false });
-    const again = await answerQuestion({ ask_id: ids.ask, question_id: q!.id, answer: '$18k a year per hospital', user: maya, idempotency_key: 'a1' });
+    const again = await answerQuestion({ ask_id: ids.ask, question_id: q!.id, answer: '$18k a year per customer', user: maya, idempotency_key: 'a1' });
     expect(again).toMatchObject({ ok: true, reran: 1, accepted: 1, repeated: true });
     const other = await answerQuestion({ ask_id: ids.ask, question_id: q!.id, answer: 'something else', user: maya, idempotency_key: 'a2' });
     expect(other).toEqual({ ok: false, reason: 'already_answered' });
@@ -317,7 +317,7 @@ describe('the offer page and its actions', () => {
     const offers = await net.all<{ member_id: string; position: number; state: string }>(`select member_id, position, state from public.offers where ask_id = $1 order by position`, [ids.ask]);
     expect(offers[2]).toEqual({ member_id: ids.larsen, position: 3, state: 'pending' });
     const price = await net.one<{ price: string }>(`select compiled->>'price' as price from public.asks where id = $1`, [ids.ask]);
-    expect(price?.price).toBe('$18k a year per hospital');
+    expect(price?.price).toBe('$18k a year per customer');
   });
 
   it('the member whose gate asked sees the price on their card; OK makes the intro, its check-ins and one email to both', async () => {
@@ -326,7 +326,7 @@ describe('the offer page and its actions', () => {
     const token = qMail.text.match(/\/o\/([A-Za-z0-9_-]{22})/)![1]!;
     const view = await getOffer({ token });
     if (!view.found) throw new Error('no offer');
-    expect(view.offer.facts.find(([k]) => k === 'Price')?.[1]).toBe('$18k a year per hospital (Maya told your gate)');
+    expect(view.offer.facts.find(([k]) => k === 'Price')?.[1]).toBe('$18k a year per customer (Maya told your gate)');
     const ok = await respondToOffer({ token }, 'ok', { idempotency_key: `${token}:ok` });
     expect(ok).toMatchObject({ ok: true, repeated: false, offer: { state: 'ok' } });
     const again = await respondToOffer({ token }, 'ok', { idempotency_key: `${token}:ok` });
@@ -357,7 +357,7 @@ describe('the offer page and its actions', () => {
     const token = d1.text.match(/\/c\/([A-Za-z0-9_-]{22})/)![1]!;
     const view = await getCheckin({ token });
     if (!view.found) throw new Error('no check-in');
-    expect(view.checkin).toMatchObject({ kind: 'd1', role: 'asker', other_name: 'Quinn Rogers', other_first: 'Quinn', answer: null, intro_subject: 'Hospital procurement in the US' });
+    expect(view.checkin).toMatchObject({ kind: 'd1', role: 'asker', other_name: 'Quinn Rogers', other_first: 'Quinn', answer: null, intro_subject: 'Enterprise deals stuck 5 months' });
     expect(await saveCheckin({ token }, { kind: 'd1', rating: 4 }, 'k1')).toMatchObject({ ok: true, repeated: false, checkin: { answer: { kind: 'd1', rating: 4 } } });
     expect(await saveCheckin({ token }, { kind: 'd1', rating: 4 }, 'k1')).toMatchObject({ ok: true, repeated: true });
     expect(await saveCheckin({ token }, { kind: 'd14', outcome: 'customer', note: null }, 'k2')).toMatchObject({ ok: false, reason: 'bad_input' });

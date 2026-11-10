@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { qaEnabled } from '@/lib/qa';
 import { PRODUCT_NAME } from '@/lib/site';
 import { Banner } from './banner';
+import { DemoLine } from './site-header';
 
 /**
  * Slim pages (/o, /c, /pause, the sample email viewer): the wordmark plus one right-aligned meta such as
@@ -29,6 +30,7 @@ export function SlimPage({ meta, mainClassName, children }: { meta?: ReactNode; 
   return (
     <>
       <SlimHeader meta={meta} />
+      <DemoLine />
       <Banner qa={qaEnabled()} />
       <main id="main" className={mainClassName}>
         {children}

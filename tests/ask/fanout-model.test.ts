@@ -93,7 +93,7 @@ describe('QA example runs (canonical sample data, never stored)', () => {
     const you = youCell(run)!;
     expect(you.state).toBe('ask_back');
     expect(you.question?.type).toBe('price');
-    expect(you.cited).toBe('B2B founders selling to public hospitals or insurers in the US or Canada');
+    expect(you.cited).toBe('B2B founders selling to enterprise customers');
     // One question per type; your gate's wording leads and both gates count.
     expect(pendingQuestions(run)[0]).toMatchObject({ type: 'price', gates: 2 });
   });
@@ -222,8 +222,8 @@ describe('questions', () => {
     expect(q).toMatchObject({ type: 'price', gates: 2 });
     const asked = run.cells.filter((c): c is SampleCell => !!c && c.state === 'ask_back');
     const cells = asked.map((c) => ({ ...c, state: 'accept' as const, question: null, reason_code: 'match' as const }));
-    const next = applyAnswer(run, q, '$18k a year per hospital', { reran: 2, accepted: 2, cells, offer: null }, NOW);
-    expect(next.answers).toEqual([{ qid: q.qid, question: { type: 'price', text: q.text }, text: '$18k a year per hospital', reran: 2, accepted: 2, offer: false, you: true }]);
+    const next = applyAnswer(run, q, '$18k a year per customer', { reran: 2, accepted: 2, cells, offer: null }, NOW);
+    expect(next.answers).toEqual([{ qid: q.qid, question: { type: 'price', text: q.text }, text: '$18k a year per customer', reran: 2, accepted: 2, offer: false, you: true }]);
     expect(pendingQuestions(next)).toEqual([]);
     expect(youCell(next)!.state).toBe('accept');
     // The offer stays where it was: nobody new was interrupted.

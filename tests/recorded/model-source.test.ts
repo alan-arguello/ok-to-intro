@@ -15,7 +15,7 @@ import { POST as mcp } from '@/app/mcp/route';
 import { emptyRun, type SampleRun, sourceLine } from '@/components/ask/fanout-model';
 import { foldEvent } from '@/components/ask/sample-runner';
 import { recordedRunFor } from '@/components/playground/engine';
-import { chainText, computeDisplays, gateOutput, latencyText, traceRows, type RowGate } from '@/components/playground/model';
+import { chainText, computeDisplays, latencyText } from '@/components/playground/model';
 import { assembleAskText } from '@/lib/oti/ask';
 import { AUTHORED_FANOUT_LABEL, AUTHORED_LABEL } from '@/lib/oti/copy';
 import { PRESET_RECORDINGS, recordedLabel, presetRun } from '@/lib/recorded';
@@ -30,37 +30,24 @@ const HAND_WRITTEN = /written by hand|example verdicts|example results|not a mod
 
 describe('the recorded presets (S1 playground)', () => {
   const run = recordedRunFor('engineer', ENGINEER, Date.parse('2026-11-09T18:00:00Z'));
-  const { map, reachDays } = computeDisplays(run, [], 2, false);
+  const { map } = computeDisplays(run, [], 2, false);
 
   it('the file is a model recording, and its label says recorded, with date, model, wall time and cost', () => {
     expect(PRESET_RECORDINGS.source).toBe('model');
     const pr = presetRun('engineer');
     const label = recordedLabel(PRESET_RECORDINGS, { gates: pr.gates.length, wall_ms: pr.wall_ms, cost_usd: pr.cost_usd });
-    expect(label).toBe('Recorded run · Nov 9, 16:59 · claude-haiku-5-5 · 12 gates in 2.0 s · $0.001');
+    expect(label).toBe('Recorded run · Nov 9, 17:13 · claude-haiku-5-5 · 12 gates in 1.6 s · $0.001');
     expect(label).not.toBe(AUTHORED_LABEL);
   });
 
   it('rows show their recorded latency and say model, never hand-written', () => {
     expect(run.source).toBe('recorded');
-    expect(latencyText(map.a01)).toBe('2.0 s · recorded');
+    expect(latencyText(map.a01)).toBe('1.4 s · recorded');
     expect(chainText(map.a01, 2)).toBe('model accept → code 2 of 2 quotes found → cap 1 of 2');
-    expect(gateOutput(map.a01.gate as RowGate).summary).toBe('Gate output (model)');
     for (const d of Object.values(map)) {
       expect(latencyText(d)).toMatch(/^\d+(\.\d)? s · recorded$|^\d+ ms · recorded$/);
       expect(chainText(d, 2)).not.toMatch(HAND_WRITTEN);
     }
-  });
-
-  it('the raw trace is timed, reports the measured cost, and ends with done', () => {
-    const rows = traceRows(run, map, 2, reachDays);
-    expect(rows.every((r) => r.time !== null)).toBe(true);
-    const text = rows.map((r) => r.segs.map((s) => s.text).join(''));
-    expect(text[0]).toBe('plan  run r_64d8 · recorded Nov 9, 16:59 · 12 gates · rules 196 chars');
-    // The last gate arrives at the run's wall time; its check and cap lines still come before done.
-    expect(text.at(-1)).toBe('done  3 accept · 1 ask_back · 8 decline · 0 failed · $0.0014');
-    expect(text.at(-2)).toMatch(/^(check|cap) /);
-    expect(text).toContain('cap   #9 over_cap · used day 2, day 4 (code)');
-    expect(text.join('\n')).not.toMatch(HAND_WRITTEN);
   });
 
   it('POST /api/try, mode auto, streams the recording labelled recorded, with its ms and confidence', async () => {
@@ -84,7 +71,7 @@ describe('the recorded presets (S1 playground)', () => {
 
 describe('the recorded sample network (S2 SAMPLE fan-out)', () => {
   const HEALTH = SAMPLE_NETWORK_ASKS.health;
-  const parts = { challenge: HEALTH.compiledPartial[0]!.text, tried: HEALTH.compiledPartial[1]!.text, needs: HEALTH.compiledPartial[2]!.text, by: 'Nov 20', offers: 'our tender templates' };
+  const parts = { challenge: HEALTH.compiledPartial[0]!.text, tried: HEALTH.compiledPartial[1]!.text, needs: HEALTH.compiledPartial[2]!.text, by: 'Nov 20', offers: 'our procurement checklist' };
   const compiled: CompiledAsk = { parts, subject: HEALTH.subject, text: assembleAskText(HEALTH.partial, parts, ['needs', 'by', 'offers']), price: null, topic: null };
 
   async function send() {
@@ -116,8 +103,9 @@ describe('the recorded sample network (S2 SAMPLE fan-out)', () => {
   }, 15_000);
 
   it('answering a recorded member’s question without live calls is refused, never reported as a decline', async () => {
-    const q = { type: 'price' as const, text: 'What is the list price per year of your inventory software for a public hospital?' };
-    const res = await answerSampleQuestion({ sample_ask_id: HEALTH.id, compiled, you: null, question: q, answer: '$18k a year per hospital' }, { clientKey: null });
+    // The founder ask is the one whose recording holds a question (a price question from one member's gate).
+    const q = { type: 'price' as const, text: 'What is the annual contract value of the bank deal that requires SOC 2 Type I?' };
+    const res = await answerSampleQuestion({ sample_ask_id: SAMPLE_NETWORK_ASKS.founder.id, compiled, you: null, question: q, answer: '$48k a year, signed for 2 years.' }, { clientKey: null });
     expect(res.ok).toBe(false);
     if (res.ok) return;
     expect(res.status).toBe(503);
@@ -151,13 +139,13 @@ describe('MCP on a model recording', () => {
   it('try_rules on a preset says recorded, with date and model, and no hand-written copy', async () => {
     const { text, isError } = await callTool('try_rules', { rules: ENGINEER });
     expect(isError).toBe(false);
-    expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 16:59 · claude-haiku-5-5');
+    expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 17:13 · claude-haiku-5-5');
     expect(text).toContain('Recorded run, replayed from a file');
     expect(text).not.toMatch(HAND_WRITTEN);
   });
 
   it('answer_question on a recorded SAMPLE ask without a key says the gates can’t rerun, with no duration', async () => {
-    const { text, isError } = await callTool('answer_question', { ask_id: 'sa_health', question_id: 'q_f2b7', answer: '$18k a year per hospital' });
+    const { text, isError } = await callTool('answer_question', { ask_id: 'sa_founder', question_id: 'q_906e', answer: '$48k a year, signed for 2 years.' });
     expect(isError).toBe(true);
     expect(text).toContain('The gates that asked rerun live, and they can’t right now.');
     expect(text).toContain('next: answer again once live checks are back; nothing about the ask changed.');

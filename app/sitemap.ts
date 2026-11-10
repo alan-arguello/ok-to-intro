@@ -10,11 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: ROUTES.home, changeFrequency: 'weekly', priority: 1 },
     { path: ROUTES.ask, changeFrequency: 'weekly', priority: 0.8 },
     { path: ROUTES.rules, changeFrequency: 'weekly', priority: 0.8 },
-    { path: ROUTES.board, changeFrequency: 'daily', priority: 0.7 },
-    { path: ROUTES.agents, changeFrequency: 'weekly', priority: 0.7 },
     { path: ROUTES.how, changeFrequency: 'monthly', priority: 0.6 },
     { path: ROUTES.privacy, changeFrequency: 'monthly', priority: 0.4 },
-    { path: ROUTES.join, changeFrequency: 'monthly', priority: 0.4 },
   ];
   return pages.map((p) => ({ url: absoluteUrl(p.path), changeFrequency: p.changeFrequency, priority: p.priority }));
 }

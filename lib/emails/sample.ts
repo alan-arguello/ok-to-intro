@@ -214,7 +214,7 @@ function loopOffer(loop: SampleLoop, tz?: string): SampleEmail {
 
 function canonicalIntro(): SampleEmail {
   const input: IntroEmailInput = {
-    member_context: 'public hospital procurement',
+    member_context: 'public enterprise sales',
     member: {
       name: OFFER_SAMPLE.member.name,
       first: OFFER_SAMPLE.member.first,
@@ -293,7 +293,7 @@ function checkin(kind: CheckinKind, role: CheckinRole, loop: SampleLoop | null):
 /* ---------- question, outcome note, withdrawn ---------- */
 
 function question(loop: SampleLoop | null): SampleEmail {
-  const q = loop?.question ?? { type: 'price' as const, text: 'What do you charge per hospital, per year?' };
+  const q = loop?.question ?? { type: 'price' as const, text: 'What do you charge per customer, per year?' };
   const askId = loop ? loop.askId : 'sa_health';
   const message = questionEmail({
     asker_first: loop ? loop.asker.first : OFFER_SAMPLE.asker.first,

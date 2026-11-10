@@ -572,8 +572,8 @@ function Result({ model, view, card, askId, actions, hidden, busy, failed, onPos
               See a sample offer ›
             </ButtonLink>
           ) : (
-            <ButtonLink variant="primary" size="lg" href="/join" primary>
-              Sign in
+            <ButtonLink variant="primary" size="lg" href="/o/sample" primary>
+              See a sample offer ›
             </ButtonLink>
           )}
         </div>
@@ -586,12 +586,12 @@ function Result({ model, view, card, askId, actions, hidden, busy, failed, onPos
   const Who = upper1(who);
   const cap = capText(card);
   const source = model.source;
-  // SAMPLE: back to the ask that was sent (S2), or to the playground; REAL: the member's gate.
+  // SAMPLE: back to the ask that was sent (S2), or to the playground; otherwise the rules page.
   const nextLink = sample
     ? source.kind === 'ask' && askId
       ? { href: `/ask/${encodeURIComponent(askId)}`, label: 'Back to your ask ›' }
       : { href: '/rules', label: 'Back to the playground ›' }
-    : { href: '/me', label: 'Your gate ›' };
+    : { href: '/rules', label: 'Be asked ›' };
   const addOffered = view === 'no' && (model.ui.why === 'area' || model.ui.why === 'stage') && !!model.edit && model.ui.step !== 'applied' && model.ui.step !== 'kept';
   const next = (
     <ButtonLink href={nextLink.href} primary={!addOffered}>

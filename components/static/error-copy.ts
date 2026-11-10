@@ -5,9 +5,8 @@
 
 export const NOT_FOUND_COPY = {
   title: 'Not found',
-  description: 'Nothing is at this address. Check the link, or sign in to see asks waiting on you.',
-  lede: 'Nothing at this address. Check the link, or sign in to see asks waiting on you.',
-  signIn: 'Sign in',
+  description: 'Nothing is at this address. Check the link.',
+  lede: 'Nothing at this address. Check the link.',
   /** The home page (`/`, the ask composer). */
   home: 'Ask the network',
 } as const;

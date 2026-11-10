@@ -259,7 +259,7 @@ describe('join, settings, turning on, delete', () => {
 
   it('saves settings and makes a rules version only when the text changed', async () => {
     const id = await db.createMember(email('settings'), { rules: HEALTH });
-    const base = { name: 'Priya Shah', one_line: 'Ran procurement for a public hospital network in Illinois.', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', scheduling_url: 'https://cal.com/priya-shah/20min', cap: 3, show_matched: true, rules: HEALTH };
+    const base = { name: 'Priya Shah', one_line: 'Closed the first 20 enterprise customers at a healthcare software company.', company: 'Oakline Health', stage: 'Seed', city: 'Chicago', scheduling_url: 'https://cal.com/priya-shah/20min', cap: 3, show_matched: true, rules: HEALTH };
     const a = await saveMemberSettings(id, base);
     expect(a).toMatchObject({ ok: true, version: 1, rules_changed: false, status: 'on' });
     const b = await saveMemberSettings(id, { ...base, rules: `${HEALTH}\nNo asks about hiring.` });
@@ -307,8 +307,8 @@ describe('the monthly ledger', () => {
   it('tallies the final decision per ask on the current rules lines', () => {
     const rules = HEALTH;
     const decisions = [
-      { ask_id: 'a1', attempt: 1, verdict: 'ask_back' as const, cited: cited('B2B founders selling to public hospitals or insurers in the US or Canada', 'have a price'), created_at: at('2026-11-02T12:00:00Z') },
-      { ask_id: 'a1', attempt: 2, verdict: 'accept' as const, cited: cited('B2B founders selling to public hospitals or insurers in the US or Canada', 'talked to 10+ buyers and have a price'), created_at: at('2026-11-02T13:00:00Z') },
+      { ask_id: 'a1', attempt: 1, verdict: 'ask_back' as const, cited: cited('B2B founders selling to enterprise customers', 'have a price'), created_at: at('2026-11-02T12:00:00Z') },
+      { ask_id: 'a1', attempt: 2, verdict: 'accept' as const, cited: cited('B2B founders selling to enterprise customers', 'talked to 10+ buyers and have a price'), created_at: at('2026-11-02T13:00:00Z') },
       { ask_id: 'a2', attempt: 1, verdict: 'ask_back' as const, cited: cited('talked to 10+ buyers'), created_at: at('2026-11-03T12:00:00Z') },
       { ask_id: 'a3', attempt: 1, verdict: 'decline' as const, cited: cited('No asks to review a deck.'), created_at: at('2026-11-04T12:00:00Z') },
       { ask_id: 'a4', attempt: 1, verdict: 'decline' as const, cited: [], created_at: at('2026-11-05T12:00:00Z') },
@@ -319,7 +319,7 @@ describe('the monthly ledger', () => {
     const l = buildLedger(rules, decisions, 1, '2026-11-01');
     expect(l).toMatchObject({ reached_gate: 7, reached_you: 1, declined: 4, failed: 1, no_line: 2, old_lines: 1 });
     expect(l.tallies).toEqual(['1 let in', '1 let in · 1 question', 'not used this month', '1 kept out']);
-    expect(l.example).toBe('B2B founders selling to public hospitals or insurers in the US or Canada');
+    expect(l.example).toBe('B2B founders selling to enterprise customers');
     for (const r of l.ranges) expect(rules.slice(r.start, r.end).length).toBeGreaterThan(3);
     expect(buildLedger(rules, [], 0, '2026-11-01')).toMatchObject({ reached_gate: 0, tallies: null, example: null });
   });
@@ -328,7 +328,7 @@ describe('the monthly ledger', () => {
     const asker = await db.createMember(email('asker'), { rules: ENGINEER });
     const id = await db.createMember(email('ledger'), { rules: HEALTH });
     const month = capMonth(new Date());
-    await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L1x', $1, 'raw', '{}'::jsonb, 'Hospital procurement in the US', 'open')`, [asker]);
+    await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L1x', $1, 'raw', '{}'::jsonb, 'Enterprise deals stuck 5 months', 'open')`, [asker]);
     await db.pg.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ('a_L2x', $1, 'raw', '{}'::jsonb, 'Old ask', 'closed')`, [asker]);
     await db.pg.query(`insert into public.ask_members (ask_id, member_id, position) values ('a_L1x', $1, 0), ('a_L2x', $1, 0)`, [id]);
     await db.pg.query(

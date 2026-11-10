@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createTestDb, type TestDb } from './harness';
 
-const HEALTH_RULES = 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.\nNo asks to review a deck.';
+const HEALTH_RULES = 'Happy to talk to B2B founders selling to enterprise customers.\nNo asks to review a deck.';
 let tokenSeq = 0;
 const tokenHash = () => (++tokenSeq).toString(16).padStart(64, '0');
 
@@ -14,7 +14,7 @@ afterAll(async () => db?.close());
 
 async function newAsk(id: string, asker: string) {
   await db.asService((tx) =>
-    tx.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ($1, $2, 'raw ask text', '{}'::jsonb, 'Hospital procurement in the US, 20 min?', 'gating')`, [id, asker]),
+    tx.query(`insert into public.asks (id, asker_id, raw, compiled, subject, status) values ($1, $2, 'raw ask text', '{}'::jsonb, 'Enterprise deals stuck 5 months, 20 min?', 'gating')`, [id, asker]),
   );
 }
 async function addToNetwork(askId: string, members: string[]) {
@@ -87,7 +87,7 @@ describe('create_offer and the offer state machine', () => {
   let first: string; // cap 1
   let second: string; // cap 2
   beforeAll(async () => {
-    asker = await db.createMember('asker@example.com', { rules: 'Happy to talk about tender templates.' });
+    asker = await db.createMember('asker@example.com', { rules: 'Happy to talk about procurement checklists.' });
     first = await db.createMember('first@example.com', { rules: HEALTH_RULES, cap: 1 });
     second = await db.createMember('second@example.com', { rules: HEALTH_RULES, cap: 2 });
     await newAsk('a_chain1', asker);
@@ -175,11 +175,11 @@ describe('save_rules', () => {
   });
 
   it('creates a new version on each save and keeps the current one in rules', async () => {
-    const v2 = await db.asService((tx) => tx.query<{ v: number }>(`select public.save_rules($1, $2, 'web') as v`, [m, `${HEALTH_RULES}\nNo asks about public procurement.`]));
+    const v2 = await db.asService((tx) => tx.query<{ v: number }>(`select public.save_rules($1, $2, 'web') as v`, [m, `${HEALTH_RULES}\nNo asks about procurement.`]));
     expect(v2.rows[0]?.v).toBe(2);
     const cur = await db.pg.query<{ version: number; text: string }>(`select version, text from public.rules where member_id = $1`, [m]);
     expect(cur.rows[0]?.version).toBe(2);
-    expect(cur.rows[0]?.text).toMatch(/public procurement/);
+    expect(cur.rows[0]?.text).toMatch(/No asks about procurement/);
     // The member can read their own versions (and only theirs).
     const versions = await db.asUser(m, (tx) => tx.query(`select version from public.rule_versions`));
     expect(versions.rows).toHaveLength(2);
@@ -202,13 +202,13 @@ describe('row level security', () => {
   let marcus: string;
   beforeAll(async () => {
     priya = await db.createMember('priya@example.com', { rules: HEALTH_RULES });
-    maya = await db.createMember('maya@oakline.example', { rules: 'Happy to talk about tender templates.' });
+    maya = await db.createMember('maya@oakline.example', { rules: 'Happy to talk about procurement checklists.' });
     marcus = await db.createMember('marcus@example.com', { rules: 'Happy to talk about Postgres.' });
     await newAsk('a_rls1', maya);
     await addToNetwork('a_rls1', [priya, marcus]);
     await db.pg.query(
       `insert into public.gate_decisions (ask_id, member_id, rules_version, verdict, model_verdict, decided_by, reason_code, reason)
-       values ('a_rls1', $1, 1, 'accept', 'accept', 'gate', 'match', 'Public hospitals.'), ('a_rls1', $2, 1, 'decline', 'decline', 'gate', 'topic', 'Postgres only.')`,
+       values ('a_rls1', $1, 1, 'accept', 'accept', 'gate', 'match', 'Enterprise customers.'), ('a_rls1', $2, 1, 'decline', 'decline', 'gate', 'topic', 'Churn only.')`,
       [priya, marcus],
     );
     await offer('o_rls1', 'a_rls1', priya, '2027-02-01T10:00:00-08:00');
@@ -328,7 +328,7 @@ describe('board_snapshot and real_line', () => {
       tx.query(
         `insert into public.audit (action, member_id, asker_id, ask_id, offer_id, detail) values
           ('member_joined', $1, null, null, null, '{}'),
-          ('ask_sent', null, $2, 'a_brd1', null, '{"topic":"Hospital procurement, US"}'),
+          ('ask_sent', null, $2, 'a_brd1', null, '{"topic":"Enterprise sales, US"}'),
           ('gate_checked', $1, $2, 'a_brd1', null, '{"verdict":"accept","decided_by":"gate","attempt":1}'),
           ('gate_checked', $2, $1, 'a_brd1', null, '{"verdict":"decline","decided_by":"clause_check","attempt":1}'),
           ('offer_delivered', $1, $2, 'a_brd1', 'o_brd1', '{}')`,
@@ -368,7 +368,7 @@ describe('model_usage, drafts and app_state (server-only shared state)', () => {
 
   it('keeps drafts and app state server-only', async () => {
     const m = await db.createMember('drafter@example.com', { rules: HEALTH_RULES });
-    await db.asService((tx) => tx.query(`insert into public.drafts (id, owner_id, raw) values ('d_7Kx2', $1, 'Our Postgres p95 went from 40 ms to 900 ms.')`, [m]));
+    await db.asService((tx) => tx.query(`insert into public.drafts (id, owner_id, raw) values ('d_7Kx2', $1, 'Customers churn after month 3.')`, [m]));
     await db.asService((tx) => tx.query(`insert into public.app_state (key, value) values ('live_pause', '{"state":"budget"}')`));
     await expect(db.asUser(m, (tx) => tx.query(`select id from public.drafts`))).rejects.toThrow(/permission denied/);
     await expect(db.asUser(m, (tx) => tx.query(`select public.add_model_usage(1)`))).rejects.toThrow(/permission denied/);

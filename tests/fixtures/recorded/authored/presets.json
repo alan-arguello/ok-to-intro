@@ -7,7 +7,7 @@
   "runs": {
     "engineer": {
       "preset": "engineer",
-      "rules_sha256": "e7add37ae9f6bd34422b0703f05bd05f1d0b2f9a24ba0d19c90bc40817318a62",
+      "rules_sha256": "b5c753d2dd867b388938e37c1fa068c5be136b41a82bef676f63df045907d3d1",
       "wall_ms": null,
       "cost_usd": null,
       "gates": [
@@ -17,21 +17,21 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "founders about Postgres, queues or LLM evals in production",
+              "text": "founders about churn, activation or support load",
               "found": true,
               "start": 17,
-              "end": 75
+              "end": 65
             },
             {
-              "text": "a real workload: a table size, a p95 or an error rate",
+              "text": "real usage: a customer count, a churn rate or a ticket count",
               "found": true,
-              "start": 95,
-              "end": 148
+              "start": 85,
+              "end": 145
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Postgres at 40M rows with a 900 ms p95: the topic, with a real workload.",
+          "reason": "Churn after month 3, with 31 of 120 accounts lost: the topic, with real usage.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -45,7 +45,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hospital procurement. No line in these rules covers it.",
+          "reason": "Enterprise sales. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -58,21 +58,21 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "founders about Postgres, queues or LLM evals in production",
+              "text": "founders about churn, activation or support load",
               "found": true,
               "start": 17,
-              "end": 75
+              "end": 65
             },
             {
-              "text": "a real workload: a table size, a p95 or an error rate",
+              "text": "real usage: a customer count, a churn rate or a ticket count",
               "found": true,
-              "start": 95,
-              "end": 148
+              "start": 85,
+              "end": 145
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "LLM evals in production, with an 8% failure rate on real tickets.",
+          "reason": "Support load, with 140 tickets a month.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -86,7 +86,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Pricing software for insurers. No line in these rules covers it.",
+          "reason": "Pricing. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -100,7 +100,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hiring a first engineer. No line in these rules covers it.",
+          "reason": "Hiring a first salesperson. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -113,18 +113,18 @@
           "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "founders about Postgres, queues or LLM evals in production",
+              "text": "founders about churn, activation or support load",
               "found": true,
               "start": 17,
-              "end": 75
+              "end": 65
             }
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Queues fit, but the ask gives no number for the workload.",
+          "reason": "Activation fits, but the ask gives no number for usage.",
           "question": {
             "type": "metric",
-            "text": "How many jobs a day do you run, and what share gets dropped?"
+            "text": "How many signups a month do you get, and what share finishes setup?"
           },
           "flags": [],
           "confidence": null,
@@ -151,15 +151,15 @@
           "model_verdict": "decline",
           "cited": [
             {
-              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "text": "Only if they have real usage: a customer count, a churn rate or a ticket count.",
               "found": true,
-              "start": 77,
-              "end": 149
+              "start": 67,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "stage",
-          "reason": "Pre-launch with no users, so there is no workload yet.",
+          "reason": "Pre-launch with no users, so there is no usage yet.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -172,21 +172,21 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "founders about Postgres, queues or LLM evals in production",
+              "text": "founders about churn, activation or support load",
               "found": true,
               "start": 17,
-              "end": 75
+              "end": 65
             },
             {
-              "text": "a real workload: a table size, a p95 or an error rate",
+              "text": "real usage: a customer count, a churn rate or a ticket count",
               "found": true,
-              "start": 95,
-              "end": 148
+              "start": 85,
+              "end": 145
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "LLM evals in production; 6% of claims misrouted.",
+          "reason": "Activation; 9 of 20 accounts never run a second report.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -233,8 +233,8 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 171,
-              "end": 196
+              "start": 168,
+              "end": 193
             }
           ],
           "decided_by": "gate",
@@ -250,7 +250,7 @@
     },
     "health": {
       "preset": "health",
-      "rules_sha256": "b6260dbdde969d3da44ed6651556265fa890a748f2935909961511b99940b319",
+      "rules_sha256": "0e3999da706330161fd4f2545f26e2cc9d5a145e5eaa047eaf93e63743eed776",
       "wall_ms": null,
       "cost_usd": null,
       "gates": [
@@ -261,7 +261,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Postgres performance. No line in these rules covers it.",
+          "reason": "Churn. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -274,24 +274,24 @@
           "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "B2B founders selling to public hospitals or insurers in the US or Canada",
+              "text": "B2B founders selling to enterprise customers",
               "found": true,
               "start": 17,
-              "end": 89
+              "end": 61
             },
             {
               "text": "have a price",
               "found": true,
-              "start": 134,
-              "end": 146
+              "start": 106,
+              "end": 118
             }
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Public hospitals in Illinois with 14 buyer calls, but the ask gives no price.",
+          "reason": "Enterprise deals with hospital groups and 14 buyer calls, but the ask gives no price.",
           "question": {
             "type": "price",
-            "text": "What do you charge per hospital, per year?"
+            "text": "What do you charge per customer, per year?"
           },
           "flags": [],
           "confidence": null,
@@ -305,7 +305,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "AI support tooling. No line in these rules covers it.",
+          "reason": "Support load. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -320,8 +320,8 @@
             {
               "text": "have a price",
               "found": true,
-              "start": 134,
-              "end": 146
+              "start": 106,
+              "end": 118
             }
           ],
           "decided_by": "gate",
@@ -354,7 +354,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Job queues. No line in these rules covers it.",
+          "reason": "Activation. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -368,7 +368,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Sells to a bank, not to hospitals or insurers.",
+          "reason": "A SOC 2 audit. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -382,7 +382,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Postgres schema design. No line in these rules covers it.",
+          "reason": "Onboarding before launch. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -395,21 +395,21 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "B2B founders selling to public hospitals or insurers in the US or Canada",
+              "text": "B2B founders selling to enterprise customers",
               "found": true,
               "start": 17,
-              "end": 89
+              "end": 61
             },
             {
               "text": "talked to 10+ buyers and have a price",
               "found": true,
-              "start": 109,
-              "end": 146
+              "start": 81,
+              "end": 118
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Sells to insurers in the US; 11 insurer calls; $2,500 a month per insurer.",
+          "reason": "Sells to enterprise health systems; 11 buyer calls; $2,500 a month per account.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -439,7 +439,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Sells to private clinics, not public hospitals or insurers. The ask told the gate what to answer and what to quote. It was read as text, not followed.",
+          "reason": "Sells to small private clinics, not enterprise customers. The ask told the gate what to answer and what to quote. It was read as text, not followed.",
           "question": null,
           "flags": [
             "instruction_in_ask"
@@ -456,8 +456,8 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 169,
-              "end": 194
+              "start": 141,
+              "end": 166
             }
           ],
           "decided_by": "gate",
@@ -473,7 +473,7 @@
     },
     "founder": {
       "preset": "founder",
-      "rules_sha256": "f909daf277a050e5343a04fc557f2b10ad3d57a25d73efac545e2541d09ecd6a",
+      "rules_sha256": "189a3be28ad1d2801286edc7f0c9666bbf4689f35a88eb8889d94eff7b99b4f3",
       "wall_ms": null,
       "cost_usd": null,
       "gates": [
@@ -484,7 +484,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Postgres performance. No line in these rules covers it.",
+          "reason": "Churn. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -498,7 +498,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hospital procurement. No line in these rules covers it.",
+          "reason": "Enterprise sales. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -512,7 +512,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "LLM evals. No line in these rules covers it.",
+          "reason": "Support load. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -526,7 +526,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Pricing software for insurers. No line in these rules covers it.",
+          "reason": "Pricing. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -539,21 +539,21 @@
           "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "hiring a first engineer",
+              "text": "hiring a first salesperson",
               "found": true,
               "start": 20,
-              "end": 43
+              "end": 46
             },
             {
               "text": "Only if you have revenue.",
               "found": true,
-              "start": 76,
-              "end": 101
+              "start": 79,
+              "end": 104
             }
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Hiring a first engineer fits, but the ask doesn’t say whether there is revenue.",
+          "reason": "Hiring a first salesperson fits, but the ask doesn’t say whether there is revenue.",
           "question": {
             "type": "stage",
             "text": "Do you have revenue? Roughly how much a month?"
@@ -570,7 +570,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Job queues. No line in these rules covers it.",
+          "reason": "Activation. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -585,14 +585,14 @@
             {
               "text": "passing a first SOC 2 audit",
               "found": true,
-              "start": 47,
-              "end": 74
+              "start": 50,
+              "end": 77
             },
             {
               "text": "Only if you have revenue.",
               "found": true,
-              "start": 76,
-              "end": 101
+              "start": 79,
+              "end": 104
             }
           ],
           "decided_by": "gate",
@@ -611,7 +611,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Postgres schema design. No line in these rules covers it.",
+          "reason": "Onboarding before launch. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -625,7 +625,7 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "LLM evals for claims. No line in these rules covers it.",
+          "reason": "Activation. No line in these rules covers it.",
           "question": null,
           "flags": [],
           "confidence": null,
@@ -672,8 +672,8 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 123,
-              "end": 148
+              "start": 126,
+              "end": 151
             }
           ],
           "decided_by": "gate",

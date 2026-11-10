@@ -21,7 +21,7 @@ const clean = (s: string | null | undefined) => stripEnd(String(s ?? '').replace
 /**
  * Card facts in order: Problem, Needs, Tried, By, Offers, then Price when a gate asked for it and the asker
  * answered. Empty parts are dropped. `price` is the fact text as the surface shows it, e.g.
- * “$18k a year per hospital (Maya told your gate)”.
+ * “$18k a year per customer (Maya told your gate)”.
  */
 export function askFacts(parts: AskParts, price?: string | null): Fact[] {
   const facts: Fact[] = [];
@@ -40,8 +40,8 @@ export function askFacts(parts: AskParts, price?: string | null): Fact[] {
 /**
  * The ask as members read it: the founder's own text, then one sentence per part they added after the check, in
  * the order tried, needs (+ by), offers. Parts the compiler found in the text are not repeated.
- * assembleAskText('…writes still block.', parts, ['needs', 'by', 'offers']) →
- * “…writes still block. Need 20 minutes with someone who has run Postgres past 100M rows, before Nov 21. Offer: our load-test harness.”
+ * assembleAskText('…no change.', parts, ['needs', 'by', 'offers']) →
+ * “…no change. Need 20 minutes with someone who has cut early churn in a B2B product, before Nov 21. Offer: our cancellation interview notes.”
  */
 export function assembleAskText(raw: string, parts: AskParts, added: readonly PartKey[]): string {
   let base = String(raw ?? '').trim();

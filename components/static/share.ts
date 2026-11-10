@@ -18,7 +18,7 @@ export function isProductionSite(env: Record<string, string | undefined> = proce
  */
 
 export const OG_IMAGE_ALT =
-  'OK to Intro: “What would you agree to be asked?” above one sample row, Reaches you · Tidewell Data, citing “founders about Postgres, queues or LLM evals in production” as found in your rules.';
+  'OK to Intro: “What would you agree to be asked?” above one sample row, Reaches you · Tidewell Data, citing “founders about churn, activation or support load” as found in your rules.';
 
 export const OG_IMAGE = { url: '/opengraph-image.png', width: 1200, height: 630, type: 'image/png', alt: OG_IMAGE_ALT } as const;
 

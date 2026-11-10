@@ -63,7 +63,7 @@ export interface MeInitial {
   /** 0 = no rules saved yet. */
   rulesVersion: number;
   saved: TimeLabel | null;
-  /** The first-visit block's source label: “From the playground”, “Health operator preset”, or null. */
+  /** The first-visit block's source label: “From the playground”, “Sales operator preset”, or null. */
   rulesSourceLabel: string | null;
   capUsed: number;
   /** Cap month, YYYY-MM-01 (Pacific time). */

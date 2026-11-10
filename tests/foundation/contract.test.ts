@@ -11,7 +11,7 @@ const a02 = SAMPLE_ASKS.find((a) => a.id === 'a02')!;
 
 describe('askFacts: one card everywhere (ux-spec Revision 3)', () => {
   it('reads Problem, Needs (“20 minutes with …”), Tried, By, Offers, then Price, as on the sample offer', () => {
-    const facts = askFacts(a02.parts, '$18k a year per hospital (Maya told your gate)');
+    const facts = askFacts(a02.parts, '$18k a year per customer (Maya told your gate)');
     expect(facts).toEqual(OFFER_SAMPLE.facts);
   });
 
@@ -23,12 +23,12 @@ describe('askFacts: one card everywhere (ux-spec Revision 3)', () => {
 describe('assembleAskText: the ask members read', () => {
   it('appends only the parts the founder added, in a fixed order', () => {
     const sa = SAMPLE_NETWORK_ASKS.engineer;
-    const parts = { challenge: 'x', tried: 'y', needs: 'someone who has run Postgres past 100M rows', by: 'Nov 21', offers: 'our load-test harness' };
+    const parts = { challenge: 'x', tried: 'y', needs: 'someone who has cut early churn in a B2B product', by: 'Nov 21', offers: 'our cancellation interview notes' };
     expect(assembleAskText(sa.partial, parts, ['needs', 'by', 'offers'])).toBe(
-      `${sa.partial} Need 20 minutes with someone who has run Postgres past 100M rows, before Nov 21. Offer: our load-test harness.`,
+      `${sa.partial} Need 20 minutes with someone who has cut early churn in a B2B product, before Nov 21. Offer: our cancellation interview notes.`,
     );
     expect(assembleAskText(a01.text, a01.parts, [])).toBe(a01.text);
-    expect(assembleAskText('No period here', { ...a01.parts }, ['offers'])).toBe('No period here. Offer: our load-test harness.');
+    expect(assembleAskText('No period here', { ...a01.parts }, ['offers'])).toBe('No period here. Offer: our cancellation interview notes.');
   });
 });
 
@@ -63,7 +63,7 @@ describe('suggestRuleEdit: templated, additive, never copies the ask', () => {
 
   it('Not my area adds “No asks about <topic>.”; Wrong stage adds the stage line', () => {
     const area = suggestRuleEdit('not_my_area', { rules: health, matchedLine: health.split('\n')[0]!, topic: a02.topic, askText: a02.text, companies: [a02.company] });
-    expect(area).toEqual({ reason: 'not_my_area', context: health.split('\n')[0], add: 'No asks about hospital procurement.' });
+    expect(area).toEqual({ reason: 'not_my_area', context: health.split('\n')[0], add: 'No asks about enterprise sales.' });
     const stage = suggestRuleEdit('wrong_stage', { rules: health, matchedLine: null, topic: a02.topic, askText: a02.text });
     expect(stage?.add).toBe('Only after a first paying customer.');
   });
@@ -78,8 +78,8 @@ describe('suggestRuleEdit: templated, additive, never copies the ask', () => {
 
   it('never names a company and never copies 6+ words of the ask', () => {
     expect(suggestRuleEdit('not_my_area', { rules: health, matchedLine: null, topic: 'Oakline Health deals', askText: a02.text, companies: ['Oakline Health'] })).toBeNull();
-    expect(sharesWords('No asks about public hospital procurement committee in the US.', a02.text)).toBe(true);
-    expect(topicPhrase('Hospital procurement, US')).toBe('hospital procurement');
+    expect(sharesWords('No asks about a first enterprise deal through procurement.', a02.text)).toBe(true);
+    expect(topicPhrase('Enterprise sales, US')).toBe('enterprise sales');
     expect(topicPhrase('First SOC 2 audit')).toBe('first SOC 2 audit');
   });
 });

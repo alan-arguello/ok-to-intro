@@ -161,8 +161,8 @@ export function KitDemo() {
             <RulesReadView
               rules={ENGINEER}
               ranges={[
-                range('Happy to talk to founders about Postgres, queues or LLM evals in production.', ['a01']),
-                range('a real workload: a table size, a p95 or an error rate'),
+                range('Happy to talk to founders about churn, activation or support load.', ['a01']),
+                range('real usage: a customer count, a churn rate or a ticket count'),
                 range('No asks to review a deck.'),
               ]}
               activeKeys={['a01']}
@@ -195,7 +195,7 @@ export function KitDemo() {
                   <RowAside desk>1.3 s</RowAside>
                 </RowLine1>
                 <RowBody>
-                  Our Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows. Tried monthly partitions and a read replica; writes still block. Need 20 minutes with someone who has run Postgres past 100M rows, before Nov 21. Offer: our load-test harness.
+                  Customers churn after month 3: 31 of 120 accounts left last quarter, most right after onboarding ends. Tried a check-in call at day 60 and an annual discount; no change. Need 20 minutes with someone who has cut early churn in a B2B product, before Nov 21. Offer: our cancellation interview notes.
                 </RowBody>
               </RowToggle>
               <RowFoot>
@@ -203,10 +203,10 @@ export function KitDemo() {
                   <span className="ink-2">Cited</span>
                   <span>
                     <span style={{ display: 'block' }}>
-                      <Clause>founders about Postgres, queues or LLM evals in production</Clause>
+                      <Clause>founders about churn, activation or support load</Clause>
                     </span>
                     <span style={{ display: 'block', marginTop: 2 }}>
-                      <Clause>a real workload: a table size, a p95 or an error rate</Clause>{' '}
+                      <Clause>real usage: a customer count, a churn rate or a ticket count</Clause>{' '}
                       <span className="ink-2" style={{ whiteSpace: 'nowrap' }}>
                         ✓ in your rules
                       </span>
@@ -290,7 +290,7 @@ export function KitDemo() {
                 </ButtonLink>
               }
             >
-              Hospital procurement in the US · 61 h left
+              Enterprise deals stuck 5 months · 61 h left
             </Notice>
             <Diff
               label="Suggested change to your rules"
@@ -363,7 +363,7 @@ export function KitDemo() {
               <Stat label="People interrupted per useful outcome" value={<Metric attn>2.2</Metric>} note="11 interrupted ÷ 5 useful" />
               <Stat label="Cap overruns" value="0" note="race test passed Nov 9" />
             </Stats>
-            <Crumbs items={[{ href: '/ask', label: 'Asks' }, { label: 'Postgres p95 at 40M rows' }]} />
+            <Crumbs items={[{ href: '/ask', label: 'Asks' }, { label: 'Churn after month 3' }]} />
             <Disclosure summary="Raw trace (24 lines)">
               <p className="small">…</p>
             </Disclosure>

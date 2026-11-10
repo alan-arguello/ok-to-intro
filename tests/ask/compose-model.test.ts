@@ -67,11 +67,11 @@ describe('example compile results (the sample chips, hand-written)', () => {
   it('sample answers are the complete ask’s own words', () => {
     const sa = SAMPLE_NETWORK_ASKS.engineer;
     expect(sampleAnswers(sa)).toEqual({
-      challenge: 'Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows',
-      tried: 'monthly partitions and a read replica',
-      needs: 'someone who has run Postgres past 100M rows',
+      challenge: 'Customers churn after month 3: 31 of 120 accounts left last quarter',
+      tried: 'a check-in call at day 60 and an annual discount',
+      needs: 'someone who has cut early churn in a B2B product',
       by: 'Nov 21',
-      offers: 'our load-test harness',
+      offers: 'our cancellation interview notes',
     });
   });
 });
@@ -119,7 +119,7 @@ describe('the parts list', () => {
   it('Edit turns a suggestion into an input holding it; Use approves it', () => {
     const s = compiled('engineer');
     const edited = composeReducer(s, { type: 'partEdit', i: 2 });
-    expect(edited.parts?.[2]).toMatchObject({ state: 'editing', value: 'someone who has run Postgres past 100M rows' });
+    expect(edited.parts?.[2]).toMatchObject({ state: 'editing', value: 'someone who has cut early churn in a B2B product' });
     expect(isResolved(edited.parts![2]!)).toBe(true);
     const cleared = composeReducer(edited, { type: 'partInput', i: 2, value: '  ' });
     expect(isResolved(cleared.parts![2]!)).toBe(false);
@@ -136,7 +136,7 @@ describe('the parts list', () => {
   });
 
   it('suggestedFrom joins quoted phrases', () => {
-    expect(suggestedFrom(['writes still block', '40M rows'])).toBe('suggested from “writes still block” and “40M rows”');
+    expect(suggestedFrom(['churn after month 3', '31 of 120 accounts'])).toBe('suggested from “churn after month 3” and “31 of 120 accounts”');
     expect(suggestedFrom([])).toBe('suggested');
   });
 });
@@ -222,7 +222,7 @@ describe('the compose reducer', () => {
 describe('subjects written by code from the founder’s challenge', () => {
   it.each([
     // Cut on a word boundary to fit “, 20 min?” in 45 characters (the prototype's rule); the founder can edit it.
-    ['Our Postgres p95 went from 40 ms to 900 ms past 40M rows', 'Postgres p95 went from 40 ms to 900, 20 min?'],
+    ['Our customers churn after month 3 and 31 of 120 left last quarter', 'Customers churn after month 3 and 31, 20 min?'],
     ['We need a first engineer', 'Need a first engineer, 20 min?'],
     ['Checkout drops 4% of card payments at 3DS', 'Checkout drops 4% of card payments, 20 min?'],
     ['', ''],
@@ -234,10 +234,10 @@ describe('subjects written by code from the founder’s challenge', () => {
 });
 
 describe('“Use this edit” inserts the one true sentence after the line it extends', () => {
-  it('adds the workload number after “writes still block.”', () => {
+  it('adds the revenue number after “no change.”', () => {
     const sa = SAMPLE_NETWORK_ASKS.engineer;
     const text = withEdit(sa.complete, sa.noMatchEdit);
-    expect(text).toContain('writes still block. Our events table takes 2k writes/s at peak. Need 20 minutes');
+    expect(text).toContain('no change. Our 120 accounts pay $400 a month on average. Need 20 minutes');
   });
   it('appends when the context isn’t in the text', () => {
     expect(withEdit('Something else.', { context: 'Not here at all, really.', add: 'Added.' })).toBe('Something else. Added.');

@@ -1,22 +1,19 @@
 /**
  * Copy for S8's static pages (/how, /privacy, 404, error), verbatim from prototype/how.html, privacy.html, 404.html
  * and error.html, with the honesty changes docs/CONTRACT.md §e requires:
- * - eval results only from data/eval/heldout-summary.json (`source: "eval"`), never the prototype's “3 of 3”;
- * - costs say “about” and come from the one cost constant (lib/sample/cost.ts), labelled an estimate while it is one;
  * - /privacy says exactly what the code stores, keeps and deletes, and links each line to the code that enforces it.
  */
 
-import { fmtUsdAbout, fmtUsdConst } from '@/components/board/format';
-import { COST, estimatedCost } from '@/lib/sample/cost';
 import { MODELS } from '@/lib/site';
-import type { EvalSummary } from '@/lib/types';
 
 export const HOW_COPY = {
   title: 'How it works',
-  description: 'The five steps from a member’s rules to an intro, what enforces each one, and the guarantees with their tests.',
+  description: 'Five steps: a founder writes an ask, a model checks it, each member’s own rules decide, a monthly limit holds, and one person at a time gets the offer.',
+  lede: 'The mechanism in 5 short steps. This demo runs it on 40 fictional members.',
   stepsLabel: 'Five steps',
-  guaranteesTitle: 'Guarantees',
-  codeAndEval: 'Code and eval:',
+  tryAsk: 'Write an ask',
+  tryRules: 'On the other side? See what would reach you ›',
+  code: 'Code:',
 } as const;
 
 export interface HowStep {
@@ -26,71 +23,25 @@ export interface HowStep {
 }
 
 export const HOW_STEPS: readonly HowStep[] = [
-  { name: 'Rules and cap', line: 'You write rules and a cap.', by: ['Your rules (model)', 'Cap (Postgres)'] },
+  { name: 'The ask', line: 'A founder writes one specific ask for a 20-minute call.', by: ['Founder'] },
   {
-    name: 'The ask',
-    line: 'A founder writes one specific ask. It’s checked for 5 parts; vague asks and anything about YC applications are refused.',
-    by: [`Compiler (${MODELS.compiler})`],
+    name: 'The check',
+    line: 'A model checks it for 5 parts: the challenge, what they tried, who they need, a deadline and an offer back. Vague asks are refused.',
+    by: [`Model (${MODELS.compiler})`],
   },
   {
-    name: 'The gates',
-    line: 'SQL drops members at their cap and repeat pairs. Each remaining member’s gate returns accept, decline or one question, quoting the line it used. Code checks the quote is in that member’s rules; if not, it’s a decline.',
-    by: ['Model + code'],
+    name: 'Each member’s gate',
+    line: 'Every member wrote, in their own words, what they’d agree to help with. A small model reads the ask against those rules and must quote the line it used. Code checks the quote is really there; if not, it’s a no.',
+    by: [`Model (${MODELS.gate})`, 'Code'],
   },
-  {
-    name: 'One offer at a time',
-    line: 'reserve_slot() locks the member’s monthly counter, so two asks can’t take the last slot. One person gets one card. A No or 72 quiet hours moves it to the next person who accepted.',
-    by: ['Postgres row lock'],
-  },
-  {
-    name: 'Intro and check-ins',
-    line: 'Both people get the intro. At +1 day both are asked if the call happened; at +14 days the founder is asked what came of it.',
-    by: ['Email + cron'],
-  },
+  { name: 'The monthly limit', line: 'Each member picks how many intros a month they take, from 1 to 5. An ask that matches after that number doesn’t reach them.', by: ['Code'] },
+  { name: 'One offer at a time', line: 'One member who matched sees the ask. A no, or 72 quiet hours, moves it to the next one. Nobody is introduced until that person says OK.', by: ['Code'] },
 ];
-
-/** “(3 of 3 declined in each run)” from a real eval; otherwise says the eval hasn't run. */
-export function injectionResult(summary: EvalSummary): string {
-  const row = summary.source === 'eval' ? summary.rows.find((r) => r.case_type === 'injection') : undefined;
-  if (!row || !row.runs.length) return 'Injection cases are part of the held-out eval, which hasn’t run yet.';
-  const same = row.runs.every((n) => n === row.runs[0]);
-  const declined = same ? `${row.runs[0]} of ${row.n} declined in each run` : `${row.runs.join(', ')} of ${row.n} declined across the ${row.runs.length} runs`;
-  return `Injection cases are in the held-out eval (${declined}).`;
-}
-
-export function howGuarantees(summary: EvalSummary): readonly { lead: string; text: string }[] {
-  return [
-    { lead: 'Caps live in Postgres.', text: 'Test: 20 concurrent asks, 1 free slot, exactly 1 offer.' },
-    {
-      lead: 'Every quote is checked.',
-      text: 'A cited line must appear in the member’s rules, character for character after normalizing quotes, spaces and letter case, or the verdict becomes a decline.',
-    },
-    {
-      lead: 'Asks are data.',
-      text: `The ask reaches the gate as quoted text after your rules. ${injectionResult(summary)} If a gate is fooled anyway, code still checks every quote, Postgres still holds the cap, and nobody is introduced until a person presses OK.`,
-    },
-    {
-      lead: 'Failures never interrupt anyone.',
-      text: 'A gate that errors or times out counts as not checked, never as an accept. If more than 1 in 5 gates fail, nothing is offered.',
-    },
-    { lead: 'Askers learn little:', text: 'no caps, no list of who declined, no names before OK.' },
-    { lead: 'A person always says yes.', text: 'No intro is sent without the member pressing OK.' },
-    { lead: 'Email buttons can’t act.', text: 'They open a page; only a button on that page does anything.' },
-  ];
-}
-
-/** The cost line, from the one cost constant; “estimated from published prices” while it is an estimate. */
-export function howCostLine(): string {
-  const per = fmtUsdConst(COST.perGate);
-  const twelve = fmtUsdAbout(estimatedCost(12));
-  const thirtyThree = fmtUsdAbout(estimatedCost(33));
-  const how = COST.estimate ? ', estimated from published prices' : ', measured';
-  return `Cost: about ${per} per gate call on ${COST.model}${how} (about ${twelve} for the 12 sample asks); an ask that reaches 33 gates costs about ${thirtyThree}.`;
-}
 
 export const PRIVACY_COPY = {
   title: 'Privacy',
   description: 'Who sees your rules, cap and answers, what is stored, which processors handle it and how to delete it.',
+  demo: 'This site is a demo: 40 fictional members, no accounts and no email. The rows below describe what the code does when it runs a real network.',
   whoTitle: 'Who sees what',
 } as const;
 
@@ -119,14 +70,12 @@ export const PRIVACY_ROWS = {
   store:
     'Your email, name, one line, scheduling link and asker profile; your rules and every saved version; your cap and pause; your asks and the gate decisions on them, each with the rules version it used; offers, intros and check-ins; drafts of asks made in Claude Code, which expire after 24 hours; a hash of your Claude Code token, never the token; and an audit log of facts for the board, without rules, ask text, names or emails.',
   noStore:
-    'Playground rules (they stay in your browser tab unless you join), email opens, and IP addresses: rate limits keep only an HMAC of the address with a daily salt, removed by the daily cleanup after a day.',
+    'Rules you try on this site (they stay in your browser tab), email opens, and IP addresses: rate limits keep only an HMAC of the address with a daily salt, removed by the daily cleanup after a day.',
   processors:
     'Supabase (database and email sign-in), Anthropic (gate and compiler calls; it deletes API inputs and outputs within 30 days by default, longer only for content its safety review flags), Resend (email), Vercel (hosting; our code never logs request bodies).',
   never: 'Gmail, Calendar, Notion, or any community data.',
-  deleteBefore: 'In ',
-  deleteLink: 'Your gate',
-  deleteAfter:
-    ', one button and one confirm. It deletes your account, rules, cap, asks, offers, check-ins and tokens now, and cancels emails still scheduled to you. Intros already sent stay in inboxes; the board’s counts stay, without your name. Export (JSON), next to it, downloads your data first.',
+  delete:
+    'A member deletes everything from their own page, with one button and one confirm. It deletes the account, rules, cap, asks, offers, check-ins and tokens now, and cancels emails still scheduled to them. Intros already sent stay in inboxes; counts stay, without the name. An export (JSON) downloads the data first. This demo has no accounts, so there is nothing of yours to delete.',
   contactFallback: ' (a public issue: leave personal data out)',
 } as const;
 

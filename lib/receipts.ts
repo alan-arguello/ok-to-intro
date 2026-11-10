@@ -739,7 +739,7 @@ export function myAsksReceipt(rows: readonly MyAskRow[], opts: { example?: boole
   });
 }
 
-/** “Hospital procurement in the US, 20 min?” → “Hospital procurement in the US”. */
+/** “Enterprise deals stuck 5 months, 20 min?” → “Enterprise deals stuck 5 months”. */
 function bareTitle(subject: string): string {
   return String(subject || '').replace(/,\s*20 min\?\s*$/, '');
 }

@@ -29,7 +29,7 @@ function view(over: Partial<CheckinView> = {}): CheckinView {
     sample: false,
     other_name: 'Priya Shah',
     other_first: 'Priya',
-    intro_subject: 'Hospital procurement in the US, 20 min?',
+    intro_subject: 'Enterprise deals stuck 5 months, 20 min?',
     intro_made_at: '2026-11-09T21:16:00-08:00',
     answer: null,
     answered_at: null,

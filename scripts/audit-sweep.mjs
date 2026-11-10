@@ -30,8 +30,8 @@ const shotsDir = opt('shots', '');
 /** lib/qa.ts QA_STATES (tests/site/scripts.test.ts fails if the two differ). */
 export const QA = {
   home: ['default'],
-  playground: ['not-run', 'running', 'done-recorded', 'done-live', 'rerun-changed', 'rerun-nochange', 'stale', 'cap-changed', 'partial-timeout', 'clause-check', 'marks', 'empty-rules', 'too-long', 'all-declined', 'all-accepted', 'rate-limited', 'api-down', 'budget', 'lost-stream', 'offline'],
-  ask: ['empty', 'filled', 'compiling', 'compiled', 'ready', 'refused-vague', 'refused-yc', 'compiler-slow', 'compiler-down', 'queued', 'real-guest'],
+  playground: ['not-run', 'running', 'done-recorded', 'done-live', 'stale', 'cap-changed', 'partial-timeout', 'empty-rules', 'too-long', 'all-declined', 'all-accepted', 'rate-limited', 'api-down', 'budget', 'lost-stream', 'offline'],
+  ask: ['empty', 'filled', 'compiling', 'compiled', 'ready', 'refused-vague', 'refused-yc', 'compiler-slow', 'compiler-down'],
   askStatus: ['offered', 'streaming', 'offered-you', 'ask-back', 'answered', 'intro', 'moved-on', 'no-match', 'closed-all-passed', 'expired-deadline', 'failed-closed', 'partial-failure', 'withdrawn', 'real'],
   board: ['default', 'launch-day', 'small-n', 'stale'],
   offer: ['open', 'confirm-ok', 'answer', 'ok-sent', 'answer-sent', 'no-done', 'no-reason-diff', 'no-reason-busy', 'diff-applied', 'already-acted', 'expired', 'withdrawn', 'paused-member', 'invalid', 'post-failed', 'sample'],

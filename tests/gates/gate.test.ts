@@ -20,8 +20,8 @@ import { GATE_RUBRIC, GATE_SCHEMA } from '@/lib/server/rubric';
 import { apiError, fakeFetch, hang, message, reply, verdict } from './fake-api';
 
 const ENGINEER = PRESETS.find((p) => p.id === 'engineer')!.rules;
-const E1 = 'founders about Postgres, queues or LLM evals in production';
-const E2 = 'a real workload: a table size, a p95 or an error rate';
+const E1 = 'founders about churn, activation or support load';
+const E2 = 'real usage: a customer count, a churn rate or a ticket count';
 const askOf = (a: (typeof SAMPLE_ASKS)[number]) => ({ text: a.text, subject: a.subject, parts: a.parts, asker_stage: a.stage });
 const A01 = SAMPLE_ASKS.find((a) => a.id === 'a01')!;
 const A06 = SAMPLE_ASKS.find((a) => a.id === 'a06')!;
@@ -45,21 +45,21 @@ describe('clause check: verifyQuotes', () => {
   });
 
   it('matches across collapsed whitespace and line breaks, and ignores case', () => {
-    const [a, b] = verifyQuotes(ENGINEER, ['A REAL WORKLOAD:   a table size', 'in production.  Only if they have']);
-    expect(ENGINEER.slice(a!.start, a!.end)).toBe('a real workload: a table size');
-    expect(ENGINEER.slice(b!.start, b!.end)).toBe('in production.\nOnly if they have');
+    const [a, b] = verifyQuotes(ENGINEER, ['REAL USAGE:   a customer count', 'support load.  Only if they have']);
+    expect(ENGINEER.slice(a!.start, a!.end)).toBe('real usage: a customer count');
+    expect(ENGINEER.slice(b!.start, b!.end)).toBe('support load.\nOnly if they have');
   });
 
   it('widens a quote that stops inside a word to the whole word', () => {
-    const [a, b] = verifyQuotes(ENGINEER, ['ounders about Postgres', 'Postgres, queue']);
-    expect(ENGINEER.slice(a!.start, a!.end)).toBe('founders about Postgres');
-    expect(ENGINEER.slice(b!.start, b!.end)).toBe('Postgres, queues');
+    const [a, b] = verifyQuotes(ENGINEER, ['ounders about churn', 'churn, activatio']);
+    expect(ENGINEER.slice(a!.start, a!.end)).toBe('founders about churn');
+    expect(ENGINEER.slice(b!.start, b!.end)).toBe('churn, activation');
     expect(snapToWords('abc def', 1, 5)).toEqual({ start: 0, end: 7 });
     expect(snapToWords('abc def', 0, 3)).toEqual({ start: 0, end: 3 });
   });
 
   it('rejects text that is not one contiguous span, and quotes too short to identify a line', () => {
-    const cited = verifyQuotes(ENGINEER, ['Happy to take any intro', 'Postgres, queues or error rate', 'No', 'a', '  ']);
+    const cited = verifyQuotes(ENGINEER, ['Happy to take any intro', 'churn, activation or ticket count', 'No', 'a', '  ']);
     expect(cited.map((c) => c.found)).toEqual([false, false, false, false]);
     for (const c of cited) {
       expect(c.start).toBeUndefined();
@@ -99,8 +99,8 @@ describe('code checks on the model output: decide', () => {
   });
 
   it('keeps a valid question and declines a question that breaks the rules', () => {
-    const ok = decide(ENGINEER, out({ verdict: 'ask_back', cited: [E1], reason_code: 'proof', question: { type: 'metric', text: 'How many jobs a day do you run, and what share gets dropped?' } }));
-    expect(ok).toMatchObject({ verdict: 'ask_back', decided_by: 'gate', question: { type: 'metric', text: 'How many jobs a day do you run, and what share gets dropped?' } });
+    const ok = decide(ENGINEER, out({ verdict: 'ask_back', cited: [E1], reason_code: 'proof', question: { type: 'metric', text: 'How many signups a month do you get, and what share finishes setup?' } }));
+    expect(ok).toMatchObject({ verdict: 'ask_back', decided_by: 'gate', question: { type: 'metric', text: 'How many signups a month do you get, and what share finishes setup?' } });
     const bad = [
       { type: 'metric', text: 'See https://example.com/form and tell us your p95?' },
       { type: 'role', text: 'Email your CTO at cto@example.com?' },
@@ -117,7 +117,7 @@ describe('code checks on the model output: decide', () => {
 
   it('accepts ordinary questions that only look like links', () => {
     expect(questionProblem({ type: 'metric', text: 'How many jobs/day do you run?' })).toBeNull();
-    expect(questionProblem({ type: 'price', text: 'What do you charge per hospital, per year?' })).toBeNull();
+    expect(questionProblem({ type: 'price', text: 'What do you charge per customer, per year?' })).toBeNull();
     expect(questionProblem({ type: 'stage', text: 'Do you have revenue? Roughly how much a month?' })).toBeNull();
     expect(questionProblem({ type: 'metric', text: 'What is the p95 on your Node.js API?' })).toBeNull();
   });
@@ -170,7 +170,7 @@ describe('runGate against a fake API', () => {
   });
 
   it('returns the verdict with code-found offsets, the measured cost and the request id', async () => {
-    api.next(reply(() => verdict({ verdict: 'accept', cited: [E1, E2], reason: 'Postgres at 40M rows.', confidence: 0.86 })));
+    api.next(reply(() => verdict({ verdict: 'accept', cited: [E1, E2], reason: 'Churn after month 3.', confidence: 0.86 })));
     const run = await runGateDetailed({ rules: ENGINEER, ask: askOf(A01) });
     expect(run.result.ok).toBe(true);
     if (!run.result.ok) return;

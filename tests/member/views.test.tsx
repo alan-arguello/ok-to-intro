@@ -139,7 +139,7 @@ describe('/me (SAMPLE preview, QA states only)', () => {
     expect(out).toContain(ME_COPY.protoNote);
     expect(out).toContain('Cap 2 a month · 1 of 2 used in November · resets Dec 1');
     expect(out).toContain('1 let in · 1 question · 3 kept out');
-    expect(out).toContain('<mark class="mark">B2B founders selling to public hospitals or insurers in the US or Canada</mark>');
+    expect(out).toContain('<mark class="mark">B2B founders selling to enterprise customers</mark>');
     expect(out).toContain('16 asks matched no line and were declined.');
     expect(out).toContain('Saved 21:14 · version 3');
     expect(out).toContain('When you ask, the member who gets it sees “Priya Shah · Oakline Health · Seed · Chicago”.');
@@ -153,7 +153,7 @@ describe('/me (SAMPLE preview, QA states only)', () => {
   it('first: the Finish block, gate off, Turn on my gate on desktop and in the phone bar', () => {
     const out = html(<MeView initial={sampleMe('first', NOV9)} />);
     expect(out).toContain('Not on yet');
-    expect(out).toContain('Health operator preset');
+    expect(out).toContain('Sales operator preset');
     expect(out.match(/Turn on my gate/g)?.length).toBe(2);
     expect(out).not.toContain(ME_COPY.protoNote);
     expect(out).not.toContain('id="token"');
@@ -163,7 +163,7 @@ describe('/me (SAMPLE preview, QA states only)', () => {
     expect(html(<MeView initial={sampleMe('paused', NOV9)} />)).toContain('Until Dec 1 · offers go to others');
     const pending = html(<MeView initial={sampleMe('offer-pending', NOV9)} />);
     expect(pending).toContain('1 ask is waiting on you');
-    expect(pending).toContain(' · Hospital procurement in the US · from Maya Bennett · 61 h left');
+    expect(pending).toContain(' · Enterprise deals stuck 5 months · from Maya Bennett · 61 h left');
     expect(html(<MeView initial={sampleMe('empty-ledger', NOV9)} />)).toContain('Your gate checked 6 asks this month and declined all 6. None reached you.');
     const created = html(<MeView initial={sampleMe('token-created', NOV9)} />);
     expect(created).toContain(SAMPLE_TOKEN);
@@ -215,11 +215,12 @@ describe('/pause/[token]', () => {
     expect(out).toMatch(/aria-checked="true"[^>]*data-value="month"/);
   });
 
-  it('paused: Undo is its own POST with until=undo, and Your gate › is the primary', () => {
+  it('paused: Undo is its own POST with until=undo, and the way back to the rules is the primary', () => {
     const out = html(<PauseView token="AAAAAAAAAAAAAAAAAAAAAA" sample={false} nowMs={NOV9} initial={{ kind: 'paused', phrase: 'until Dec 1', canUndo: true, focus: false, error: null }} />);
     expect(out).toContain('Paused until Dec 1.');
     expect(out).toContain('<input type="hidden" name="until" value="undo"/>');
-    expect(out).toContain('Your gate ›');
+    expect(out).toContain('Back to your rules ›');
+    expect(out).not.toContain('href="/me');
     const noUndo = html(<PauseView token="AAAAAAAAAAAAAAAAAAAAAA" sample={false} nowMs={NOV9} initial={{ kind: 'paused', phrase: 'until Dec 1', canUndo: false, focus: false, error: null }} />);
     expect(noUndo).not.toContain('Undo');
   });

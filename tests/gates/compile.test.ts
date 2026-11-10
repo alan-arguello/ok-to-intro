@@ -27,13 +27,13 @@ const PARTIAL = ENG.partial;
 
 const GOOD = {
   decision: 'compile',
-  challenge: { state: 'found', text: 'Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows', sources: ['Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows'] },
-  tried: { state: 'found', text: 'monthly partitions and a read replica', sources: ['monthly partitions and a read replica'] },
-  needs: { state: 'suggested', text: 'someone who has run Postgres past 100M rows', sources: ['writes still block', '40M rows'] },
+  challenge: { state: 'found', text: 'Customers churn after month 3: 31 of 120 accounts left last quarter', sources: ['Customers churn after month 3: 31 of 120 accounts left last quarter'] },
+  tried: { state: 'found', text: 'a check-in call at day 60 and an annual discount', sources: ['a check-in call at day 60 and an annual discount'] },
+  needs: { state: 'suggested', text: 'someone who has cut early churn in a B2B product', sources: ['churn after month 3', '31 of 120 accounts'] },
   by: { state: 'missing', text: '', sources: [] },
   offers: { state: 'missing', text: '', sources: [] },
-  subject: 'Postgres p95 at 40M rows, 20 min?',
-  topic: 'Postgres at scale',
+  subject: 'Churn after month 3, 20 min?',
+  topic: 'Churn',
 };
 
 type Received = CompileEvent & { id: string | null; at: number };
@@ -93,7 +93,7 @@ describe('code refusals (no model call, with or without a key)', () => {
   it('refuses asks about YC applications and the vague samples', () => {
     expect(codeRefusal('Need 20 minutes with a YC alum to review our YC application before the batch deadline.')).toBe('yc_application');
     for (const s of Object.values(SAMPLE_NETWORK_ASKS)) expect(codeRefusal(s.vague)).toBe('vague');
-    expect(codeRefusal('  need   INTROS to hospital buyers in the us. ')).toBe('vague');
+    expect(codeRefusal('  need   INTROS to enterprise buyers in the us. ')).toBe('vague');
     expect(codeRefusal('Help with fundraising')).toBe('vague');
     expect(codeRefusal(PARTIAL)).toBeNull();
     expect(codeRefusal(ENG.complete)).toBeNull();
@@ -150,16 +150,16 @@ describe('POST /api/compile live (fake streamed API)', () => {
     expect(parts.map((p) => p.i)).toEqual([0, 1, 2, 3, 4]);
     expect(parts.map((p) => p.part.state)).toEqual(['found', 'found', 'suggested', 'missing', 'missing']);
     for (const p of parts) for (const s of p.part.source) expect(PARTIAL.slice(s.start!, s.end!)).toBe(s.text);
-    expect(parts[0]!.part.text).toBe('Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows');
-    expect(parts[2]!.part).toMatchObject({ key: 'needs', text: 'someone who has run Postgres past 100M rows' });
-    expect(parts[2]!.part.source.map((s) => s.text)).toEqual(['writes still block', '40M rows']);
+    expect(parts[0]!.part.text).toBe('Customers churn after month 3: 31 of 120 accounts left last quarter');
+    expect(parts[2]!.part).toMatchObject({ key: 'needs', text: 'someone who has cut early churn in a B2B product' });
+    expect(parts[2]!.part.source.map((s) => s.text)).toEqual(['churn after month 3', '31 of 120 accounts']);
     expect(parts[3]!.part).toEqual({ key: 'by', state: 'missing', text: '', source: [], question: PART_QUESTIONS.by });
     // The first part arrives while the model is still writing (it streams; it doesn't wait for done).
     expect(evs[evs.length - 1]!.at - evs[1]!.at).toBeGreaterThan(40);
     const done = evs[evs.length - 1]!.data as { draft_id: string; subject: string; topic: string | null; parts: CompiledPart[]; ms: number };
     expect(done.draft_id).toBe((evs[0]!.data as { draft_id: string }).draft_id);
     expect(done.draft_id).toMatch(/^d_/);
-    expect(done).toMatchObject({ subject: 'Postgres p95 at 40M rows, 20 min?', topic: 'Postgres at scale' });
+    expect(done).toMatchObject({ subject: 'Churn after month 3, 20 min?', topic: 'Churn' });
     expect(done.parts.map((p) => p.key)).toEqual(['challenge', 'tried', 'needs', 'by', 'offers']);
   });
 
@@ -180,10 +180,10 @@ describe('POST /api/compile live (fake streamed API)', () => {
     api.next(
       streamOf({
         ...GOOD,
-        tried: { state: 'found', text: 'sharding with Citus and 14 buyer calls', sources: [] },
-        by: { state: 'suggested', text: 'Nov 30', sources: ['writes still block'] },
-        offers: { state: 'suggested', text: 'our load-test harness', sources: ['writes still block'] },
-        needs: { state: 'suggested', text: 'someone who has run Postgres past 100M rows', sources: ['a DBA with 100M-row experience'] },
+        tried: { state: 'found', text: 'a loyalty program and 14 buyer calls', sources: [] },
+        by: { state: 'suggested', text: 'Nov 30', sources: ['no change'] },
+        offers: { state: 'suggested', text: 'our cancellation interview notes', sources: ['no change'] },
+        needs: { state: 'suggested', text: 'someone who has cut early churn in a B2B product', sources: ['a consultant with 100 churn projects'] },
       }),
     );
     const evs = await events(await post({ text: PARTIAL, network: 'sample' }));
@@ -251,12 +251,12 @@ describe('POST /api/compile live (fake streamed API)', () => {
   });
 
   it('after a server-side fallback, the fallback model’s answer replaces the declined partial output', async () => {
-    const partialFromFirst = chunk(JSON.stringify({ decision: 'compile', challenge: { state: 'found', text: 'Our Postgres p95', sources: [] } }).slice(0, 60), 10);
+    const partialFromFirst = chunk(JSON.stringify({ decision: 'compile', challenge: { state: 'found', text: 'Customers churn after', sources: [] } }).slice(0, 60), 10);
     api.next(() => sse(textStreamEvents(chunk(JSON.stringify(GOOD), 11), { fallbackFirst: partialFromFirst })));
     const evs = await events(await post({ text: PARTIAL, network: 'sample' }));
     const done = evs[evs.length - 1]!;
     expect(done.event).toBe('done');
-    expect((done.data as { parts: CompiledPart[] }).parts[0]!.text).toBe('Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows');
+    expect((done.data as { parts: CompiledPart[] }).parts[0]!.text).toBe('Customers churn after month 3: 31 of 120 accounts left last quarter');
   });
 
   it('startCompile serves MCP draft_ask the same events', async () => {
@@ -272,8 +272,8 @@ describe('POST /api/compile live (fake streamed API)', () => {
 
 describe('part, subject and topic checks', () => {
   it('normalizePart widens a found span to whole words and drops trailing punctuation', () => {
-    const p = normalizePart('tried', { state: 'found', text: 'onthly partitions and a read replica;', sources: [] }, PARTIAL);
-    expect(p).toMatchObject({ state: 'found', text: 'monthly partitions and a read replica' });
+    const p = normalizePart('tried', { state: 'found', text: 'heck-in call at day 60 and an annual discount;', sources: [] }, PARTIAL);
+    expect(p).toMatchObject({ state: 'found', text: 'check-in call at day 60 and an annual discount' });
     expect(PARTIAL.slice(p.source[0]!.start!, p.source[0]!.end!)).toBe(p.text);
   });
 
@@ -286,16 +286,16 @@ describe('part, subject and topic checks', () => {
   });
 
   it('normalizeSubject keeps the model’s subject when it fits and derives one from the challenge otherwise', () => {
-    expect(normalizeSubject('Postgres p95 at 40M rows, 20 min?', null)).toBe('Postgres p95 at 40M rows, 20 min?');
-    expect(normalizeSubject('Postgres p95 at 40M rows', null)).toBe('Postgres p95 at 40M rows, 20 min?');
-    const derived = normalizeSubject('A subject that is far too long to fit in an inbox line, 20 min?', 'Our Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows');
+    expect(normalizeSubject('Churn after month 3, 20 min?', null)).toBe('Churn after month 3, 20 min?');
+    expect(normalizeSubject('Churn after month 3', null)).toBe('Churn after month 3, 20 min?');
+    const derived = normalizeSubject('A subject that is far too long to fit in an inbox line, 20 min?', 'Our customers churn after month 3 and 31 of 120 accounts left last quarter');
     expect(derived.length).toBeLessThanOrEqual(45);
-    expect(derived).toMatch(/^Postgres p95 went from 40 ms to 900.*, 20 min\?$/);
+    expect(derived).toMatch(/^Customers churn after month 3.*, 20 min\?$/);
     expect(normalizeSubject('', null)).toBe('Your ask, 20 min?');
   });
 
   it('normalizeTopic is short and single-line, or null', () => {
-    expect(normalizeTopic('  Hospital procurement,\nUS. ')).toBe('Hospital procurement, US');
+    expect(normalizeTopic('  Enterprise sales,\nUS. ')).toBe('Enterprise sales, US');
     expect(normalizeTopic('')).toBeNull();
     expect(normalizeTopic(5)).toBeNull();
     expect(normalizeTopic('x '.repeat(80))!.length).toBeLessThanOrEqual(80);

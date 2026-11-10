@@ -7,18 +7,17 @@ import type { LiveState, PartKey } from '@/lib/types';
 import { fmtN, plural } from '@/lib/oti/text';
 
 export const ASK_TITLE = 'Ask the network';
-export const ASK_LEDE = 'One specific ask, checked against each member’s own rules. At most one person sees it at a time.';
+export const ASK_LEDE = 'You’re a founder who needs help. Write your ask; see how it’s checked and who would get it.';
 export const ASK_DESCRIPTION = 'Write one specific ask, check it for its 5 parts, see what a member would get, then send it to the sample network.';
 export const STATUS_DESCRIPTION = 'Where your ask stands: who it was offered to, the 40-member fan-out, any question for you and the raw trace.';
 /** The home page (`/`): the same composer, ask-first (Alan, Nov 9: “the main window should be like ChatGPT”). */
 export const HOME_TITLE = 'What do you need from the network?';
-export const HOME_LEDE = 'Write one specific ask. It’s checked for 5 parts, then against each member’s own rules. At most one person sees it at a time.';
+export const HOME_LEDE = ASK_LEDE;
 export const HOME_DESCRIPTION =
   'Write one specific ask for a 20-minute call. It is checked for 5 parts, then against each member’s own rules; at most one person sees it at a time.';
-/** The quiet second entry under the composer: the member's side, on /rules. */
-export const OTHER_SIDE_LINK = 'Or decide what you’d agree to be asked →';
-export const OTHER_SIDE_HEAD = 'On the other side: asks from other founders';
-export const OTHER_SIDE_NOTE = 'Members write what they’d agree to be asked. A small model checks each ask against those words.';
+/** The second card under the composer: the member's side, on /rules. */
+export const OTHER_SIDE_LINK = 'On the other side? See what would reach you →';
+export const OTHER_SIDE_NOTE = 'Write what you’d agree to help with; 12 asks from other founders are checked against it.';
 export const COMPOSER_LABEL = 'What do you need?';
 export const ASK_PLACEHOLDER = 'We sell X to Y. We tried Z. Need 20 minutes with someone who has done W, before [date]. In return: …';
 
@@ -90,10 +89,7 @@ export function liveBlockedCopy(state: LiveState, network: 'sample' | 'real', un
     : `${why}, so only the 3 sample asks can go to the sample network. Try one above; your text is kept.`;
 }
 
-export function sendLabel(network: 'sample' | 'real'): string {
-  // The prototype's REAL label (“Send to 40 members”) used an example network size; the build doesn't know it.
-  return network === 'real' ? 'Send to the real network' : 'Send to 40 sample members';
-}
+export const SEND_LABEL = 'Send to 40 sample members';
 
 /* ---------- status page ---------- */
 
@@ -246,6 +242,4 @@ export const REAL_UNKNOWN_ERROR = 'Something broke on our side, so this ask didn
 
 /** QA example notes (example data next to a dashed note, docs/CONTRACT.md §e.4). */
 export const EXAMPLE_REAL_NOTE = 'Example REAL ask for layout (QA state). A real ask reads from the database.';
-export const EXAMPLE_PROFILE_NOTE = 'Example profile for layout (QA state).';
 
-export const REAL_NOT_ANSWERING = 'The real network isn’t answering right now. Nothing was sent to anyone. The sample network still works.';

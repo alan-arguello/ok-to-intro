@@ -183,7 +183,7 @@ function pendingExample(receiptOnlyLines: boolean): string {
         asker: { name: a.name, first: a.first, company: a.company, stage: a.stage, city: a.city },
         matched: OFFER_SAMPLE.matched,
         ask_text: ORVELLA?.text ?? '',
-        price: '$18k a year per hospital',
+        price: '$18k a year per customer',
         expires_at: REPLY_BY,
       },
     ],
@@ -255,7 +255,7 @@ function askTranscript(): Transcript {
   const send = exampleSampleSend('sa_health', SENT_AT);
   const q = send.question_list[0];
   const rows: TranscriptRow[] = [
-    row('U', '/ask need someone who has bought software for a public hospital in the US'),
+    row('U', '/ask need someone who has closed a first enterprise deal through procurement'),
     row('B'),
     row('C', 'I read README.md and notes/pipeline.md (not .env or keys).'),
     row('B'),
@@ -266,7 +266,7 @@ function askTranscript(): Transcript {
   rows.push(
     row('B'),
     row('C', 'Deadline and offer back are missing. Use these?'),
-    row('O', '1. Before Nov 20; offer our tender templates (notes/pipeline.md line 12)'),
+    row('O', '1. Before Nov 20; offer our procurement checklist (notes/pipeline.md line 12)'),
     row('O', '2. I’ll type them'),
     row('O', '3. Cancel'),
     row('U', '1'),
@@ -286,7 +286,7 @@ function askTranscript(): Transcript {
       row('C', 'Your docs/pricing.md line 4 says HOSPITAL_ANNUAL = 18000.'),
       row('B'),
       row('C', 'Send this answer to the gate that asked?'),
-      row('O', '1. “$18k a year per hospital” (docs/pricing.md line 4)'),
+      row('O', '1. “$18k a year per customer” (docs/pricing.md line 4)'),
       row('O', '2. Edit'),
       row('O', '3. Skip'),
       row('U', '1'),
@@ -300,7 +300,7 @@ function askTranscript(): Transcript {
           ask_id: send.id,
           network: 'sample',
           question: q.text,
-          answer: '$18k a year per hospital',
+          answer: '$18k a year per customer',
           reran: q.gates,
           accepted: q.gates,
           // As answerSampleQuestion does: when no gate held the ask, the rerun accept is offered now.
@@ -391,7 +391,7 @@ export function toolExamples(): Record<ToolName, string[]> {
         counts: { offered: 1, next: 1, question: 1, nothistime: 37 },
         offer: { reply_by: REPLY_BY },
         people_interrupted: 1,
-        question_list: [{ qid: 'q_5Hd2', type: 'price', text: 'What do you charge per hospital, per year?', gates: 1 }],
+        question_list: [{ qid: 'q_5Hd2', type: 'price', text: 'What do you charge per customer, per year?', gates: 1 }],
         failed: 0,
         failed_closed: false,
         wall_ms: null,
@@ -402,8 +402,8 @@ export function toolExamples(): Record<ToolName, string[]> {
       answerReceipt({
         ask_id: 'a_91xQ2k',
         network: 'real',
-        question: 'What do you charge per hospital, per year?',
-        answer: '$18k a year per hospital',
+        question: 'What do you charge per customer, per year?',
+        answer: '$18k a year per customer',
         reran: 1,
         accepted: 1,
         offered_now: false,
@@ -423,7 +423,7 @@ export function toolExamples(): Record<ToolName, string[]> {
             status: 'a gate has a question for you',
             question: { id: 'q_8kM3', type: 'deal_size', text: SAMPLE_NETWORK_ASKS.founder.ask_back[0]?.[1].text ?? 'How large is the bank contract, per year?' },
           },
-          { id: 'a_3k9pZr', subject: 'Postgres p95 at 40M rows, 20 min?', outcome: 'intro', status: 'intro made · Sun Nov 8, 16:30 PT' },
+          { id: 'a_3k9pZr', subject: 'Churn after month 3, 20 min?', outcome: 'intro', status: 'intro made · Sun Nov 8, 16:30 PT' },
         ],
         { example: true },
       ),

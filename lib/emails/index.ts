@@ -176,7 +176,7 @@ export function offerEmail(input: OfferEmailInput): EmailMessage {
  * S5 · the intro email (To and Reply-To: both people; the service is not in the thread)
  * ======================================================================== */
 
-/** “Intro: Maya Bennett (Oakline Health) and Priya Shah (public hospital procurement)” (the parenthetical is optional). */
+/** “Intro: Maya Bennett (Oakline Health) and Priya Shah (first enterprise customers)” (the parenthetical is optional). */
 export function introSubject(input: Pick<IntroEmailInput, 'asker' | 'member' | 'member_context'>): string {
   const member = input.member_context ? `${input.member.name} (${input.member_context})` : input.member.name;
   const company = (input.asker.company ?? '').trim();

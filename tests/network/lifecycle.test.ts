@@ -38,10 +38,10 @@ const m: Record<string, string> = {};
 let seq = 0;
 
 const RULES = [
-  'Happy to talk about tender templates for hospitals.',
+  'Happy to talk about procurement checklists for hospitals.',
   'Hospital procurement questions are welcome here.',
   'Happy to talk about hospital buyers in the US.',
-  'Happy to talk about public hospital pilots.',
+  'Happy to talk about enterprise pilots.',
   'Happy to talk about health founders in Illinois.',
 ];
 
@@ -276,7 +276,7 @@ describe('3 open asks, the queue and one edited resend a week', () => {
 
   it('allows one edited resend of the same original a week, counting a chain of resends together', async () => {
     const original = await newAsk();
-    const c = compiledAsk({ text: `${compiledAsk().text} We charge $18k a year per hospital.` });
+    const c = compiledAsk({ text: `${compiledAsk().text} We charge $18k a year per customer.` });
     const first = await createAsk(asker, { text: c.text, compiled: c, idempotency_key: `r${++seq}`, resend_of: original });
     expect(first).toMatchObject({ ok: true });
     const second = await createAsk(asker, { text: c.text, compiled: c, idempotency_key: `r${++seq}`, resend_of: first.ok ? first.id : '' });

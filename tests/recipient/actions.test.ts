@@ -61,12 +61,12 @@ const realOffer = (): OfferView => ({
   offer_id: 'o_3Fp9kL',
   state: 'passed',
   sample: false,
-  title: 'Hospital procurement in the US',
-  subject: 'Hospital procurement in the US, 20 min?',
+  title: 'Enterprise deals stuck 5 months',
+  subject: 'Enterprise deals stuck 5 months, 20 min?',
   asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
-  matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.' },
+  matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to enterprise customers.' },
   rules_version: 3,
-  topic: 'Hospital procurement, US',
+  topic: 'Enterprise sales, US',
   scheduling_url: null,
   facts: [...OFFER_SAMPLE.facts],
   cap: 2,
@@ -190,9 +190,9 @@ describe('offerReason and offerFollow (the private Why after a No)', () => {
     offers.getOffer.mockResolvedValue({ found: true, offer: realOffer() });
     member.appendRuleLine.mockResolvedValue({ ok: true, version: 4 });
     expect(await landing(offerFollow(real({ step: 'add', why: 'area' })))).toBe(`/o/${TOKEN}?done=no&why=area&step=applied`);
-    expect(member.appendRuleLine).toHaveBeenCalledWith('u-priya', 'No asks about hospital procurement.', 'offer_edit');
+    expect(member.appendRuleLine).toHaveBeenCalledWith('u-priya', 'No asks about enterprise sales.', 'offer_edit');
 
-    const rules = `${PRESETS[1]!.rules}\nNo asks about hospital procurement.`;
+    const rules = `${PRESETS[1]!.rules}\nNo asks about enterprise sales.`;
     member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules, rules_version: 4 } });
     member.saveRules.mockResolvedValue({ ok: true, version: 5 });
     expect(await landing(offerFollow(real({ step: 'undo', why: 'area' })))).toBe(`/o/${TOKEN}?done=no&why=area&step=undone`);

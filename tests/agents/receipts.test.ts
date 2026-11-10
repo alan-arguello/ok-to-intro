@@ -106,7 +106,7 @@ describe('the /agents examples are receipts that keep the contract', () => {
 
   it('label a model recording as recorded, never as written by hand', () => {
     const tryText = examples.try_rules[0] as string;
-    expect(tryText.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 16:59 · claude-haiku-5-5');
+    expect(tryText.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · recorded · Nov 9, 17:13 · claude-haiku-5-5');
     expect(tryText).toContain('Recorded run, replayed from a file');
     expect(tryText).not.toContain(AUTHORED_LABEL);
     expect(tryText).not.toMatch(/example verdicts|written by hand|\blive\b/);
@@ -135,8 +135,8 @@ describe('try_rules', () => {
     const lines = text.split('\n');
     expect(lines[1]).toBe('2 reach you · 1 over your cap · 1 question first · 8 declined');
     expect(lines[2]).toBe('every quoted line was found in your rules · rules not stored');
-    expect(text).toContain(' 1 reach    Tidewell Data    “founders about Postgres, queues or LLM evals in production” +1');
-    expect(text).toContain(' 6 ask      Fernby Labs      question: How many jobs a day do you run, and what share gets dropped?');
+    expect(text).toContain(' 1 reach    Tidewell Data    “founders about churn, activation or support load” +1');
+    expect(text).toContain(' 6 ask      Fernby Labs      question: How many signups a month do you get, and what share finishes setup?');
     expect(text).toContain(' 9 held     Wrenby Health    accepted; your cap of 2 was used by #1 and #3');
     expect(text).toContain('11 decline  Sagefen Health   [trap: injection] no line covers it; the instruction in the ask was read as text');
     expect(text).toContain(' + 4 declined, no line covers them: #2 #4 #5 #7');
@@ -148,7 +148,7 @@ describe('try_rules', () => {
     // The model's copy differs in typography; the receipt prints the rules text at the offsets.
     first.decision.cited = first.decision.cited.map((c) => ({ ...c, text: c.text.toUpperCase() }));
     const text = tryRulesReceipt({ rules: engineer.rules, cap: 2, results, source: 'live', wall_ms: 1900, join_open: true });
-    expect(text).toContain('“founders about Postgres, queues or LLM evals in production”');
+    expect(text).toContain('“founders about churn, activation or support load”');
     expect(text.split('\n')[0]).toBe('ok-to-intro · try_rules · 12 SAMPLE asks · cap 2 · live · 1.9 s');
     expect(text).not.toContain(AUTHORED_LABEL);
   });
@@ -271,7 +271,7 @@ describe('asker privacy on REAL receipts', () => {
       counts: { offered: 1, next: 1, question: 1, nothistime: 37 },
       offer: { reply_by: '2026-11-13T05:04:00Z' },
       people_interrupted: 1,
-      question_list: [{ qid: 'q_5Hd2', type: 'price', text: 'What do you charge per hospital, per year?', gates: 1 }],
+      question_list: [{ qid: 'q_5Hd2', type: 'price', text: 'What do you charge per customer, per year?', gates: 1 }],
       failed: 2,
       failed_closed: false,
       wall_ms: 2100,
@@ -287,9 +287,9 @@ describe('asker privacy on REAL receipts', () => {
     const text = draftReceipt({
       id: 'd_abc123',
       parts: [
-        { key: 'challenge', state: 'found', text: 'Postgres p95 at 900 ms', from: 'notes/pipeline.md line 9' },
+        { key: 'challenge', state: 'found', text: 'Churn after month 3', from: 'notes/pipeline.md line 9' },
         { key: 'tried', state: 'missing', text: '', from: null },
-        { key: 'needs', state: 'suggested', text: 'someone who ran Postgres', from: '“writes still block”' },
+        { key: 'needs', state: 'suggested', text: 'someone who cut churn', from: '“no change”' },
         { key: 'by', state: 'added', text: 'Nov 21', from: 'the user' },
         { key: 'offers', state: 'missing', text: '', from: null },
       ],
@@ -314,11 +314,11 @@ describe('asker privacy on REAL receipts', () => {
       cap: 2,
       nth: 1,
       emailed: true,
-      edit: { context: 'Happy to talk to B2B founders selling to public hospitals.', add: 'No asks about hospital procurement.' },
+      edit: { context: 'Happy to talk to B2B founders selling to enterprise customers.', add: 'No asks about enterprise sales.' },
       reason: 'not my area',
     });
     expectReceipt(text);
-    expect(text).toContain('+ No asks about hospital procurement.');
+    expect(text).toContain('+ No asks about enterprise sales.');
     expect(text).toContain(SUGGESTED_EDIT_UNTESTED);
     expect(text).toContain('call set_rules');
   });

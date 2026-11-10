@@ -101,7 +101,7 @@ export function PauseView({ token, sample, initial, nowMs }: { token: string; sa
               </Button>
             </form>
           ) : null}
-          <ButtonLink variant="primary" size="lg" href={sample ? '/me?state=paused' : '/me'} primary>
+          <ButtonLink variant="primary" size="lg" href="/rules" primary>
             {PAUSE_COPY.yourGate}
           </ButtonLink>
         </ButtonRow>
@@ -140,7 +140,7 @@ export function PauseView({ token, sample, initial, nowMs }: { token: string; sa
           <Button variant="primary" size="lg" type="submit" id="pause-go" primary busy={busy}>
             {PAUSE_COPY.pauseAsks}
           </Button>
-          <ButtonLink size="lg" href={sample ? '/me?state=on' : '/me'}>
+          <ButtonLink size="lg" href="/rules">
             {PAUSE_COPY.notNow}
           </ButtonLink>
         </ButtonRow>

@@ -266,8 +266,8 @@ function CheckinInner({ model, action }: { model: CheckinPageModel; action: Serv
               See a sample check-in ›
             </ButtonLink>
           ) : (
-            <ButtonLink variant="primary" size="lg" href="/join" primary>
-              Sign in
+            <ButtonLink variant="primary" size="lg" href="/c/sample" primary>
+              See a sample check-in ›
             </ButtonLink>
           )}
         </div>
@@ -309,15 +309,9 @@ function CheckinInner({ model, action }: { model: CheckinPageModel; action: Serv
         result = card(
           `Saved: ${n} of 5.`,
           sample ? (
-            `On the public board a real check-in counts as 1 call that happened, ${useful}. No names. (sample, nothing was saved)`
+            `A real check-in counts as 1 call that happened, ${useful}. No names. (sample, nothing was saved)`
           ) : (
-            <>
-              On the{' '}
-              <a className="link" href="/board">
-                public board
-              </a>{' '}
-              this counts as 1 call that happened, {useful}. No names.
-            </>
+            `This counts as 1 call that happened, ${useful}. No names.`
           ),
           <p className="meta">One more question on {live.d14}, then we stop.</p>,
           change(false),

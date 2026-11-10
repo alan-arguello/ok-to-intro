@@ -2,8 +2,7 @@ import Link from 'next/link';
 import { FOOTER_LINE, FOOTER_LINKS } from '@/lib/site';
 
 /**
- * The footer on every page: the disclaimer (the product's one mention of Y Combinator), then Board · Privacy ·
- * Code (MIT). Hit areas are 40 px on phones (tokens.css). It sits at the bottom of short pages because the
+ * The footer on every page: the disclaimer (the product's one mention of Y Combinator), then Privacy · Code (MIT). Hit areas are 40 px on phones (tokens.css). It sits at the bottom of short pages because the
  * body is a flex column.
  */
 export function SiteFooter() {

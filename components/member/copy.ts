@@ -129,7 +129,7 @@ export const ME_COPY = {
   edit: 'Edit',
   rulesEmpty: 'Write at least one rule.',
   rulesTooLong: 'Your rules are over 1,000 characters.',
-  rulesPlaceholder: 'Happy to talk to founders about Postgres, queues or LLM evals in production.',
+  rulesPlaceholder: 'Happy to talk to founders about churn, activation or support load.',
   save: 'Save',
   retry: 'Retry',
   discard: 'Discard',
@@ -177,7 +177,7 @@ export const WHO_SEES_WHAT: readonly { what: string; you: true; askers: string |
   { what: 'Your name and email', you: true, askers: 'after you say OK' },
 ];
 
-/** “Asker sees: “Matched: ‘B2B founders selling to public hospitals …’.”” */
+/** “Asker sees: “Matched: ‘B2B founders selling to enterprise customers …’.”” */
 export function matchedOn(example: string): string {
   return `Asker sees: “Matched: ‘${example}’.”`;
 }
@@ -249,17 +249,17 @@ export const PAUSE_COPY = {
   notNow: 'Not now',
   doneLede: 'Gates skip you and offers go to others. Nothing else changed: your rules and cap stay as they are.',
   undo: 'Undo',
-  yourGate: 'Your gate ›',
+  yourGate: 'Back to your rules ›',
   undone: 'Undone. Asks can reach you again.',
   failed: 'Didn’t go through. Check your connection and tap again; nothing happens twice.',
   /** A POST that reached us but failed on our side (BE2 /api/pause → ?error=db_down). */
   down: 'Something broke on our side. Nothing changed. Try again in a minute.',
   /** Undo after its 24 hours, or after a pause or resume elsewhere (?error=invalid on a link that still works). */
-  undoGone: 'This link can’t undo that pause anymore. You can turn asks back on from Your gate.',
+  undoGone: 'This link can’t undo that pause anymore.',
   pendingTitle: 'Your gate isn’t on yet',
   pendingBody: 'Nothing reaches you until you turn it on, so there’s nothing to pause.',
   invalidTitle: 'This pause link doesn’t work',
-  invalidBody: 'It doesn’t match a member on this instance. If you deleted your data, there is nothing left to pause. Signed-in members can pause from Your gate.',
+  invalidBody: 'It doesn’t match a member. This site is a demo: nobody is signed up, so there is nothing to pause.',
   offTitle: 'Pause links aren’t set up on this instance',
   offBody: 'This instance has no database connected, so nothing can be paused from here.',
   downTitle: 'Something broke on our side',
@@ -350,7 +350,7 @@ export function tokenLine(createdDay: string, lastUsed: string | null): string {
   return `Token created ${createdDay} · ${lastUsed ? `last used ${lastUsed} from Claude Code` : 'not used yet'}`;
 }
 
-/** “1 ask is waiting on you · Hospital procurement in the US · from Maya Bennett · 61 h left”. */
+/** “1 ask is waiting on you · Enterprise deals stuck 5 months · from Maya Bennett · 61 h left”. */
 export function pendingParts(title: string, from: string, hoursLeft: number): { head: string; rest: string } {
   return { head: '1 ask is waiting on you', rest: ` · ${title} · from ${from} · ${hoursLeft} h left` };
 }

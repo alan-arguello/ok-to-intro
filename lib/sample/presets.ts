@@ -9,21 +9,21 @@ import type { Preset } from './types';
 export const PRESETS: readonly Preset[] = [
   {
     id: 'engineer',
-    label: 'Engineer',
+    label: 'Product lead',
     cap: 2,
     rules: [
-      'Happy to talk to founders about Postgres, queues or LLM evals in production.',
-      'Only if they have a real workload: a table size, a p95 or an error rate.',
+      'Happy to talk to founders about churn, activation or support load.',
+      'Only if they have real usage: a customer count, a churn rate or a ticket count.',
       'No fundraising asks.',
       'No asks to review a deck.',
     ].join('\n'),
   },
   {
     id: 'health',
-    label: 'Health operator',
+    label: 'Sales operator',
     cap: 2,
     rules: [
-      'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.',
+      'Happy to talk to B2B founders selling to enterprise customers.',
       'Only if they have talked to 10+ buyers and have a price.',
       'No fundraising asks.',
       'No asks to review a deck.',
@@ -34,7 +34,7 @@ export const PRESETS: readonly Preset[] = [
     label: 'Founder',
     cap: 2,
     rules: [
-      'Happy to talk about hiring a first engineer or passing a first SOC 2 audit.',
+      'Happy to talk about hiring a first salesperson or passing a first SOC 2 audit.',
       'Only if you have revenue.',
       'No fundraising asks.',
       'No asks to review a deck.',

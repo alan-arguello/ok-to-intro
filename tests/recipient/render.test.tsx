@@ -53,9 +53,9 @@ describe('/o: the decision', () => {
   it('open: the card in spec order, then OK to intro · Answer in 2 lines · No, in the row and the phone bar', () => {
     const html = render(offerModel('open'));
     const t = text(html);
-    expect(t).toContain('Hospital procurement in the US');
+    expect(t).toContain('Enterprise deals stuck 5 months');
     expect(t).toContain('Maya Bennett · Oakline Health · Seed · Chicago');
-    expect(t).toContain('Matched your rule: “B2B founders selling to public hospitals or insurers in the US or Canada”');
+    expect(t).toContain('Matched your rule: “B2B founders selling to enterprise customers”');
     expect(t).toContain('Maya sees your name only if you choose OK. A No is private. This counts as 1 of your 2 whatever you answer.');
     const desk = html.slice(html.indexOf('id="offer-desk"'), html.indexOf('id="offer-g-ok"'));
     expect([...desk.matchAll(/data-key="(\w+)"/g)].map((x) => x[1])).toEqual(['ok', 'answer', 'no']);
@@ -119,7 +119,7 @@ describe('/o: after the decision', () => {
     expect(real).toContain('Intro sent.');
     expect(real).toContain('We emailed you and Maya at 21:16 , with your scheduling link. Reply-all to pick a time. Tomorrow we’ll ask you both one question: did the call happen?');
     expect(real).toContain('This used 1 of your 2 this month.');
-    expect(real).toContain('Your gate ›');
+    expect(real).toContain('Be asked ›');
     const sample = render(offerModel('ok-sent', { mode: 'sample' }));
     expect(text(sample)).toContain('Sample Intro sent (sample, no email sent).');
     expect(sample).toContain('href="/emails/intro"');
@@ -146,7 +146,7 @@ describe('/o: after the decision', () => {
     const html = render(offerModel('no-reason-diff', {}, { why: 'area' }));
     const t = text(html);
     expect(t).toContain('Suggested change to your rules');
-    expect(html).toContain('<span class="d-add"><span class="sr-only">Add: </span>No asks about public procurement.</span>');
+    expect(html).toContain('<span class="d-add"><span class="sr-only">Add: </span>No asks about procurement.</span>');
     expect(t).toContain('Expected on the 12 sample asks (written by hand, not a model run): 1 change (Oakline Health: question first → decline). Nothing else changes.');
     expect(t).not.toMatch(/Tested on/);
     expect(html).toContain('<button type="submit" class="btn btn--primary" data-primary="" form="offer-f-add" data-why="add">Add to my rules</button>');
@@ -167,7 +167,7 @@ describe('/o: after the decision', () => {
 
   it('invalid, not set up, and something broke: no card, one way forward', () => {
     const invalid = text(render(offerModel('invalid', { card: null })));
-    expect(invalid).toContain('This link doesn’t match an offer. It may be mistyped or expired. Sign in to see asks waiting on you. Sign in');
+    expect(invalid).toContain('This link doesn’t match an offer. It may be mistyped or expired. This site is a demo, so no real offers exist. See a sample offer ›');
     const unconfigured = render(offerModel('open', { mode: 'real', card: null, forms: null, ui: { ...offerModel('open').ui, view: 'unconfigured' } }));
     // Not configured is a setup state, never an outage or a wrong link (CONTRACT §e.8); SAMPLE still works.
     expect(text(unconfigured)).toContain('Offers aren’t set up on this instance This instance has no database connected, so this link can’t be looked up. Nothing was sent to anyone. See a sample offer ›');
@@ -203,7 +203,7 @@ describe('/c: the check-in', () => {
       ui,
       source: { kind: 'none' },
       other: ui.role === 'member' ? { name: 'Maya Bennett', first: 'Maya' } : { name: 'Priya Shah', first: 'Priya' },
-      subject: 'Hospital procurement in the US',
+      subject: 'Enterprise deals stuck 5 months',
       introMade: { iso: '2026-11-09T21:16:00-08:00', text: 'Nov 9' },
       d14: { iso: '2026-11-23T10:00:00-08:00', text: 'Nov 23' },
       reminder: { iso: '2026-11-13T10:00:00-08:00', text: 'Nov 13' },
@@ -240,7 +240,7 @@ describe('/c: the check-in', () => {
   });
 
   it('saved states use the spec’s words', () => {
-    expect(text(renderCk(ck('d1-saved')))).toContain('Saved: 4 of 5. On the public board this counts as 1 call that happened, rated useful. No names. One more question on Nov 23, then we stop. Change');
+    expect(text(renderCk(ck('d1-saved')))).toContain('Saved: 4 of 5. This counts as 1 call that happened, rated useful. No names. One more question on Nov 23, then we stop. Change');
     expect(text(renderCk(ck('d1-saved', {}, { v: '2' })))).toContain('rated not useful');
     expect(text(renderCk(ck('d1-notyet')))).toContain('Saved. We’ll ask once more on Nov 13.');
     expect(text(renderCk(ck('d1-wont')))).toContain('Saved. Thanks for telling us.');
@@ -258,7 +258,7 @@ describe('/c: the check-in', () => {
   });
 
   it('invalid and not set up', () => {
-    expect(text(renderCk(ck('invalid', { other: null })))).toContain('This link doesn’t match a check-in. It may be mistyped or expired. Sign in to see asks waiting on you. Sign in');
+    expect(text(renderCk(ck('invalid', { other: null })))).toContain('This link doesn’t match a check-in. It may be mistyped or expired. This site is a demo, so no real offers exist. See a sample check-in ›');
     const unconfigured = ck('d1-preselected', { mode: 'real', forms: null });
     const off = text(renderCk({ ...unconfigured, ui: { ...unconfigured.ui, view: 'unconfigured' } }));
     expect(off).toContain('Check-ins aren’t set up on this instance This instance has no database connected, so this link can’t be looked up. Nothing was sent to anyone. See a sample check-in ›');

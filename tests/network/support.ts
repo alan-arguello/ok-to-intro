@@ -156,22 +156,22 @@ export function captureEmails(): { transport: EmailTransport; sent: SentEmail[];
 
 /* ---------- asks ---------- */
 
-export const HEALTH_RULES = 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.\nNo asks to review a deck.';
-export const PG_RULES = 'Happy to talk about Postgres or Kafka at scale.';
+export const HEALTH_RULES = 'Happy to talk to B2B founders selling to enterprise customers.\nNo asks to review a deck.';
+export const PG_RULES = 'Happy to talk about churn and retention in B2B software.';
 
 export function compiledAsk(overrides: Partial<CompiledAsk> = {}): CompiledAsk {
   return {
     parts: {
-      challenge: 'Public hospital committees stall at technical review',
-      tried: '14 buyer calls; 2 committees reached review',
-      needs: 'someone who has sat on a public hospital procurement committee in the US',
+      challenge: '2 enterprise deals have sat in procurement for 5 months',
+      tried: '14 buyer calls; 2 deals reached procurement',
+      needs: 'someone who has closed a first enterprise deal through procurement',
       by: 'Nov 20',
-      offers: 'our tender templates',
+      offers: 'our procurement checklist',
     },
-    subject: 'Hospital procurement in the US, 20 min?',
-    text: 'Selling inventory software to public hospitals in Illinois. 14 buyer calls; 2 committees stalled at technical review. Need 20 minutes with someone who has sat on a public hospital procurement committee in the US, before Nov 20. Offer: our tender templates.',
+    subject: 'Enterprise deals stuck 5 months, 20 min?',
+    text: 'Selling staffing software to hospital groups, our first enterprise customers. 14 buyer calls; 2 deals have sat in procurement for 5 months. Need 20 minutes with someone who has closed a first enterprise deal through procurement, before Nov 20. Offer: our procurement checklist.',
     price: null,
-    topic: 'Hospital procurement, US',
+    topic: 'Enterprise sales, US',
     ...overrides,
   };
 }

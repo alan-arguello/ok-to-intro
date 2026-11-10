@@ -7,7 +7,7 @@ member wrote, checks the ask, and only asks that pass the gate and fit under the
 
 ## How it works
 
-- **The gate.** Every member writes plain-text rules (“founders about Postgres, queues or LLM evals in production”).
+- **The gate.** Every member writes plain-text rules (“founders about churn, activation or support load”).
   For each ask, `claude-haiku-5-5` returns a structured verdict: accept, decline or ask back one short question.
   It must quote the line of the rules it relied on. The ask is passed to the model as quoted data, never as
   instructions.

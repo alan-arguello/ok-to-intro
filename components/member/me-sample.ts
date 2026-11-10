@@ -1,6 +1,6 @@
 /**
  * The /me SAMPLE preview for QA states only (`?state=…` with QA enabled): the sample member Priya Shah with the
- * Health operator rules and the prototype's example numbers (lib/sample/examples.ts EXAMPLE_ME), always under the
+ * Sales operator rules and the prototype's example numbers (lib/sample/examples.ts EXAMPLE_ME), always under the
  * dashed “Prototype: example numbers for layout…” note. Never rendered without an explicit QA state
  * (docs/CONTRACT.md §e.4). Pure.
  */
@@ -67,7 +67,7 @@ export function sampleMe(state: QaState<'me'>, nowMs: number): MeInitial {
     rules,
     rulesVersion: first ? 0 : state === 'saved' ? me.version + 1 : me.version,
     saved: first ? null : { iso: null, label: state === 'saved' ? '21:16' : me.saved, fmt: 'clock' },
-    rulesSourceLabel: first ? 'Health operator preset' : null,
+    rulesSourceLabel: first ? 'Sales operator preset' : null,
     capUsed: used,
     month,
     ledger: first ? null : sampleLedger(rules, state === 'empty-ledger'),
@@ -78,9 +78,9 @@ export function sampleMe(state: QaState<'me'>, nowMs: number): MeInitial {
           state: 'ok',
           example: true,
           items: [
-            { id: 'sa_health', subject: 'Hospital procurement in the US', outcome: 'offered', created: { iso: null, label: 'Nov 9', fmt: 'day' }, href: '/ask/sa_health' },
+            { id: 'sa_health', subject: 'Enterprise deals stuck 5 months', outcome: 'offered', created: { iso: null, label: 'Nov 9', fmt: 'day' }, href: '/ask/sa_health' },
             { id: 'sa_founder', subject: 'First SOC 2 in 60 days', outcome: 'question', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_founder' },
-            { id: 'sa_eng', subject: 'Postgres p95 at 40M rows', outcome: 'intro', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_eng' },
+            { id: 'sa_eng', subject: 'Churn after month 3', outcome: 'intro', created: { iso: null, label: 'Nov 8', fmt: 'day' }, href: '/ask/sa_eng' },
           ],
         },
     token: first

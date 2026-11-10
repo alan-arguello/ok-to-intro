@@ -112,22 +112,22 @@ export const ROUTES = {
 } as const;
 
 /**
- * Header nav (desktop) and the phone menu (which adds "Sign in" last). “Ask” is the home page (the composer; it is
- * also current on /ask and /ask/<id>); “Be asked” is the rules playground.
+ * Header nav (desktop) and the phone menu. The site is a demo: three tabs, no sign-in. “Ask” is the home page (the
+ * composer; it is also current on /ask and /ask/<id>); “Be asked” is the rules page.
  */
 export const NAV_ITEMS = [
   { href: '/', label: 'Ask' },
   { href: '/rules', label: 'Be asked' },
-  { href: '/board', label: 'Board' },
-  { href: '/agents', label: 'Agents' },
   { href: '/how', label: 'How it works' },
 ] as const;
 
-export const FOOTER_LINKS = [
-  { href: '/board', label: 'Board', external: false },
+/** The one constant line under the header on every page. */
+export const DEMO_LINE = 'Demo · 40 fictional members · nothing is sent to anyone';
+
+export const FOOTER_LINKS: readonly { href: string; label: string; external: boolean }[] = [
   { href: '/privacy', label: 'Privacy', external: false },
   { href: REPO_URL, label: 'Code (MIT)', external: true },
-] as const;
+];
 
 export const DEFAULT_DESCRIPTION =
   'Write what you’d agree to be asked and a monthly cap. A small model checks each ask against your words and must quote the line it used.';

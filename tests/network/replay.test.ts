@@ -36,7 +36,7 @@ import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 import type { CompiledAsk, FanoutCellEventSample, FanoutEvent } from '@/lib/types';
 
 const ENG = SAMPLE_NETWORK_ASKS.engineer;
-const parts = { challenge: ENG.compiledPartial[0]!.text, tried: ENG.compiledPartial[1]!.text, needs: ENG.compiledPartial[2]!.text, by: 'Nov 21', offers: 'our load-test harness' };
+const parts = { challenge: ENG.compiledPartial[0]!.text, tried: ENG.compiledPartial[1]!.text, needs: ENG.compiledPartial[2]!.text, by: 'Nov 21', offers: 'our cancellation interview notes' };
 const compiled: CompiledAsk = { parts, subject: ENG.subject, text: assembleAskText(ENG.partial, parts, ['needs', 'by', 'offers']), price: null, topic: null };
 
 async function timed(replay: boolean) {

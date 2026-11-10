@@ -18,10 +18,10 @@
           "reason": null,
           "cited": [
             {
-              "text": "Happy to talk about Postgres or Kafka at scale",
+              "text": "Happy to talk about churn and retention in B2B software",
               "found": true,
               "start": 0,
-              "end": 46
+              "end": 55
             }
           ],
           "question": null,
@@ -37,10 +37,10 @@
           "reason": null,
           "cited": [
             {
-              "text": "Happy to talk about database performance",
+              "text": "Happy to talk about onboarding and early churn",
               "found": true,
               "start": 0,
-              "end": 40
+              "end": 46
             }
           ],
           "question": null,
@@ -618,10 +618,10 @@
           "reason": null,
           "cited": [
             {
-              "text": "Happy to talk to founders selling to hospitals in the US",
+              "text": "Happy to talk to founders landing their first enterprise customers",
               "found": true,
               "start": 0,
-              "end": 56
+              "end": 66
             }
           ],
           "question": null,
@@ -638,7 +638,7 @@
           "cited": [],
           "question": {
             "type": "price",
-            "text": "What do you charge per hospital, per year?"
+            "text": "What do you charge per customer, per year?"
           },
           "flags": [],
           "confidence": null,
@@ -676,10 +676,10 @@
           "reason": null,
           "cited": [
             {
-              "text": "Clinic groups and hospital networks in the US",
+              "text": "Long sales cycles with hospital groups and health systems",
               "found": true,
               "start": 0,
-              "end": 45
+              "end": 57
             }
           ],
           "question": null,

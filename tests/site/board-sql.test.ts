@@ -10,7 +10,7 @@ import { parseBoardSnapshot } from '@/components/board/model';
 import { createTestDb, type TestDb } from '../db/harness';
 
 const FIXTURE = fileURLToPath(new URL('../../supabase/migrations/0003_board_as_of.sql', import.meta.url));
-const RULES = 'Happy to talk to founders about Postgres, queues or LLM evals in production.';
+const RULES = 'Happy to talk to founders about churn, activation or support load.';
 
 let db: TestDb;
 let a: string;
@@ -33,9 +33,9 @@ beforeAll(async () => {
   await db.pg.query(
     `insert into public.audit (at, action, member_id, asker_id, ask_id, offer_id, detail) values
       ($4, 'member_joined', $1, null, null, null, '{}'),
-      ($4, 'ask_sent', null, $2, 'a_asof1', null, '{"topic":"Hospital procurement, US"}'),
-      ($4, 'ask_sent', null, $3, 'a_asof2', null, '{"topic":"Hospital procurement, US"}'),
-      ($4, 'ask_sent', null, $1, 'a_asof3', null, '{"topic":"Hospital procurement, US"}'),
+      ($4, 'ask_sent', null, $2, 'a_asof1', null, '{"topic":"Enterprise sales, US"}'),
+      ($4, 'ask_sent', null, $3, 'a_asof2', null, '{"topic":"Enterprise sales, US"}'),
+      ($4, 'ask_sent', null, $1, 'a_asof3', null, '{"topic":"Enterprise sales, US"}'),
       ($4, 'gate_checked', $1, $2, 'a_asof1', null, '{"verdict":"accept","decided_by":"gate","attempt":1}'),
       ($4, 'gate_checked', $3, $2, 'a_asof1', null, '{"verdict":"decline","decided_by":"clause_check","attempt":1}'),
       ($4, 'offer_delivered', $1, $2, 'a_asof1', 'o_asof1', '{}'),
@@ -79,7 +79,7 @@ describe('board_snapshot(p_as_of)', () => {
     expect(parsed?.quotes_not_found).toBe(1);
     expect(parsed?.members_with_rules).toBe(3);
     // Three different founders asked about the topic, so it is listed.
-    expect(parsed?.demand).toEqual([{ topic: 'Hospital procurement, US', asks: 3, reached: 1, askers: 3 }]);
+    expect(parsed?.demand).toEqual([{ topic: 'Enterprise sales, US', asks: 3, reached: 1, askers: 3 }]);
   });
 
   it('replaces the zero-argument function (no ambiguous overload) and stays server-only', async () => {

@@ -245,13 +245,13 @@ export interface AskParts {
 /** What the asker approved on /ask. Stored in `asks.compiled`. */
 export interface CompiledAsk {
   parts: AskParts;
-  /** ≤ 45 characters, e.g. “Hospital procurement in the US, 20 min?”. */
+  /** ≤ 45 characters, e.g. “Enterprise deals stuck 5 months, 20 min?”. */
   subject: string;
   /** The ask as members will see it (the founder's text, possibly with the parts they added). */
   text: string;
   /** Known only after a gate asked and the asker answered (type `price`). */
   price: string | null;
-  /** A coarse topic the compiler assigns (e.g. “Hospital procurement, US”), for the board's unanswered demand. */
+  /** A coarse topic the compiler assigns (e.g. “Enterprise sales, US”), for the board's unanswered demand. */
   topic: string | null;
 }
 
@@ -517,7 +517,7 @@ export interface OfferView {
   matched: { text: string; start: number; end: number; line: string } | null;
   /** The rules version the gate read (S4 “Rules updated, version 4”). */
   rules_version: number;
-  /** The compiler's coarse topic for the ask (e.g. “Hospital procurement, US”), for the templated No edit. */
+  /** The compiler's coarse topic for the ask (e.g. “Enterprise sales, US”), for the templated No edit. */
   topic: string | null;
   /** The member's own scheduling link (“with your scheduling link” after OK), or null. */
   scheduling_url: string | null;
@@ -705,7 +705,7 @@ export interface OfferEmailInput {
 export interface IntroEmailInput {
   /**
    * Optional lower-case phrase after the member's name in the subject: “Intro: Maya Bennett (Oakline Health) and
-   * Priya Shah (public hospital procurement)”. Null drops the parenthetical (“… and Priya Shah”). R builds the subject.
+   * Priya Shah (first enterprise customers)”. Null drops the parenthetical (“… and Priya Shah”). R builds the subject.
    */
   member_context: string | null;
   member: { name: string; first: string; one_line: string; scheduling_url: string | null; email: string };

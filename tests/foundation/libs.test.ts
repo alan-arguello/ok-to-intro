@@ -18,12 +18,12 @@ describe('text helpers', () => {
     expect(plural(2, 'person', 'people')).toBe('2 people');
     expect(traceTime(0)).toBe('+0 ms     ');
     expect(traceTime(1290)).toBe('+1290 ms  ');
-    expect(bareSubject('Hospital procurement in the US, 20 min?')).toBe('Hospital procurement in the US');
+    expect(bareSubject('Enterprise deals stuck 5 months, 20 min?')).toBe('Enterprise deals stuck 5 months');
   });
 
   it('reads Needs the same everywhere: “20 minutes with …”', () => {
-    expect(needsLine('Someone who has run Postgres past 100M rows')).toBe('20 minutes with someone who has run Postgres past 100M rows');
-    expect(needsLine('A CTO who made a first hire outside the Bay Area')).toBe('20 minutes with a CTO who made a first hire outside the Bay Area');
+    expect(needsLine('Someone who has cut early churn in a B2B product')).toBe('20 minutes with someone who has cut early churn in a B2B product');
+    expect(needsLine('A founder who hired a first salesperson')).toBe('20 minutes with a founder who hired a first salesperson');
     expect(needsLine('CTO who made a first hire')).toBe('20 minutes with CTO who made a first hire');
     expect(needsLine('20 minutes with someone')).toBe('20 minutes with someone');
     expect(needsLine('')).toBe('');

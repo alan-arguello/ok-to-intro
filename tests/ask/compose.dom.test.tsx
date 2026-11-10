@@ -14,7 +14,7 @@ vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorde
 const push = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push, replace: vi.fn(), prefetch: vi.fn(), back: vi.fn() }), usePathname: () => '/ask' }));
 
-const BASE: AskComposeProps = { qaState: null, degraded: null, live: { state: 'off', until: null }, real: { kind: 'not_configured' }, preset: null, from: null, edit: false, resend: null };
+const BASE: AskComposeProps = { qaState: null, degraded: null, live: { state: 'off', until: null }, preset: null, from: null, edit: false };
 
 function setup(props: Partial<AskComposeProps> = {}) {
   return render(<AskCompose {...BASE} {...props} />);
@@ -48,8 +48,11 @@ describe('/ask compose', () => {
   it('server HTML is the empty SAMPLE compose (no storage, nothing staged)', () => {
     const html = renderToString(<AskCompose {...BASE} />).replace(/<!-- -->/g, '');
     expect(html).toContain('Ask the network');
-    expect(html).toContain('Sample · 40 fictional members');
-    expect(html).toContain('Sent as a sample founder at Tidewell Data (Seed, San Francisco).');
+    expect(html).toContain('You’re a founder who needs help. Write your ask; see how it’s checked and who would get it.');
+    // Demo only: no network choice, no “Sent as”, no REAL line, no way to sign in.
+    expect(html).not.toContain('role="radiogroup"');
+    for (const gone of ['Real', 'Sent as', 'Sign in', 'isn’t connected']) expect(html).not.toContain(gone);
+    expect(html).not.toMatch(/href="\/(join|me|board|agents)/);
     expect(html).toContain('0 / 600');
     expect(html).toMatch(/data-primary=""[^>]*>Check my ask/);
   });
@@ -70,8 +73,8 @@ describe('/ask compose', () => {
     const card = document.querySelector('#ask-preview .offer-card')!;
     const facts = [...card.querySelectorAll('dt')].map((d) => d.textContent);
     expect(facts).toEqual(['Problem', 'Needs', 'Tried', 'By', 'Offers']);
-    expect(card.textContent).toContain('20 minutes with someone who has run Postgres past 100M rows');
-    expect(card.textContent).toContain('Matched your rule: “founders about Postgres, queues or LLM evals in production”');
+    expect(card.textContent).toContain('20 minutes with someone who has cut early churn in a B2B product');
+    expect(card.textContent).toContain('Matched your rule: “founders about churn, activation or support load”');
     const send = document.getElementById('ask-send')!;
     expect(send.getAttribute('aria-disabled')).toBe('false');
     expect(send.hasAttribute('data-primary')).toBe(true);
@@ -190,44 +193,11 @@ describe('/ask compose', () => {
     expect(screen.getByText('Asks about YC applications aren’t sent.')).toBeTruthy();
   });
 
-  it('REAL is unavailable here and says why when pressed', () => {
-    setup();
-    const real = screen.getByRole('radio', { name: 'Real' });
-    expect(real.getAttribute('aria-disabled')).toBe('true');
-    expect(document.getElementById('ask-real-note')!.hidden).toBe(true);
-    fireEvent.click(real);
-    expect(document.getElementById('ask-real-note')!.hidden).toBe(false);
-    expect(document.getElementById('ask-real-why')!.textContent).toBe('The real network isn’t set up on this instance.');
-    expect(screen.getByRole('radio', { name: 'Sample · 40 fictional members' }).getAttribute('aria-checked')).toBe('true');
-  });
-
-  it('the keyboard reaches the unavailable Real option too, and hears why', () => {
-    setup();
-    const sample = screen.getByRole('radio', { name: 'Sample · 40 fictional members' });
-    const real = screen.getByRole('radio', { name: 'Real' });
-    sample.focus();
-    fireEvent.keyDown(sample, { key: 'ArrowRight' });
-    expect(document.activeElement).toBe(real);
-    expect(document.getElementById('ask-real-note')!.hidden).toBe(false);
-    expect(real.getAttribute('aria-describedby')).toBe('ask-real-why');
-    expect(sample.getAttribute('aria-checked')).toBe('true');
-    fireEvent.keyDown(real, { key: 'ArrowLeft' });
-    expect(document.activeElement).toBe(sample);
-  });
-
-  it('signed in with a profile: REAL shows who it is sent as', async () => {
-    setup({ real: { kind: 'allowed', profile: { name: 'Priya Shah', first: 'Priya', company: 'Northside Clinic', stage: 'Seed', city: 'Seattle' } }, live: { state: 'ok', until: null } });
-    fireEvent.click(screen.getByRole('radio', { name: 'Real' }));
-    expect(document.getElementById('ask-as')!.textContent).toContain('Sent as Priya Shah, Northside Clinic (Seed, Seattle).');
-    expect(document.getElementById('ask-samples')!.hidden).toBe(true);
-  });
-
   it('arriving from the playground fills that preset’s Missing 2 parts sample', async () => {
     sessionStorage.setItem('oti.playground', JSON.stringify({ v: 1, preset: 'health', rules: 'x', cap: 2, edited: false, run_id: null, ran_at: null, mode: null, run_rules: null, results: [], marks: [] }));
     setup({ from: 'playground' });
     await flush();
     expect((screen.getByLabelText('What do you need?') as HTMLTextAreaElement).value).toBe(SAMPLE_NETWORK_ASKS.health.partial);
-    expect(document.getElementById('ask-as')!.textContent).toContain('Oakline Health (Seed, Chicago)');
   });
 
   it('keeps what you typed in this tab', async () => {
@@ -252,11 +222,6 @@ describe('/ask compose', () => {
   });
 
   it('QA states render the prototype’s designed states', async () => {
-    setup({ qaState: 'queued' });
-    await flush();
-    expect(screen.getByText('You have 3 open asks. This one sends when one of them closes.')).toBeTruthy();
-    expect(screen.getByText('Example profile for layout (QA state).')).toBeTruthy();
-    cleanup();
     setup({ qaState: 'compiler-down' });
     await flush();
     expect(screen.getByText('The compiler isn’t answering. Fill the 5 parts yourself; your text is kept.')).toBeTruthy();
@@ -265,21 +230,19 @@ describe('/ask compose', () => {
 });
 
 describe('/ (home): the same composer, ask-first', () => {
-  const HOME: Partial<AskComposeProps> = { variant: 'home', realLine: 'The real network isn’t connected on this instance yet.' };
+  const HOME: Partial<AskComposeProps> = { variant: 'home' };
 
-  it('server HTML: the display H1, one composer with its action attached, the pills, and the way to /rules', () => {
+  it('server HTML: the display H1, what you do here, one composer with its action attached, the pills, and the card to /rules', () => {
     const html = renderToString(<AskCompose {...BASE} {...HOME} />).replace(/<!-- -->/g, '');
     expect(html).toContain('<h1 class="h1">What do you need from the network?</h1>');
     expect(html).not.toContain('Ask the network</h1>');
-    expect(html).toContain('The real network isn’t connected on this instance yet.');
+    expect(html).toContain('You’re a founder who needs help. Write your ask; see how it’s checked and who would get it.');
+    expect(html).not.toContain('isn’t connected');
     // The textarea and its action share one composer box; the action is the page's one black pill before a check.
     expect(html).toMatch(/class="ask-composer"[\s\S]*id="ask-text"[\s\S]*class="ask-composer__foot"[\s\S]*data-primary=""[^>]*>Check my ask/);
     expect(html.match(/btn--primary/g)?.length).toBe(1);
     expect(html).toContain('data-sample="partial"');
-    expect(html).toContain('href="/rules">Or decide what you’d agree to be asked →</a>');
-    // The preview of the other side is SAMPLE data and says so.
-    expect(html).toContain('Postgres p95 at 40M rows, 20 min?');
-    expect(html).toMatch(/On the other side: asks from other founders[\s\S]*Sample/);
+    expect(html).toMatch(/<a class="ask-other__card" href="\/rules">[\s\S]*On the other side\? See what would reach you →/);
     // No phone bar until there is something to send.
     expect(html).not.toContain('id="ask-bar-btn"');
   });
@@ -326,21 +289,5 @@ describe('/ (home): the same composer, ask-first', () => {
     expect(fetch).toHaveBeenCalledWith('/api/compile', expect.anything());
     expect(document.getElementById('ask-parts')!.hidden).toBe(false);
     expect(screen.queryByText('Example parts, written by hand · not a compiler run')).toBeNull();
-  });
-
-  it('a static page hands a possibly signed-in visitor to /ask for the Real option, keeping the text', () => {
-    setup({ ...HOME, real: { kind: 'signed_out', mode: 'open' }, realHref: '/ask' });
-    fireEvent.change(screen.getByLabelText('What do you need?'), { target: { value: 'Draft for real' } });
-    fireEvent.click(screen.getByRole('radio', { name: 'Real' }));
-    expect(push).toHaveBeenCalledWith('/ask');
-    expect(JSON.parse(sessionStorage.getItem('oti.s2.draft')!)).toEqual({ v: 1, text: 'Draft for real' });
-    expect(document.getElementById('ask-real-note')!.hidden).toBe(true);
-  });
-
-  it('without a session hint, Real explains itself in place (REAL stays not set up here)', () => {
-    setup(HOME);
-    fireEvent.click(screen.getByRole('radio', { name: 'Real' }));
-    expect(push).not.toHaveBeenCalled();
-    expect(document.getElementById('ask-real-note')!.hidden).toBe(false);
   });
 });

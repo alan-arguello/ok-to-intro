@@ -49,7 +49,6 @@ export const NO_LINE_COVERS = 'No line in your rules covers this ask.';
 /** Privacy notes repeated across /me, /privacy and the playground help. */
 export const RULES_TO_ANTHROPIC =
   'Your rules go to Anthropic’s API for each check, and Anthropic deletes API data within 30 days by default. Alan, who runs this instance, has database access. The public board shows counts, never names.';
-export const PLAYGROUND_RULES_HELP = 'Each run sends your rules to Anthropic’s API. Nothing is stored unless you join.';
 
 /** Labels for recorded data, by source (docs/CONTRACT.md §e). */
 export const AUTHORED_LABEL = 'Example verdicts, written by hand · not a model run';
@@ -75,8 +74,6 @@ export const REAL_ASK_COPY = {
 export const SAMPLE_NOTE = 'All 12 asks and companies are fictional (SAMPLE).';
 export const PROTOTYPE_NUMBERS_NOTE = 'Prototype: example numbers for layout. The live board reads from the database.';
 
-/** The S1 REAL line when the real network isn't connected on this instance (getRealLine() returned null). */
-export const REAL_LINE_OFF = 'The real network isn’t connected on this instance yet.';
 
 /** The OTP sign-in limits (ux-spec S3). */
 export const OTP_RESEND_SECONDS = 60;

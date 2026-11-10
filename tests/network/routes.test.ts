@@ -31,7 +31,7 @@ const post = (path: string, body: unknown, headers: Record<string, string> = {})
   new Request(`${ORIGIN}${path}`, { method: 'POST', headers: { 'content-type': 'application/json', origin: ORIGIN, host: 'localhost:3200', ...headers }, body: JSON.stringify(body) });
 
 const ENG = SAMPLE_NETWORK_ASKS.engineer;
-const parts = { challenge: ENG.compiledPartial[0]!.text, tried: ENG.compiledPartial[1]!.text, needs: ENG.compiledPartial[2]!.text, by: 'Nov 21', offers: 'our load-test harness' };
+const parts = { challenge: ENG.compiledPartial[0]!.text, tried: ENG.compiledPartial[1]!.text, needs: ENG.compiledPartial[2]!.text, by: 'Nov 21', offers: 'our cancellation interview notes' };
 const compiled: CompiledAsk = { parts, subject: ENG.subject, text: assembleAskText(ENG.partial, parts, ['needs', 'by', 'offers']), price: null, topic: null };
 
 describe('REAL routes without keys', () => {
@@ -117,7 +117,7 @@ describe('the SAMPLE routes without keys', () => {
   });
 
   it('POST /api/asks/sample/answer reruns the gate that asked', async () => {
-    const res = await sampleAnswer(post('/api/asks/sample/answer', { sample_ask_id: 'sa_eng', compiled, you: null, question: { type: 'role', text: 'Who on your team would join the call, and what is their role?' }, answer: 'Our CTO, who owns the events pipeline.' }));
+    const res = await sampleAnswer(post('/api/asks/sample/answer', { sample_ask_id: 'sa_eng', compiled, you: null, question: { type: 'role', text: 'Who on your team would join the call, and what is their role?' }, answer: 'Our head of customer success, who runs onboarding.' }));
     expect(res.status).toBe(200);
     expect(await res.json()).toMatchObject({ ok: true, reran: 1, accepted: 1, offer: null });
   });

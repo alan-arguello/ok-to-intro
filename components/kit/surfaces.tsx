@@ -223,7 +223,7 @@ export function HBar({ value, max }: { value: number; max: number }) {
 
 /* ---------- Small parts ---------- */
 
-/** `.crumbs`: “‹ New ask” or “Asks › Postgres p95 at 40M rows”. */
+/** `.crumbs`: “‹ New ask” or “Asks › Churn after month 3”. */
 export function Crumbs({ items, label = 'Breadcrumb' }: { items: readonly { href?: string; label: ReactNode }[]; label?: string }) {
   return (
     <nav className="crumbs" aria-label={label}>

@@ -69,7 +69,7 @@ export function stripEnd(s: string): string {
   return String(s || '').replace(/[.;!?\s]+$/, '');
 }
 
-/** “Hospital procurement in the US, 20 min?” → “Hospital procurement in the US”. */
+/** “Enterprise deals stuck 5 months, 20 min?” → “Enterprise deals stuck 5 months”. */
 export function bareSubject(subject: string): string {
   return String(subject || '').replace(/,\s*20 min\?\s*$/, '');
 }
@@ -79,7 +79,7 @@ export const SUBJECT_MAX = 45;
 
 /**
  * Needs reads the same everywhere (ux-spec Revision 3): “20 minutes with …”.
- * needsLine('Someone who has run Postgres past 100M rows') → “20 minutes with someone who has run Postgres past 100M rows”.
+ * needsLine('Someone who has cut early churn in a B2B product') → “20 minutes with someone who has cut early churn in a B2B product”.
  */
 export function needsLine(needs: string): string {
   const n = String(needs || '').trim();

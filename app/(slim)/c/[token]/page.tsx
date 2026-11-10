@@ -43,7 +43,7 @@ export default async function CheckinPage({ params, searchParams }: Props) {
         <CheckinScreen model={model} action={checkinSave} />
       </SlimPage>
       {/* The prototype's check-in footer leads with the recipient's links and drops Board. */}
-      {cardless ? null : <RecipientFooter links={checkinFooterLinks(model.mode, model.ui.role, askId)} board={false} />}
+      {cardless ? null : <RecipientFooter links={checkinFooterLinks(model.mode, model.ui.role, askId)} />}
     </>
   );
 }

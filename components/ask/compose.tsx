@@ -4,39 +4,36 @@
  * S2 · the compose island on `/` (variant `home`) and `/ask` (variant `page`); port of prototype/ask.html + a.js
  * `Compose`, laid out chat-style since Nov 9 (Alan: “the main window should be like ChatGPT”). One specific ask:
  * the founder's text in one auto-growing composer with its action attached (Enter or ⌘↵ checks, Shift+Enter is a
- * newline), the sample prompts as pills, the network, then the reply below it: a check for the 5 parts
- * (POST /api/compile, or the hand-written example for a sample pill), the subject, the exact card a member gets,
- * then Send. SAMPLE sends go to /ask/<sa_id>, whose state lives in this tab; REAL sends create the ask
- * (POST /api/asks) and open /ask/<a_id>, which sends it. One component, one reducer: the variants differ only in
- * the heading and the home page's link to the other side (/rules).
+ * newline), the sample prompts as pills, then the reply below it: a check for the 5 parts (POST /api/compile, or
+ * the hand-written example for a sample pill), the subject, the exact card a member gets, then Send. The site is
+ * a demo: every send goes to the 40 fictional members, to /ask/<sa_id>, whose state lives in this tab. One
+ * component, one reducer: the variants differ only in the heading and the home page's card to the other side
+ * (/rules).
  */
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useLayoutEffect, useReducer, useRef, type ChangeEvent, type KeyboardEvent, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useReducer, useRef, type ChangeEvent, type KeyboardEvent } from 'react';
 import { Bar } from '@/components/kit/blocks';
 import { Button } from '@/components/kit/button';
 import { cx } from '@/components/kit/cx';
 import { Counter, Input, Textarea } from '@/components/kit/forms';
 import { Kbd } from '@/components/kit/kbd';
 import { OfferCard } from '@/components/kit/offer-card';
-import { RealTag, SampleTag, Tag, Verdict } from '@/components/kit/pills';
-import { RadioGroup } from '@/components/kit/radio-group';
-import { Notice, ProtoNote } from '@/components/kit/surfaces';
+import { SampleTag, Tag, Verdict } from '@/components/kit/pills';
+import { Notice } from '@/components/kit/surfaces';
 import { announce } from '@/components/site/live-region';
 import { askFacts, isYcApplicationAsk, validateAsk } from '@/lib/oti/ask';
-import { REAL_ASK_COPY } from '@/lib/oti/copy';
 import { publicId } from '@/lib/oti/ids';
 import { readStore, type PlaygroundStore } from '@/lib/oti/storage';
 import { ASK_TEXT_MAX, bareSubject, fmtN, SUBJECT_MAX } from '@/lib/oti/text';
 import { fmtClock } from '@/lib/oti/time';
 import type { QaState } from '@/lib/qa';
 import { PRESET_RECORDINGS } from '@/lib/recorded';
-import { sampleAskById } from '@/lib/sample/asks';
 import { SAMPLE_NETWORK_ASKS } from '@/lib/sample/network';
 import { presetById, isPresetId } from '@/lib/sample/presets';
 import { postSse } from '@/lib/sse';
-import type { BannerKind, CompileDoneEvent, CompileEvent, CompileRefusedEvent, Network, PresetId } from '@/lib/types';
+import type { BannerKind, CompileDoneEvent, CompileEvent, CompileRefusedEvent, PresetId } from '@/lib/types';
 import {
   checkingRows,
   compiledAskOf,
@@ -76,32 +73,25 @@ import {
   COMPOSER_LABEL,
   compilerDownCopy,
   EXAMPLE_PARTS_LABEL,
-  EXAMPLE_PROFILE_NOTE,
   HOME_LEDE,
   HOME_TITLE,
   liveBlockedCopy,
-  OTHER_SIDE_HEAD,
   OTHER_SIDE_LINK,
   OTHER_SIDE_NOTE,
   PART_LABEL,
   partsLeftCopy,
   QUEUED_COPY,
-  REAL_NOT_ANSWERING,
   REFUSAL,
-  SEND_FAILED_TITLE,
-  sendLabel,
-  withoutNothingSent,
+  SEND_LABEL,
 } from './copy';
 import { emptyRun } from './fanout-model';
 import { reveal, isPhoneNow, useOnline, usePlayground } from './hooks';
 import { stopSampleRun } from './sample-runner';
 import { putRun } from './sample-store';
-import { liveCanRun, type LiveInfo, type RealAccess, type ResendSeed } from './types';
+import { liveCanRun, type LiveInfo } from './types';
 
 const DRAFT_KEY = 'oti.s2.draft';
 const YC_SAMPLE_TEXT = 'Need 20 minutes with a YC alum to review our YC application before the batch deadline. We tried the online guides.';
-/** QA example profile (Maya Bennett, a fictional founder in lib/sample) for the signed-in REAL states. */
-const EXAMPLE_PROFILE = { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' };
 /** The compiler should answer in about 3 s (ux-spec S2): a note at 8 s, the manual form at 15 s. */
 const SLOW_MS = 8_000;
 const GIVE_UP_MS = 15_000;
@@ -110,26 +100,14 @@ export interface AskComposeProps {
   qaState: QaState<'ask'> | null;
   degraded: BannerKind | null;
   live: LiveInfo;
-  real: RealAccess;
   preset: PresetId | null;
   from: 'playground' | null;
   edit: boolean;
   /** `?new=1` (the status page's “‹ New ask”): start empty instead of from the draft kept in this tab. */
   fresh?: boolean;
-  resend: ResendSeed | null;
-  /** `home` on `/` (display H1, the REAL line, the link to /rules); `page` on /ask. Default `page`. */
+  /** `home` on `/` (display H1, the card to /rules); `page` on /ask. Default `page`. */
   variant?: 'home' | 'page';
-  /** Home only: the dated REAL line, worded on the server (null renders none). */
-  realLine?: string | null;
-  /**
-   * Home only (a static page can't read the session): where a visitor who may be signed in goes to ask the REAL
-   * network. Set by the home island when REAL is set up and a session cookie exists; /ask resolves the session.
-   */
-  realHref?: string | null;
 }
-
-/** The home page's preview of the other side: 3 of the 12 SAMPLE asks the playground runs. */
-const OTHER_SIDE_IDS = ['a01', 'a03', 'a02'] as const;
 
 /* ---------- client-only start (sessionStorage), after hydration ---------- */
 
@@ -154,7 +132,6 @@ function writeDraft(text: string): void {
 
 function startState(props: AskComposeProps, preset: PresetId): ComposeState {
   const sa = SAMPLE_NETWORK_ASKS[preset];
-  const net: Network = props.real.kind === 'allowed' && props.resend ? 'real' : 'sample';
   const example = (text: string, kind: 'partial' | 'complete', base = initialCompose('sample', text)) =>
     composeReducer(base, { type: 'checkExample', text, rows: exampleRows(sa, kind), subject: sa.subject, topic: null });
   switch (props.qaState) {
@@ -180,28 +157,16 @@ function startState(props: AskComposeProps, preset: PresetId): ComposeState {
       return composeReducer(composeReducer(initialCompose('sample', sa.partial), { type: 'checkStart', text: sa.partial }), { type: 'checkSlow' });
     case 'compiler-down':
       return composeReducer(initialCompose('sample', sa.partial), { type: 'checkDown', kind: 'down', until: null, samples: sampleAnswers(sa), subject: sa.subject, text: sa.partial });
-    case 'queued': {
-      // The REAL example is Maya's hospital ask (lib/sample), as in the prototype.
-      const h = SAMPLE_NETWORK_ASKS.health;
-      const base = initialCompose('real', h.complete);
-      return composeReducer(composeReducer(base, { type: 'checkExample', text: h.complete, rows: exampleRows(h, 'complete'), subject: h.subject, topic: null }), { type: 'queued' });
-    }
-    case 'real-guest':
-      return { ...initialCompose('sample'), realOpen: true };
     default:
       break;
-  }
-  if (props.resend) {
-    const text = props.edit && props.resend.suggestion ? withEdit(props.resend.text, props.resend.suggestion) : props.resend.text;
-    return initialCompose(net, text);
   }
   if (props.edit) return initialCompose('sample', withEdit(sa.complete, sa.noMatchEdit));
   if (props.from === 'playground') return initialCompose('sample', sa.partial);
   if (props.fresh) {
     writeDraft('');
-    return initialCompose(net);
+    return initialCompose('sample');
   }
-  return initialCompose(net, readDraft() ?? '');
+  return initialCompose('sample', readDraft() ?? '');
 }
 
 /** The rule a member would see quoted, for the preview: the visitor's own words from their playground run when it
@@ -228,25 +193,19 @@ function untilLabel(iso: unknown): string | null {
   return Number.isNaN(ms) ? null : new Date(ms).toLocaleString('en-US', { month: 'short', day: 'numeric' });
 }
 
-/** POST /api/asks answers CreateAskResult (BE2) or a JSON error body. */
-type CreateAskReply = { ok?: boolean; id?: string; status?: string; error?: string; reason?: string; message?: string };
-
 /* ---------- the island ---------- */
 
 export function AskCompose(props: AskComposeProps) {
   const router = useRouter();
   const online = useOnline();
   const pg = usePlayground();
-  const [st, dispatch] = useReducer(composeReducer, undefined, () => initialCompose(props.real.kind === 'allowed' && props.resend ? 'real' : 'sample', props.resend?.text ?? ''));
+  const [st, dispatch] = useReducer(composeReducer, undefined, () => initialCompose('sample'));
   const booted = useRef(false);
   const compile = useRef<{ ctrl: AbortController; timers: ReturnType<typeof setTimeout>[] } | null>(null);
   const afterRender = useRef<(() => void) | null>(null);
-  const sendKey = useRef<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
 
-  const qa = props.qaState;
-  const real: RealAccess = qa === 'real-guest' ? { kind: 'signed_out', mode: props.real.kind === 'signed_out' ? props.real.mode : 'open' } : qa === 'queued' ? { kind: 'allowed', profile: EXAMPLE_PROFILE, example: true } : props.real;
   const preset: PresetId = props.preset ?? (pg && isPresetId(pg.preset) ? pg.preset : 'engineer');
   const sa = SAMPLE_NETWORK_ASKS[preset];
   const degraded = props.degraded;
@@ -254,8 +213,8 @@ export function AskCompose(props: AskComposeProps) {
   const live: LiveInfo =
     degraded === 'down' || degraded === 'budget' || degraded === 'off'
       ? { state: degraded, until: degraded === 'budget' ? 'Dec 1' : null }
-      : degraded === 'slow' || qa === 'queued'
-        ? { state: qa === 'queued' ? 'ok' : 'slow', until: null }
+      : degraded === 'slow'
+        ? { state: 'slow', until: null }
         : props.live;
 
   // Start from the URL and this tab (playground preset, draft) once hydrated.
@@ -311,15 +270,14 @@ export function AskCompose(props: AskComposeProps) {
     [],
   );
 
-  const net = st.net;
   const left = unresolvedCount(st.parts);
   const ready = isReady(st);
   const compiled = st.phase === 'compiled' && !st.stale;
   const problem = textProblem(st.text);
   const subjectOk = st.subject.trim().length > 0 && st.subject.length <= SUBJECT_MAX;
-  // A SAMPLE send of the founder's own text, and any REAL send, needs live gates.
-  const liveBlocked = !liveCanRun(live) && (net === 'real' || !sampleKindOf(st.checked ?? st.text, sa));
-  const canSend = ready && subjectOk && !st.sending && !offline && !liveBlocked && (net === 'sample' || real.kind === 'allowed');
+  // A send of the founder's own text needs live gates; a sample pill's text has hand-written verdicts.
+  const liveBlocked = !liveCanRun(live) && !sampleKindOf(st.checked ?? st.text, sa);
+  const canSend = ready && subjectOk && !st.sending && !offline && !liveBlocked;
   const canCheck = st.phase !== 'compiling' && !problem && !offline;
   const showResults = st.phase === 'compiled' && ready;
 
@@ -364,7 +322,6 @@ export function AskCompose(props: AskComposeProps) {
     if (!canCheck) return;
     const text = st.text.trim();
     stopCompile();
-    sendKey.current = null;
     if (isYcApplicationAsk(text)) {
       // The same code check the server runs on every send: refused before any model call.
       dispatch({ type: 'checkRefused', kind: 'yc_application', text });
@@ -372,7 +329,7 @@ export function AskCompose(props: AskComposeProps) {
       onPhoneShow('[data-note="refused"]', false);
       return;
     }
-    const kind = net === 'sample' ? sampleKindOf(text, sa) : null;
+    const kind = sampleKindOf(text, sa);
     if (kind === 'partial' || kind === 'complete') {
       // A sample chip's text: its hand-written parts render at once, labelled (no compiler run, no request).
       const rows = exampleRows(sa, kind);
@@ -424,7 +381,7 @@ export function AskCompose(props: AskComposeProps) {
     let error: { kind: string } | null = null;
     const res = await postSse<CompileEvent>(
       '/api/compile',
-      { text, network: net },
+      { text, network: 'sample' },
       (ev) => {
         if (ctrl.signal.aborted) return;
         if (ev.event === 'part' && ev.data && typeof ev.data.i === 'number' && ev.data.part) dispatch({ type: 'checkPart', i: ev.data.i, row: rowFromCompiled(ev.data.part, text) });
@@ -493,95 +450,19 @@ export function AskCompose(props: AskComposeProps) {
       return;
     }
     dispatch({ type: 'sendStart' });
-    if (net === 'sample') {
-      const kind = sampleKindOf(text, sa);
-      const sampleId = kind ? sa.id : null;
-      const id = sampleId ?? publicId('sampleAsk');
-      const pgNow = readStore('playground');
-      const you = pgNow && typeof pgNow.rules === 'string' && pgNow.rules.trim() ? { rules: pgNow.rules, cap: Math.max(1, Math.min(5, Math.round(pgNow.cap) || 2)) } : null;
-      stopSampleRun(id);
-      putRun(emptyRun({ id, preset, sample_ask_id: sampleId, text, compiled: ask, you, sent_at: Date.now() }));
-      announce('Sending to 40 sample members.');
-      router.push(`/ask/${id}`);
-      return;
-    }
-    sendKey.current ??= globalThis.crypto?.randomUUID?.() ?? publicId('run', 16);
-    let res: Response;
-    try {
-      res = await fetch('/api/asks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ text, compiled: ask, idempotency_key: sendKey.current, resend_of: props.resend?.id ?? null }),
-        cache: 'no-store',
-      });
-    } catch {
-      dispatch({ type: 'sendFailed', note: { key: 'offline' } });
-      return;
-    }
-    let body: CreateAskReply | null = null;
-    try {
-      body = (await res.json()) as CreateAskReply;
-    } catch {
-      body = null;
-    }
-    if (res.ok && body?.ok && typeof body.id === 'string') {
-      announce('Your ask was created.');
-      router.push(`/ask/${body.id}`);
-      return;
-    }
-    const message = typeof body?.message === 'string' && body.message ? body.message : REAL_NOT_ANSWERING;
-    const code = body?.error ?? body?.reason;
-    const fail = (tone: 'plain' | 'warn' | 'error', text: string, action: 'signin' | 'profile' | 'asks' | null = null, title: string | null = null) =>
-      dispatch({ type: 'sendFailed', note: { key: 'send', tone, title, body: text, action } });
-    if (res.status === 401 || code === 'signed_out') {
-      fail('plain', message === REAL_NOT_ANSWERING ? REAL_ASK_COPY.signedOutOpen : message, 'signin');
-    } else if (code === 'refused') {
-      fail('plain', REFUSAL.yc_application.body, null, REFUSAL.yc_application.title);
-    } else if (res.status === 403 || code === 'not_allowed') {
-      // Not invited (allowlist mode), an incomplete asker profile, or too many asks open and waiting.
-      fail('plain', message, message === REAL_ASK_COPY.profileIncomplete ? 'profile' : message === REAL_ASK_COPY.notInvited ? null : 'asks');
-    } else if (res.status === 409 || res.status === 429) {
-      fail('warn', message);
-    } else if (res.status >= 500 || res.status === 0) {
-      fail('warn', withoutNothingSent(message) || REAL_NOT_ANSWERING, null, SEND_FAILED_TITLE);
-    } else {
-      fail('error', message);
-    }
+    const kind = sampleKindOf(text, sa);
+    const sampleId = kind ? sa.id : null;
+    const id = sampleId ?? publicId('sampleAsk');
+    const pgNow = readStore('playground');
+    const you = pgNow && typeof pgNow.rules === 'string' && pgNow.rules.trim() ? { rules: pgNow.rules, cap: Math.max(1, Math.min(5, Math.round(pgNow.cap) || 2)) } : null;
+    stopSampleRun(id);
+    putRun(emptyRun({ id, preset, sample_ask_id: sampleId, text, compiled: ask, you, sent_at: Date.now() }));
+    announce('Sending to 40 sample members.');
+    router.push(`/ask/${id}`);
   }
 
   /* ----- events ----- */
 
-  /** The home page can't resolve a session: a visitor who may be signed in asks the REAL network on /ask. */
-  function toRealPage(): boolean {
-    if (!props.realHref) return false;
-    writeDraft(st.text);
-    router.push(props.realHref);
-    return true;
-  }
-  function onNet(v: Network) {
-    if (v === 'real' && real.kind !== 'allowed') {
-      if (toRealPage()) return;
-      dispatch({ type: 'realOpen', open: true });
-      return;
-    }
-    dispatch({ type: 'net', net: v });
-  }
-  function onNetClick(e: MouseEvent<HTMLDivElement>) {
-    const t = e.target as HTMLElement;
-    if (t.closest('[data-value="real"][aria-disabled="true"]') && !toRealPage()) dispatch({ type: 'realOpen', open: true });
-  }
-  /**
-   * Keyboard parity with a click (prototype OTI.radiogroup): an arrow key from Sample moves focus onto the
-   * unavailable Real option and shows why it is unavailable; Sample stays selected. From Real, arrows go back.
-   * Runs after the radiogroup's own handler (bubble phase), which keeps unavailable options out of the cycle.
-   */
-  function onNetKey(e: KeyboardEvent<HTMLDivElement>) {
-    if (!['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'].includes(e.key)) return;
-    const realEl = e.currentTarget.querySelector<HTMLElement>('[data-value="real"][aria-disabled="true"]');
-    if (!realEl || (e.target as HTMLElement).closest('[data-value="real"]')) return;
-    dispatch({ type: 'realOpen', open: true });
-    realEl.focus();
-  }
   function onText(e: ChangeEvent<HTMLTextAreaElement>) {
     dispatch({ type: 'text', text: e.target.value });
   }
@@ -598,7 +479,6 @@ export function AskCompose(props: AskComposeProps) {
   }
   function fill(kind: 'vague' | 'partial' | 'complete') {
     stopCompile();
-    sendKey.current = null;
     dispatch({ type: 'fill', text: sa[kind] });
   }
   function onUse(i: number) {
@@ -627,16 +507,12 @@ export function AskCompose(props: AskComposeProps) {
 
   /* ----- render ----- */
 
-  const realNote = realNoteOf(real);
-  const realOptionDisabled = real.kind !== 'allowed';
-  const tagKind = net === 'real' ? 'real' : 'plain';
-  const showUseAll = net === 'sample' && st.phase === 'compiled' && !st.stale && openSuggestions(st.parts) > 1;
+  const showUseAll = st.phase === 'compiled' && !st.stale && openSuggestions(st.parts) > 1;
   const exampleLabel = st.source === 'example' || (st.source === 'manual' && st.parts?.some((p) => !!p.sample));
   const cap = pg && pg.rules?.trim() ? Math.max(1, Math.min(5, Math.round(pg.cap) || 2)) : 2;
-  const clause = net === 'sample' && sampleKindOf(st.checked ?? '', sa) ? previewClause(preset, pg) : null;
+  const clause = sampleKindOf(st.checked ?? '', sa) ? previewClause(preset, pg) : null;
   const facts = st.parts ? askFacts(compiledAskOf(st)?.parts ?? { challenge: '', tried: '', needs: '', by: '', offers: '' }) : [];
-  const fromLine = net === 'real' && real.kind === 'allowed' ? [real.profile.name, real.profile.company, real.profile.stage, real.profile.city].filter(Boolean).join(' · ') : [sa.as.name, sa.as.company, sa.as.stage, sa.as.city].join(' · ');
-  const finePerson = net === 'real' && real.kind === 'allowed' ? `${real.profile.first} sees` : 'The founder sees';
+  const fromLine = [sa.as.name, sa.as.company, sa.as.stage, sa.as.city].join(' · ');
   const counterOver = st.text.length > ASK_TEXT_MAX;
 
   const checkLabel = st.phase === 'compiling' ? 'Checking…' : compiled ? 'Check again' : st.stale ? 'Check again' : 'Check my ask';
@@ -645,7 +521,7 @@ export function AskCompose(props: AskComposeProps) {
     : offline
       ? ACTIONS_OFFLINE
       : liveBlocked
-        ? liveBlockedCopy(live.state, net, live.until)
+        ? liveBlockedCopy(live.state, 'sample', live.until)
         : ready && !subjectOk
           ? ACTIONS_NO_SUBJECT
           : ready
@@ -664,14 +540,6 @@ export function AskCompose(props: AskComposeProps) {
         <header className={cx('page-head page-head--left ask-head', home && 'ask-head--home')}>
           {home ? <h1 className="h1">{HOME_TITLE}</h1> : <h1 className="title">{ASK_TITLE}</h1>}
           <p className="lede">{home ? HOME_LEDE : ASK_LEDE}</p>
-          {home && props.realLine ? (
-            <p className="meta ask-real-line">
-              <RealTag /> <span>{props.realLine}</span>{' '}
-              <Link className="link" href="/board">
-                Board
-              </Link>
-            </p>
-          ) : null}
         </header>
 
         <div className="ask-form" id="ask-form" ref={formRef}>
@@ -710,7 +578,7 @@ export function AskCompose(props: AskComposeProps) {
               </Button>
             </div>
           </div>
-          <div className="ask-samples" id="ask-samples" hidden={net === 'real'}>
+          <div className="ask-samples" id="ask-samples">
             <span className="meta" id="ask-samples-lbl">
               Try a sample:
             </span>
@@ -724,53 +592,6 @@ export function AskCompose(props: AskComposeProps) {
               Complete
             </button>
           </div>
-          <div className="ask-net" onClickCapture={onNetClick} onKeyDown={onNetKey}>
-            <span className="meta" id="ask-net-lbl">
-              Network
-            </span>
-            <RadioGroup<Network>
-              variant="seg"
-              labelledBy="ask-net-lbl"
-              value={net}
-              onChange={onNet}
-              options={[
-                { value: 'sample', label: 'Sample · 40 fictional members' },
-                { value: 'real', label: 'Real', disabled: realOptionDisabled, describedBy: realOptionDisabled ? 'ask-real-why' : undefined },
-              ]}
-            />
-          </div>
-          <div className="notice" id="ask-real-note" hidden={!(st.realOpen && realOptionDisabled)}>
-            <p id="ask-real-why">{realNote.text}</p>
-            {realNote.action === 'signin' ? (
-              <Link className="btn btn--sm" href="/join?next=%2Fask">
-                Sign in
-              </Link>
-            ) : realNote.action === 'profile' ? (
-              <Link className="btn btn--sm" href="/me#settings">
-                Edit profile ›
-              </Link>
-            ) : null}
-          </div>
-          <p className="small ask-as" id="ask-as">
-            {net === 'real' && real.kind === 'allowed' ? (
-              <>
-                Sent as {real.profile.name}, {real.profile.company} ({real.profile.stage}, {real.profile.city}).{' '}
-                <Link className="link" href="/me#settings">
-                  Edit profile ›
-                </Link>
-                {real.example ? (
-                  <>
-                    {' '}
-                    <ProtoNote>{EXAMPLE_PROFILE_NOTE}</ProtoNote>
-                  </>
-                ) : null}
-              </>
-            ) : (
-              <>
-                Sent as a sample founder at {sa.as.company} ({sa.as.stage}, {sa.as.city}). <SampleTag />
-              </>
-            )}
-          </p>
           <noscript>
             <div className="notice">
               <p>Checking and sending an ask needs JavaScript. Nothing was sent to anyone.</p>
@@ -794,7 +615,7 @@ export function AskCompose(props: AskComposeProps) {
                     Use all {openSuggestions(st.parts)} suggestions
                   </Button>
                 ) : null}
-                {tagKind === 'real' ? <RealTag /> : <SampleTag />}
+                <SampleTag />
               </span>
               {exampleLabel ? <p className="meta ask-parts-src">{EXAMPLE_PARTS_LABEL}</p> : null}
             </div>
@@ -804,7 +625,6 @@ export function AskCompose(props: AskComposeProps) {
                 row={p}
                 i={i}
                 flash={(st.flash[i] ?? 0) > 0}
-                sample={net === 'sample'}
                 onInput={(value) => dispatch({ type: 'partInput', i, value })}
                 onUse={() => onUse(i)}
                 onEdit={() => onEdit(i)}
@@ -830,7 +650,7 @@ export function AskCompose(props: AskComposeProps) {
               <h2 className="h2" id="ask-preview-title">
                 What a member sees
               </h2>
-              {tagKind === 'real' ? <RealTag /> : <SampleTag />}
+              <SampleTag />
             </div>
             <OfferCard
               titleId="ask-card-title"
@@ -838,7 +658,7 @@ export function AskCompose(props: AskComposeProps) {
                 <>
                   <Tag kind="attn">Ask for you</Tag>
                   <span>1 of your {cap} this month</span>
-                  {net === 'sample' ? <SampleTag /> : null}
+                  <SampleTag />
                 </>
               }
               title={bareSubject(st.subject) || ' '}
@@ -854,7 +674,7 @@ export function AskCompose(props: AskComposeProps) {
                   </>
                 )
               }
-              fine={`${finePerson} your name only if you choose OK. A No is private. This counts as 1 of your ${cap} whatever you answer.`}
+              fine={`The founder sees your name only if you choose OK. A No is private. This counts as 1 of your ${cap} whatever you answer.`}
               facts={facts}
             />
           </section>
@@ -863,7 +683,7 @@ export function AskCompose(props: AskComposeProps) {
             <div className="btn-row">
               {st.phase === 'compiled' ? (
                 <Button variant="primary" size="lg" className="hide-phone" primary={compiled} kbd={compiled && !st.sending} busy={st.sending} aria-disabled={!canSend} id="ask-send" onClick={() => void send()}>
-                  {st.sending ? 'Sending…' : sendLabel(net)}
+                  {st.sending ? 'Sending…' : SEND_LABEL}
                 </Button>
               ) : null}
               {st.phase === 'compiled' ? (
@@ -896,7 +716,7 @@ export function AskCompose(props: AskComposeProps) {
               if (canSend) void send();
             }}
           >
-            {st.sending ? 'Sending…' : sendLabel(net)}
+            {st.sending ? 'Sending…' : SEND_LABEL}
           </Button>
         </Bar>
       ) : null}
@@ -906,38 +726,14 @@ export function AskCompose(props: AskComposeProps) {
 
 /* ---------- the other side (home only) ---------- */
 
-/**
- * Under the composer on `/`: the quiet way to the member's side (/rules), with 3 of the 12 SAMPLE asks the
- * playground checks, labelled Sample (fictional founders and companies, lib/sample).
- */
+/** Under the composer on `/`: one card to the member's side (/rules). */
 function OtherSide() {
-  const asks = OTHER_SIDE_IDS.map((id) => sampleAskById(id)).filter((a) => a !== null);
   return (
-    <section className="ask-other" id="ask-other" aria-labelledby="ask-other-title">
-      <p>
-        <Link className="link ask-other__link" href="/rules">
-          {OTHER_SIDE_LINK}
-        </Link>
-      </p>
-      <div className="ask-other__box">
-        <div className="split ask-other__head">
-          <h2 className="small ask-other__title" id="ask-other-title">
-            {OTHER_SIDE_HEAD}
-          </h2>
-          <SampleTag />
-        </div>
-        <ul className="ask-other__list">
-          {asks.map((a) => (
-            <li key={a.id}>
-              <p className="ask-other__subject">{a.subject}</p>
-              <p className="meta">
-                {a.company} · {a.stage} · {a.city}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <p className="meta">{OTHER_SIDE_NOTE}</p>
-      </div>
+    <section className="ask-other" id="ask-other" aria-label="The other side">
+      <Link className="ask-other__card" href="/rules">
+        <span className="ask-other__link">{OTHER_SIDE_LINK}</span>
+        <span className="meta">{OTHER_SIDE_NOTE}</span>
+      </Link>
     </section>
   );
 }
@@ -948,7 +744,6 @@ function PartRowView({
   row,
   i,
   flash,
-  sample,
   onInput,
   onUse,
   onEdit,
@@ -957,7 +752,6 @@ function PartRowView({
   row: PartRow;
   i: number;
   flash: boolean;
-  sample: boolean;
   onInput: (v: string) => void;
   onUse: () => void;
   onEdit: () => void;
@@ -1000,7 +794,7 @@ function PartRowView({
               </label>
               <input className="input" id={id} type="text" autoComplete="off" value={row.value} onChange={(e) => onInput(e.target.value)} data-input="" maxLength={200} />
             </div>
-            {sample && row.sample && row.value !== row.sample ? (
+            {row.sample && row.value !== row.sample ? (
               <Button variant="ghost" size="sm" className="ask-part__sample" data-sample-answer="" onClick={onSample}>
                 Use sample answer
               </Button>
@@ -1065,59 +859,16 @@ function NoteView({ note }: { note: Note }) {
     case 'queued':
       return (
         <div data-note="queued">
-          <Notice
-            action={
-              <Link className="btn btn--sm" href="/me#asks">
-                Withdraw one
-              </Link>
-            }
-          >
-            {QUEUED_COPY}
-          </Notice>
+          <Notice>{QUEUED_COPY}</Notice>
         </div>
       );
     case 'send':
       return (
         <div data-note="send">
-          <Notice
-            kind={note.tone}
-            title={note.title ?? undefined}
-            action={
-              note.action === 'signin' ? (
-                <Link className="btn btn--sm" href="/join?next=%2Fask">
-                  Sign in
-                </Link>
-              ) : note.action === 'profile' ? (
-                <Link className="btn btn--sm" href="/me#settings">
-                  Edit profile ›
-                </Link>
-              ) : note.action === 'asks' ? (
-                <Link className="btn btn--sm" href="/me#asks">
-                  Your asks ›
-                </Link>
-              ) : undefined
-            }
-          >
+          <Notice kind={note.tone} title={note.title ?? undefined}>
             {note.body}
           </Notice>
         </div>
       );
-  }
-}
-
-function realNoteOf(real: RealAccess): { text: string; action: 'signin' | 'profile' | null } {
-  switch (real.kind) {
-    case 'signed_out':
-      return { text: real.mode === 'allowlist' ? REAL_ASK_COPY.signedOutAllowlist : REAL_ASK_COPY.signedOutOpen, action: 'signin' };
-    case 'not_invited':
-      return { text: REAL_ASK_COPY.notInvited, action: null };
-    case 'profile_incomplete':
-      return { text: REAL_ASK_COPY.profileIncomplete, action: 'profile' };
-    case 'db_down':
-      return { text: REAL_NOT_ANSWERING, action: null };
-    case 'not_configured':
-      return { text: REAL_ASK_COPY.notConfigured, action: null };
-    default:
-      return { text: '', action: null };
   }
 }

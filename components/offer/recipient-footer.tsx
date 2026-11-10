@@ -2,9 +2,8 @@ import Link from 'next/link';
 import { FOOTER_LINE, FOOTER_LINKS } from '@/lib/site';
 
 /**
- * The footer of /o and /c. ux-spec S5: “Footers follow the recipient: askers get Your ask · Delete my data;
- * members get Pause all asks · Change your rules · Delete my data”; the prototype's offer page leads with
- * Pause all asks. Same markup and the same disclaimer as the shared footer (components/site/site-footer.tsx), which
+ * The footer of /o and /c. ux-spec S5: “Footers follow the recipient: askers get Your ask;
+ * members get Pause all asks · Change your rules”; the prototype's offer page leads with Pause all asks. Same markup and the same disclaimer as the shared footer (components/site/site-footer.tsx), which
  * these pages hide with one :has() rule in styles/offer.css, so each page keeps one contentinfo landmark.
  */
 
@@ -15,36 +14,28 @@ export interface FooterLink {
 
 export type RecipientMode = 'sample' | 'example' | 'real';
 
-/** Pause links from a page need the member's own pause token: SAMPLE has its own, REAL pauses from Your gate. */
-function pauseHref(mode: RecipientMode): string {
-  return mode === 'sample' ? '/pause/sample' : '/me#settings';
-}
+/** The demo has one pause page (/pause/sample) and no accounts, so nothing here links to sign-in or a member page. */
+const PAUSE: FooterLink = { href: '/pause/sample', label: 'Pause all asks' };
 
 /** /o: the member holding the offer. */
 export function offerFooterLinks(mode: RecipientMode): FooterLink[] {
-  return [{ href: pauseHref(mode), label: 'Pause all asks' }];
+  return mode === 'real' ? [] : [PAUSE];
 }
 
 /**
- * /c: by the recipient's role. A REAL asker's “Your ask” opens that ask (CheckinView.ask_id), or their asks under
- * Your gate when the id is missing; on SAMPLE it opens the sample ask in this tab (`sa_health` is the canonical one).
+ * /c: by the recipient's role. “Your ask” opens that ask (CheckinView.ask_id); on SAMPLE it opens the sample ask in
+ * this tab (`sa_health` is the canonical one).
  */
 export function checkinFooterLinks(mode: RecipientMode, role: 'asker' | 'member', askId: string | null): FooterLink[] {
   if (role === 'member') {
-    return [
-      { href: pauseHref(mode), label: 'Pause all asks' },
-      { href: '/me#settings', label: 'Change your rules' },
-      { href: '/me#delete', label: 'Delete my data' },
-    ];
+    return [...(mode === 'real' ? [] : [PAUSE]), { href: '/rules', label: 'Change your rules' }];
   }
-  return [
-    { href: mode === 'sample' ? `/ask/${encodeURIComponent(askId ?? 'sa_health')}` : askId ? `/ask/${encodeURIComponent(askId)}` : '/me#asks', label: 'Your ask' },
-    { href: '/me#delete', label: 'Delete my data' },
-  ];
+  const id = mode === 'sample' ? (askId ?? 'sa_health') : askId;
+  return id ? [{ href: `/ask/${encodeURIComponent(id)}`, label: 'Your ask' }] : [];
 }
 
-export function RecipientFooter({ links, board = true }: { links: readonly FooterLink[]; board?: boolean }) {
-  const site = FOOTER_LINKS.filter((l) => board || l.href !== '/board');
+export function RecipientFooter({ links }: { links: readonly FooterLink[] }) {
+  const site = FOOTER_LINKS;
   return (
     <footer className="site-footer offer-footer">
       <div className="site-footer__in">

@@ -1,11 +1,10 @@
 /**
- * QA states for `/?state=<name>` (the prototype's names, lib/qa.ts `QA_STATES.playground`). The page imports this
+ * QA states for `/rules?state=<name>` (the prototype's names, lib/qa.ts `QA_STATES.playground`). The page imports this
  * module dynamically, only when QA is enabled and a state is in the URL, so it never ships to a normal visit.
  *
- * States that show a live run (done-live, rerun-*, partial-timeout, all-*, lost-stream, running) can't call the
- * model, so they render example verdicts in the live layout: the run's meta line says “QA fixture, not a model
- * call”, rows carry no latency or confidence and say “example”, and the run is never stored. The REAL line shows
- * the prototype's example numbers with the dashed “Prototype: example numbers” note while any QA state is active.
+ * States that show a live run (done-live, partial-timeout, all-*, lost-stream, running) can't call the model, so
+ * they render example verdicts in the live layout: the run's source line says “QA fixture, not a model call”, rows
+ * carry no latency and say “example”, and the run is never stored.
  */
 
 import type { QaState } from '@/lib/qa';
@@ -19,12 +18,12 @@ const DECLINE_ALL_RULES = 'Happy to talk about robotics hardware.\nNo fundraisin
 const ACCEPT_ALL_RULES = 'Happy to talk to any founder who asks for 20 minutes.';
 /** 1,040 characters: the Engineer preset plus nine lines (too-long). */
 const LONG_RULES = [
-  'Happy to talk to founders about Postgres, queues or LLM evals in production.',
-  'Only if they have a real workload: a table size, a p95 or an error rate.',
+  'Happy to talk to founders about churn, activation or support load.',
+  'Only if they have real usage: a customer count, a churn rate or a ticket count.',
   'No fundraising asks.',
   'No asks to review a deck.',
-  'Also happy to talk about Kafka, Redis streams or Postgres logical replication when the workload is real.',
-  'Happy to look at a slow query if you send the plan, the table size and what you already tried.',
+  'Also happy to talk about onboarding emails, help centers or customer success hiring when usage is real.',
+  'Happy to look at a churn cohort if you share the numbers, the plan mix and what you already tried.',
   'Only if the ask says what you tried and what broke; a link to a dashboard is fine.',
   'No asks to join an advisory board, no recruiting asks and no requests to try a product.',
   'Prefer asks that name a deadline in the next 30 days and offer something back, even a write-up.',
@@ -63,22 +62,6 @@ function engineerGates(): GateMap {
   PRESET_RECORDINGS.runs.engineer.gates.forEach((g, i) => {
     out[g.ask_id] = { ...recordedGateEvent(g, i, PRESET_RECORDINGS), source: 'fixture', ms: null, confidence: null };
   });
-  return out;
-}
-
-/** rerun-changed: Engineer plus “No asks from health companies.”; the example has Wrenby Health declined by it. */
-function engineerWithHealthLine(): GateMap {
-  const out = engineerGates();
-  const base = out.a09;
-  out.a09 = {
-    ...base,
-    verdict: 'decline',
-    model_verdict: 'decline',
-    cited: [{ text: 'No asks from health companies.', found: false }],
-    reason_code: 'rule_says_no',
-    reason: 'Wrenby Health is a health company.',
-    question: null,
-  };
   return out;
 }
 
@@ -136,35 +119,16 @@ export function applyQaState(engine: PlaygroundEngine, state: QaState<'playgroun
       case 'done-live':
         engine.qaInstant(engineerGates());
         return;
-      case 'rerun-changed':
-        engine.recordedRun();
-        engine.qaAppendAddLine();
-        engine.qaInstant(engineerWithHealthLine());
-        return;
-      case 'rerun-nochange':
-        engine.recordedRun();
-        engine.setRules(`${rules()}\n${EXTRA_LINE}`);
-        engine.qaInstant(engineerGates());
-        return;
       case 'stale':
         engine.recordedRun();
         engine.setRules(`${rules()}\n${EXTRA_LINE}`);
         return;
       case 'cap-changed':
         engine.recordedRun();
-        engine.applyCapEdit();
+        engine.setCap(1);
         return;
       case 'partial-timeout':
         engine.qaInstant(engineerGates(), { fail: ['a09'] });
-        return;
-      case 'clause-check':
-        engine.recordedRun();
-        engine.applyQuoteTest();
-        engine.toggleRow('a11');
-        return;
-      case 'marks':
-        engine.qaSetMarks(['a08']);
-        engine.recordedRun();
         return;
       case 'empty-rules':
         engine.setRules('');

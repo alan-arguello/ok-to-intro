@@ -21,7 +21,7 @@ import {
 import type { EmailMessage } from '@/lib/types';
 import { captureEmails, createNetworkDb, type NetworkDb } from './support';
 
-const message: EmailMessage = { subject: 'Hospital procurement in the US, 20 min?', preheader: 'p', html: '<p>x</p>', text: 'x', headers: {} };
+const message: EmailMessage = { subject: 'Enterprise deals stuck 5 months, 20 min?', preheader: 'p', html: '<p>x</p>', text: 'x', headers: {} };
 
 let net: NetworkDb;
 let member: string;

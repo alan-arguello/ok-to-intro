@@ -37,13 +37,13 @@ const HEALTH = SAMPLE_NETWORK_ASKS.health;
 
 /** The Engineer “Missing 2 parts” sample, completed with the sample answers, as S2 sends it. */
 function engCompiled(): CompiledAsk {
-  const parts = { challenge: ENG.compiledPartial[0]!.text, tried: ENG.compiledPartial[1]!.text, needs: ENG.compiledPartial[2]!.text, by: 'Nov 21', offers: 'our load-test harness' };
-  return { parts, subject: ENG.subject, text: assembleAskText(ENG.partial, parts, ['needs', 'by', 'offers']), price: null, topic: 'Postgres at scale' };
+  const parts = { challenge: ENG.compiledPartial[0]!.text, tried: ENG.compiledPartial[1]!.text, needs: ENG.compiledPartial[2]!.text, by: 'Nov 21', offers: 'our cancellation interview notes' };
+  return { parts, subject: ENG.subject, text: assembleAskText(ENG.partial, parts, ['needs', 'by', 'offers']), price: null, topic: 'Churn' };
 }
 
 function healthCompiled(): CompiledAsk {
-  const parts = { challenge: HEALTH.compiledPartial[0]!.text, tried: HEALTH.compiledPartial[1]!.text, needs: HEALTH.compiledPartial[2]!.text, by: 'Nov 20', offers: 'our tender templates' };
-  return { parts, subject: HEALTH.subject, text: assembleAskText(HEALTH.partial, parts, ['needs', 'by', 'offers']), price: null, topic: 'Hospital procurement, US' };
+  const parts = { challenge: HEALTH.compiledPartial[0]!.text, tried: HEALTH.compiledPartial[1]!.text, needs: HEALTH.compiledPartial[2]!.text, by: 'Nov 20', offers: 'our procurement checklist' };
+  return { parts, subject: HEALTH.subject, text: assembleAskText(HEALTH.partial, parts, ['needs', 'by', 'offers']), price: null, topic: 'Enterprise sales, US' };
 }
 
 const engineer = PRESETS.find((p) => p.id === 'engineer')!;
@@ -78,7 +78,7 @@ describe('the SAMPLE fan-out without a model key', () => {
     }
     expect(cells.filter((c) => c.state === 'na').map((c) => c.na).sort()).toEqual(['at_cap', 'at_cap', 'at_cap', 'at_cap', 'at_cap', 'paused', 'paused']);
     const accept = cells.find((c) => c.label === 'm-7f2a')!;
-    expect(accept).toMatchObject({ state: 'accept', cited: 'Happy to talk about Postgres or Kafka at scale', reason_code: 'match' });
+    expect(accept).toMatchObject({ state: 'accept', cited: 'Happy to talk about churn and retention in B2B software', reason_code: 'match' });
 
     const q = events.find((e) => e.event === 'question');
     expect(q?.data).toEqual({ qid: `q_${hex4('sa_eng:role')}`, type: 'role', text: 'Who on your team would join the call, and what is their role?', gates: 1 });
@@ -106,11 +106,11 @@ describe('the SAMPLE fan-out without a model key', () => {
 
   it('refuses your own text (all 40 gates would run live) with the off copy, and refuses invalid or YC asks', async () => {
     const c = engCompiled();
-    const custom = await startSampleSend({ sample_ask_id: null, text: 'We sell a queue for hospitals. Tried Kafka; it drops jobs.', compiled: c, you: null }, { clientKey: null });
+    const custom = await startSampleSend({ sample_ask_id: null, text: 'We sell scheduling to hospitals. Tried a pilot; it stalled.', compiled: c, you: null }, { clientKey: null });
     expect(custom).toMatchObject({ ok: false, status: 503, body: { error: 'live_unavailable', live: 'off' } });
     if (!custom.ok) expect(custom.body.message).toMatch(/no model API key is set/);
     // The sample id with edited text is your own text too.
-    const edited = await startSampleSend({ sample_ask_id: 'sa_eng', text: `${ENG.partial} Also we use Redis.`, compiled: c, you: null }, { clientKey: null });
+    const edited = await startSampleSend({ sample_ask_id: 'sa_eng', text: `${ENG.partial} Also we tried a discount.`, compiled: c, you: null }, { clientKey: null });
     expect(edited).toMatchObject({ ok: false, status: 503 });
     const yc = await startSampleSend({ sample_ask_id: null, text: 'Who can refer me for the YC batch interview?', compiled: { ...c, text: 'Who can refer me for the YC batch interview?' }, you: null }, { clientKey: null });
     expect(yc).toMatchObject({ ok: false, status: 400, body: { error: 'invalid' } });
@@ -124,7 +124,7 @@ describe('the SAMPLE fan-out without a model key', () => {
       { clientKey: null },
     );
     expect(res).toMatchObject({ ok: true, reran: 1, accepted: 1, offer: null });
-    if (res.ok) expect(res.cells).toEqual([expect.objectContaining({ label: 'm-c3d0', state: 'accept', source: 'authored', cited: 'Happy to talk about Postgres, Redis or queues', ms: null })]);
+    if (res.ok) expect(res.cells).toEqual([expect.objectContaining({ label: 'm-c3d0', state: 'accept', source: 'authored', cited: 'Happy to talk about churn, activation or support load', ms: null })]);
     const unknown = await answerSampleQuestion({ sample_ask_id: 'sa_zzzzzz', compiled: engCompiled(), you: null, question: { type: 'price', text: 'x' }, answer: 'y' }, { clientKey: null });
     expect(unknown).toMatchObject({ ok: false, status: 400, body: { error: 'not_found' } });
   });
@@ -133,19 +133,19 @@ describe('the SAMPLE fan-out without a model key', () => {
 describe('the SAMPLE fan-out with live gates', () => {
   it('your gate runs live; with the most unused cap the offer goes to you', async () => {
     h.live = 'ok';
-    h.gate = async (input) => accepts(input.rules, 'founders about Postgres, queues or LLM evals in production', 1290);
+    h.gate = async (input) => accepts(input.rules, 'founders about churn, activation or support load', 1290);
     const start = await startSampleSend({ sample_ask_id: 'sa_eng', text: ENG.partial, compiled: engCompiled(), you: { rules: engineer.rules, cap: 2 } }, { clientKey: null });
     if (!start.ok) throw new Error('refused');
     const events = await collect(start.events);
     const you = cellsOf(events).find((c) => c.you)!;
-    expect(you).toMatchObject({ state: 'accept', source: 'live', ms: 1290, cited: 'founders about Postgres, queues or LLM evals in production' });
+    expect(you).toMatchObject({ state: 'accept', source: 'live', ms: 1290, cited: 'founders about churn, activation or support load' });
     expect(events.find((e) => e.event === 'offer')?.data).toMatchObject({ to: 'you', cell: you.cell });
   });
 
   it('a rate-limited visitor still gets the sample members; only their own gate is not checked', async () => {
     h.live = 'ok';
     h.limited = true;
-    h.gate = async (input) => accepts(input.rules, 'founders about Postgres, queues or LLM evals in production');
+    h.gate = async (input) => accepts(input.rules, 'founders about churn, activation or support load');
     const start = await startSampleSend({ sample_ask_id: 'sa_eng', text: ENG.partial, compiled: engCompiled(), you: { rules: engineer.rules, cap: 2 } }, { clientKey: 'k' });
     if (!start.ok) throw new Error('refused');
     expect(cellsOf(await collect(start.events)).find((c) => c.you)?.state).toBe('failed');
@@ -153,7 +153,7 @@ describe('the SAMPLE fan-out with live gates', () => {
 
   it('your own text runs all 40 gates live (members at their cap or paused are skipped first), with a sa_ id', async () => {
     h.live = 'ok';
-    const ruled = new Set(SAMPLE_MEMBERS.filter((m) => m.topic === 'health').map((m) => m.rules));
+    const ruled = new Set(SAMPLE_MEMBERS.filter((m) => m.topic === 'enterprise').map((m) => m.rules));
     h.gate = async (input) => (ruled.has(input.rules) ? (input.rules.includes('price') ? asksBack(input.rules, { type: 'price', text: 'What do you charge per hospital?' }) : accepts(input.rules, input.rules.split('.')[0] as string)) : declines(input.rules));
     const c = healthCompiled();
     const custom = { ...c, text: 'We sell inventory software to clinics in Phoenix. 9 pilots, 2 paid. Need someone who has bought for a hospital network.' };
@@ -170,7 +170,7 @@ describe('the SAMPLE fan-out with live gates', () => {
     const offer = events.find((e) => e.event === 'offer');
     expect(offer).toBeTruthy();
     // The question asked on custom text can be answered within the hour (this instance remembers who asked).
-    const res = await answerSampleQuestion({ sample_ask_id: start.ask_id, compiled: custom, you: null, question: { type: 'price', text: 'What do you charge per hospital?' }, answer: '$18k a year per hospital' }, { clientKey: null });
+    const res = await answerSampleQuestion({ sample_ask_id: start.ask_id, compiled: custom, you: null, question: { type: 'price', text: 'What do you charge per hospital?' }, answer: '$18k a year per customer' }, { clientKey: null });
     expect(res).toMatchObject({ ok: true, reran: 1, offer: null });
   });
 

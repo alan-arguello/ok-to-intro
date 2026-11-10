@@ -28,8 +28,8 @@ import type { Database } from '../lib/supabase/database.types';
 import { capMonth } from '../lib/oti/time';
 
 const N = 20;
-const RULES = 'Happy to talk about Postgres or Kafka at scale.';
-const QUOTE = 'Postgres or Kafka at scale';
+const RULES = 'Happy to talk about churn and retention in B2B software.';
+const QUOTE = 'churn and retention in B2B software';
 
 const hex64 = () => randomBytes(32).toString('hex');
 const offerId = () => `o_race${randomBytes(6).toString('hex').slice(0, 10)}`;

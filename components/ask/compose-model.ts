@@ -114,7 +114,7 @@ export function checkingRows(): PartRow[] {
   return PART_KEYS.map((k) => row(k, 'checking'));
 }
 
-/** “suggested from “writes still block” and “40M rows””. */
+/** “suggested from “churn after month 3” and “31 of 120 accounts””. */
 export function suggestedFrom(phrases: readonly string[]): string {
   const list = phrases.map((p) => p.trim()).filter(Boolean);
   return list.length ? `suggested from ${joinAnd(list.map(q))}` : 'suggested';

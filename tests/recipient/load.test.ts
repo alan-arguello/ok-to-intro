@@ -53,9 +53,9 @@ function offer(over: Partial<OfferView> = {}): OfferView {
     title: OFFER_SAMPLE.title,
     subject: OFFER_SAMPLE.subject,
     asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
-    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.' },
+    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to enterprise customers.' },
     rules_version: 3,
-    topic: 'Hospital procurement, US',
+    topic: 'Enterprise sales, US',
     scheduling_url: 'https://cal.com/priya-shah/20min',
     facts: [...OFFER_SAMPLE.facts],
     cap: 2,
@@ -104,7 +104,7 @@ describe('/o: resolving the link', () => {
     expect(offers.getOffer).toHaveBeenCalledWith({ token: TOKEN }, expect.any(Date));
     expect(m.mode).toBe('real');
     expect(m.ui.view).toBe('open');
-    expect(m.card).toMatchObject({ title: 'Hospital procurement in the US', from: 'Maya Bennett · Oakline Health · Seed · Chicago', matched: OFFER_SAMPLE.matched, who: 'Maya', cap: 2, nth: 1 });
+    expect(m.card).toMatchObject({ title: 'Enterprise deals stuck 5 months', from: 'Maya Bennett · Oakline Health · Seed · Chicago', matched: OFFER_SAMPLE.matched, who: 'Maya', cap: 2, nth: 1 });
     expect(m.card?.facts[0]?.[0]).toBe('Problem');
     expect(m.hours).toBe(71);
     expect(m.forms?.csrf).toBe(csrfToken(`o:t:${TOKEN}`));
@@ -187,11 +187,11 @@ describe('/o: the offer’s state decides', () => {
     member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules, rules_version: 3 } });
     const m = await loadOfferPage(TOKEN, { done: 'no' });
     expect(m.ui).toMatchObject({ view: 'no', why: 'area' });
-    expect(m.edit).toEqual({ context: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.', add: 'No asks about hospital procurement.', caption: SUGGESTED_EDIT_UNTESTED });
+    expect(m.edit).toEqual({ context: 'Happy to talk to B2B founders selling to enterprise customers.', add: 'No asks about enterprise sales.', caption: SUGGESTED_EDIT_UNTESTED });
     expect(m.rulesVersion).toBe(3);
     expect(m.edit?.add).not.toContain('Oakline');
     // Already in the rules: nothing to suggest.
-    member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules: `${rules}\nNo asks about hospital procurement.`, rules_version: 4 } });
+    member.getMemberProfile.mockResolvedValue({ ok: true, member: { rules: `${rules}\nNo asks about enterprise sales.`, rules_version: 4 } });
     expect((await loadOfferPage(TOKEN, { done: 'no', why: 'area' })).edit).toBeNull();
   });
 });
@@ -212,7 +212,7 @@ describe('/c: resolving the link and the check-in’s state', () => {
     const form = await loadCheckinPage(TOKEN, { v: '4' });
     expect(form.ui).toMatchObject({ view: 'form', kind: 'd1', role: 'asker', value: '4' });
     expect(form.other).toEqual({ name: 'Priya Shah', first: 'Priya' });
-    expect(form.subject).toBe('Hospital procurement in the US');
+    expect(form.subject).toBe('Enterprise deals stuck 5 months');
     expect(form.introMade?.text).toBe('Nov 9');
     expect(form.forms?.csrf).toBe(csrfToken(`c:t:${TOKEN}`));
     checkins.getCheckin.mockResolvedValue({ found: true, checkin: checkin({ answer: { kind: 'd1', rating: 4 }, answered_at: '2026-11-10T10:00:00-08:00' }) });

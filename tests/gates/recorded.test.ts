@@ -119,15 +119,15 @@ describe('the SAMPLE eval set', () => {
   it('freezing by hash notices any change to the file', () => {
     const text = JSON.stringify(file);
     expect(sha256(text)).toBe(sha256(JSON.stringify(file)));
-    expect(sha256(text)).not.toBe(sha256(text.replace('Postgres', 'Postgre')));
+    expect(sha256(text)).not.toBe(sha256(text.replace('churn', 'chur')));
   });
 });
 
 describe('scoring', () => {
   it('the keyword baseline never asks and ignores conditions', () => {
-    const rules = 'Happy to talk about Postgres at scale.\nOnly if you have revenue.\nNo asks to review a deck.';
-    expect(keywordBaseline(rules, 'Our Postgres p95 is 900 ms at 40M rows.')).toBe('accept');
-    expect(keywordBaseline(rules, 'Would love feedback on our Postgres pitch deck.')).toBe('decline');
+    const rules = 'Happy to talk about churn.\nOnly if you have revenue.\nNo asks to review a deck.';
+    expect(keywordBaseline(rules, 'Our churn is 31 of 120 accounts a quarter.')).toBe('accept');
+    expect(keywordBaseline(rules, 'Would love feedback on our churn pitch deck.')).toBe('decline');
     expect(keywordBaseline(rules, 'We sell inventory software to hospitals.')).toBe('decline');
   });
 

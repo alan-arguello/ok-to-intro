@@ -101,7 +101,7 @@ vi.mock('@/lib/server/offers', () => ({
   listPendingForMember: async () => ({
     ok: true,
     pending: {
-      offers: [{ offer_id: 'o_3Fp9kL', title: 'Hospital procurement in the US', asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' }, matched: null, facts: [], ask_text: '', expires_at: '2026-11-12T05:04:00.000Z' }],
+      offers: [{ offer_id: 'o_3Fp9kL', title: 'Enterprise deals stuck 5 months', asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' }, matched: null, facts: [], ask_text: '', expires_at: '2026-11-12T05:04:00.000Z' }],
       questions: [],
       checkins: [],
       cap: { cap: 2, used: 1, month: '2026-11-01' },
@@ -109,7 +109,7 @@ vi.mock('@/lib/server/offers', () => ({
   }),
 }));
 vi.mock('@/lib/server/asks', () => ({
-  listMyAsks: async () => ({ ok: true, items: [{ id: 'a_91xQ2k', subject: 'Postgres p95 at 40M rows', network: 'real', outcome: 'offered', status_line: '', created_at: '2026-11-09T05:04:00.000Z' }] }),
+  listMyAsks: async () => ({ ok: true, items: [{ id: 'a_91xQ2k', subject: 'Churn after month 3', network: 'real', outcome: 'offered', status_line: '', created_at: '2026-11-09T05:04:00.000Z' }] }),
 }));
 
 import { sendCode, verifyCode } from '@/app/(site)/join/actions';
@@ -205,8 +205,8 @@ describe('/me loader', () => {
       { text: 'No fundraising asks.', tally: '1 kept out' },
     ]);
     expect(i.ledger?.quotes).toEqual(['Postgres']);
-    expect(i.pending).toEqual({ title: 'Hospital procurement in the US', from: 'Maya Bennett', hoursLeft: 58, href: '/o/o_3Fp9kL' });
+    expect(i.pending).toEqual({ title: 'Enterprise deals stuck 5 months', from: 'Maya Bennett', hoursLeft: 58, href: '/o/o_3Fp9kL' });
     expect(i.token).toEqual({ state: 'active', created: { iso: '2026-11-09T12:00:00.000Z', label: 'Nov 9', fmt: 'day' }, lastUsed: { iso: '2026-11-09T17:04:00.000Z', label: '09:04', fmt: 'last' } });
-    expect(i.asks).toEqual({ state: 'ok', example: false, items: [{ id: 'a_91xQ2k', subject: 'Postgres p95 at 40M rows', outcome: 'offered', created: { iso: '2026-11-09T05:04:00.000Z', label: 'Nov 8', fmt: 'day' }, href: '/ask/a_91xQ2k' }] });
+    expect(i.asks).toEqual({ state: 'ok', example: false, items: [{ id: 'a_91xQ2k', subject: 'Churn after month 3', outcome: 'offered', created: { iso: '2026-11-09T05:04:00.000Z', label: 'Nov 8', fmt: 'day' }, href: '/ask/a_91xQ2k' }] });
   });
 });

@@ -13,9 +13,6 @@ export function NotFoundView() {
           {NOT_FOUND_COPY.lede}
         </p>
         <ButtonRow className="err-actions" style={ERR_ACTIONS}>
-          <ButtonLink size="lg" href={ROUTES.join}>
-            {NOT_FOUND_COPY.signIn}
-          </ButtonLink>
           <ButtonLink variant="primary" size="lg" href={ROUTES.home} primary>
             {NOT_FOUND_COPY.home}
           </ButtonLink>

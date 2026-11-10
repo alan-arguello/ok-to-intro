@@ -109,7 +109,7 @@ describe('/mcp', () => {
     expect(vague.text.split('\n')[0]).toBe('ok-to-intro · draft refused · too vague · nothing stored');
     const yc = await callTool('draft_ask', { text: 'Can someone review my YC application before the interview next week please?' });
     expect(yc.text.split('\n')[0]).toBe('ok-to-intro · draft refused · about a YC application · nothing stored');
-    const live = await callTool('draft_ask', { text: 'Our Postgres p95 went from 40 ms to 900 ms once the events table passed 40M rows. Tried partitions.' });
+    const live = await callTool('draft_ask', { text: 'Customers churn after month 3: 31 of 120 accounts left last quarter, most right after onboarding ends. Tried partitions.' });
     expect(live.isError).toBe(true);
     expect(live.text).toContain('Live checks are off on this instance: no model API key is set. Nothing was stored.');
   });
@@ -138,7 +138,7 @@ describe('/mcp', () => {
   });
 
   it('answer_question works on a SAMPLE ask without a token (hand-written reruns)', async () => {
-    const { text, isError } = await callTool('answer_question', { ask_id: 'sa_health', question_id: 'q_f2b7', answer: '$18k a year per hospital' });
+    const { text, isError } = await callTool('answer_question', { ask_id: 'sa_health', question_id: 'q_f2b7', answer: '$18k a year per customer' });
     expect(isError).toBe(false);
     expect(text.split('\n')[0]).toBe('ok-to-intro · ask sa_health · answer sent · SAMPLE');
     expect(text).toContain('result    the gate that asked accepts with this answer (example results, written by hand) · next in line');

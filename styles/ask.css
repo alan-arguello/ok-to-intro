@@ -8,10 +8,6 @@
 .ask-head .crumbs { margin-bottom: -4px; }
 .ask-form > * + * { margin-top: var(--s5); }
 .ask-form > [hidden] + * { margin-top: var(--s5); }
-.ask-net { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
-.ask-net .seg > [aria-disabled=true] { color: var(--ink-2); cursor: not-allowed; }
-.ask-as { color: var(--ink-2); }
-.ask-form > .ask-as { margin-top: var(--s3); }
 .ask-form > .ask-samples { margin-top: var(--s3); }
 .ask-samples { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
 @media (max-width: 760px) { .ask-samples > .meta { flex-basis: 100%; } }
@@ -59,8 +55,6 @@
    shadows beyond the kit's focus ring. */
 .ask-head--home { padding: var(--s10) 0 var(--s6); }
 .ask-head--home .lede { max-width: 38rem; }
-.ask-real-line { text-wrap: balance; }
-.ask-real-line .link { white-space: nowrap; }
 @media (max-width: 760px) { .ask-head--home { padding: var(--s6) 0 var(--s4); } }
 
 .ask-composer { border: 1px solid var(--line-input); border-radius: var(--r-sheet); background: var(--card); transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
@@ -71,20 +65,8 @@
 .ask-composer__foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); padding: 6px 8px 8px 16px; }
 .ask-composer__go { min-height: 44px; }
 .ask-form > .ask-samples { margin-top: var(--s3); }
-.ask-form > .ask-net { margin-top: var(--s4); }
-.ask-form > .ask-as { margin-top: var(--s2); }
 .ask-form > .ask-parts:not([hidden]) { margin-top: var(--s8); }
 
-.ask-other { margin-top: var(--s8); padding-bottom: var(--s10); }
-.ask-other__link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
-.ask-other__box { margin-top: var(--s3); padding: var(--s4); border: 1px solid var(--line-soft); border-radius: var(--r-card); background: var(--panel); }
-.ask-other__box > * + * { margin-top: var(--s3); }
-.ask-other__head { align-items: center; }
-.ask-other__title { font-weight: 500; }
-.ask-other__list { list-style: none; margin: var(--s3) 0 0; padding: 0; }
-.ask-other__list > li { padding: var(--s2) 0; border-top: 1px solid var(--line-soft); }
-.ask-other__list > li:first-child { border-top: 0; padding-top: 0; }
-.ask-other__subject { font-size: 15px; line-height: 1.4; }
 
 /* =====================================================================
    S2 · Status
@@ -146,3 +128,8 @@
 /* build: focusable cards (focus moves there after an action) show no ring for programmatic focus. */
 .st-outcome:focus:not(:focus-visible), .st-question:focus:not(:focus-visible) { outline: none; }
 .st-outcome .btn-row .link { display: inline-flex; align-items: center; min-height: 32px; }
+.ask-other { margin-top: var(--s8); padding-bottom: var(--s10); }
+.ask-other__card { display: flex; flex-direction: column; gap: 2px; min-height: 44px; padding: var(--s4); border: 1px solid var(--line-soft); border-radius: var(--r-card); background: var(--panel); color: var(--ink); text-decoration: none; }
+.ask-other__card:hover { border-color: var(--line-input); }
+.ask-other__link { font-weight: 500; color: var(--link); }
+.ask-other__card:hover .ask-other__link { text-decoration: underline; }

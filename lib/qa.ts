@@ -13,11 +13,11 @@ export const QA_STATES = {
   /** `/`, the ask-first home (static; its compose states live on /ask). */
   home: ['default'],
   playground: [
-    'not-run', 'running', 'done-recorded', 'done-live', 'rerun-changed', 'rerun-nochange', 'stale', 'cap-changed',
-    'partial-timeout', 'clause-check', 'marks', 'empty-rules', 'too-long', 'all-declined', 'all-accepted',
+    'not-run', 'running', 'done-recorded', 'done-live', 'stale', 'cap-changed',
+    'partial-timeout', 'empty-rules', 'too-long', 'all-declined', 'all-accepted',
     'rate-limited', 'api-down', 'budget', 'lost-stream', 'offline',
   ],
-  ask: ['empty', 'filled', 'compiling', 'compiled', 'ready', 'refused-vague', 'refused-yc', 'compiler-slow', 'compiler-down', 'queued', 'real-guest'],
+  ask: ['empty', 'filled', 'compiling', 'compiled', 'ready', 'refused-vague', 'refused-yc', 'compiler-slow', 'compiler-down'],
   askStatus: [
     'offered', 'streaming', 'offered-you', 'ask-back', 'answered', 'intro', 'moved-on', 'no-match', 'closed-all-passed',
     'expired-deadline', 'failed-closed', 'partial-failure', 'withdrawn', 'real',

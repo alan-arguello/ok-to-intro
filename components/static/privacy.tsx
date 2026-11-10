@@ -1,7 +1,6 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { RULES_TO_ANTHROPIC } from '@/lib/oti/copy';
-import { CONTACT_EMAIL, CONTACT_FALLBACK_URL, ROUTES } from '@/lib/site';
+import { CONTACT_EMAIL, CONTACT_FALLBACK_URL } from '@/lib/site';
 import { CodeRefs } from './code-ref';
 import { PRIVACY_CODE, PRIVACY_COPY, PRIVACY_ROWS, WHO_SEES } from './copy';
 
@@ -33,6 +32,7 @@ export function PrivacyContent() {
     <div className="container container--col">
       <header className="page-head">
         <h1 className="h1">{PRIVACY_COPY.title}</h1>
+        <p className="lede">{PRIVACY_COPY.demo}</p>
       </header>
 
       <section className="priv-sec" aria-labelledby="priv-who">
@@ -112,11 +112,7 @@ export function PrivacyContent() {
           {PRIVACY_ROWS.never}
         </Row>
         <Row id="priv-delete" title="Delete" code={PRIVACY_CODE.delete}>
-          {PRIVACY_ROWS.deleteBefore}
-          <Link className="link" href={`${ROUTES.me}#delete`}>
-            {PRIVACY_ROWS.deleteLink}
-          </Link>
-          {PRIVACY_ROWS.deleteAfter}
+          {PRIVACY_ROWS.delete}
         </Row>
         <Row id="priv-contact" title="Contact">
           {CONTACT_EMAIL ? (

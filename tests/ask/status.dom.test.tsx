@@ -50,7 +50,7 @@ afterEach(() => {
 describe('/ask/sa_… (SAMPLE, lives in this tab)', () => {
   it('the server sends a shell, never someone’s state', () => {
     const html = renderToString(<SampleStatus id="sa_eng" qaState={null} live={LIVE_OFF} />);
-    expect(html).toContain('Postgres p95 at 40M rows, 20 min?');
+    expect(html).toContain('Churn after month 3, 20 min?');
     expect(html).not.toContain('Offered');
   });
 
@@ -192,7 +192,7 @@ describe('/ask/a_… (REAL, the serializer’s view)', () => {
     const v = exampleRealView();
     render(
       <RealStatus
-        initial={{ ...v, outcome: 'no_match', offered: null, people_interrupted: 0, cells: v.cells.map(() => 'nothistime'), no_match: { why: { topic: 30, other: 10 }, suggestion: { context: '14 buyer calls; 2 committees stalled at technical review.', add: 'We charge $18k a year per hospital.', why: '4 gates wanted a price. If you have one, add it.' } } }}
+        initial={{ ...v, outcome: 'no_match', offered: null, people_interrupted: 0, cells: v.cells.map(() => 'nothistime'), no_match: { why: { topic: 30, other: 10 }, suggestion: { context: '14 buyer calls; 2 deals have sat in procurement for 5 months.', add: 'We charge $18k a year per customer.', why: '4 gates wanted a price. If you have one, add it.' } } }}
         from="x"
         example
       />,

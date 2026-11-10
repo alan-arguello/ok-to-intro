@@ -12,24 +12,24 @@ describe('norm', () => {
 
 describe('findClause', () => {
   it('returns offsets into the original rules text', () => {
-    const r = findClause(RULES, 'a real workload: a table size, a p95 or an error rate');
+    const r = findClause(RULES, 'real usage: a customer count, a churn rate or a ticket count');
     expect(r).not.toBeNull();
-    expect(RULES.slice(r!.start, r!.end)).toBe('a real workload: a table size, a p95 or an error rate');
+    expect(RULES.slice(r!.start, r!.end)).toBe('real usage: a customer count, a churn rate or a ticket count');
   });
 
   it('matches despite curly quotes, extra spaces and case, but still renders the member’s own words', () => {
     // The prototype kit's own example: a doubled space and curly quotes around the quote.
-    const r = findClause(RULES, '“a real workload:  a table size, a p95 or an error rate”');
+    const r = findClause(RULES, '“real usage:  a customer count, a churn rate or a ticket count”');
     expect(r).not.toBeNull();
-    expect(RULES.slice(r!.start, r!.end)).toBe('a real workload: a table size, a p95 or an error rate');
+    expect(RULES.slice(r!.start, r!.end)).toBe('real usage: a customer count, a churn rate or a ticket count');
     const upper = findClause(RULES, 'NO ASKS TO REVIEW A DECK.');
     expect(RULES.slice(upper!.start, upper!.end)).toBe('No asks to review a deck.');
   });
 
   it('matches across a line break in the rules (whitespace collapses)', () => {
-    const r = findClause(RULES, 'in production. Only if they have');
+    const r = findClause(RULES, 'support load. Only if they have');
     expect(r).not.toBeNull();
-    expect(RULES.slice(r!.start, r!.end)).toBe('in production.\nOnly if they have');
+    expect(RULES.slice(r!.start, r!.end)).toBe('support load.\nOnly if they have');
   });
 
   it('rejects text that is not one contiguous span of the rules', () => {
@@ -79,11 +79,11 @@ describe('read view helpers', () => {
   });
 
   it('clips ranges to lines and flags unused lines', () => {
-    const a = findClause(RULES, 'founders about Postgres, queues or LLM evals in production')!;
+    const a = findClause(RULES, 'founders about churn, activation or support load')!;
     const b = findClause(RULES, 'No asks to review a deck.')!;
     const view = readViewLines(RULES, [{ ...a, keys: ['a01'] }, b]);
     expect(view.map((l) => l.unused)).toEqual([false, true, true, false]);
     const marked = view[0]!.segments.filter((s) => s.mark).map((s) => s.text);
-    expect(marked).toEqual(['founders about Postgres, queues or LLM evals in production']);
+    expect(marked).toEqual(['founders about churn, activation or support load']);
   });
 });

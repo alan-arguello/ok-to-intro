@@ -30,16 +30,16 @@ const VIEW_KEYS = ['answer', 'as_of', 'cells', 'closed', 'compiled', 'gates_fail
 
 const COMPILED: CompiledAsk = {
   parts: {
-    challenge: 'Public hospital committees stall at technical review',
-    tried: '14 buyer calls; 2 committees reached review',
-    needs: 'someone who has sat on a public hospital procurement committee in the US',
+    challenge: '2 enterprise deals have sat in procurement for 5 months',
+    tried: '14 buyer calls; 2 deals reached procurement',
+    needs: 'someone who has closed a first enterprise deal through procurement',
     by: 'Nov 20',
-    offers: 'our tender templates',
+    offers: 'our procurement checklist',
   },
-  subject: 'Hospital procurement in the US, 20 min?',
-  text: 'Selling inventory software to public hospitals in Illinois. 14 buyer calls; 2 committees stalled at technical review.',
+  subject: 'Enterprise deals stuck 5 months, 20 min?',
+  text: 'Selling staffing software to hospital groups, our first enterprise customers. 14 buyer calls; 2 deals have sat in procurement for 5 months.',
   price: null,
-  topic: 'Hospital procurement, US',
+  topic: 'Enterprise sales, US',
 };
 
 const iso = (ms: number) => new Date(ms).toISOString();
@@ -123,7 +123,7 @@ function base(overrides: Partial<AskSnapshot['ask']> = {}, offers: SnapshotOffer
     members,
     decisions,
     questions: [
-      { id: 'q_price1', type: 'price', text: 'What do you charge per hospital, per year?', gates: 1, answer: null, answered_at: null, created_at: iso(SENT + 700), member_id: SECRET.id(8) },
+      { id: 'q_price1', type: 'price', text: 'What do you charge per customer, per year?', gates: 1, answer: null, answered_at: null, created_at: iso(SENT + 700), member_id: SECRET.id(8) },
     ],
     offers,
     intro: null,
@@ -173,12 +173,12 @@ describe('serializeForAsker: the fixtures', () => {
     expect(view.cells.filter((c) => c === 'nothistime')).toHaveLength(36);
     expect(view.people_interrupted).toBe(1);
     expect(view.matched_line).toBeNull();
-    expect(view.questions).toEqual([{ id: 'q_price1', type: 'price', text: 'What do you charge per hospital, per year?', gates: 1, answer: null, answered_at: null }]);
+    expect(view.questions).toEqual([{ id: 'q_price1', type: 'price', text: 'What do you charge per customer, per year?', gates: 1, answer: null, answered_at: null }]);
     expect(view.compiled).toEqual(COMPILED);
     expect(view.as_of).toBe(iso(Date.parse('2026-11-10T09:00:00-08:00')));
     expect(view.next_checkpoint).toBe(iso(Date.parse('2026-11-10T21:00:00-08:00')));
     expect(view.trace).toEqual([
-      '+0 ms     ask a_91xQ2k · compiled 5/5 · 17 words · REAL network · 40 members',
+      '+0 ms     ask a_91xQ2k · compiled 5/5 · 22 words · REAL network · 40 members',
       '+2104 ms  gates done',
       '+2104 ms  offered to 1 person · reply window ends Thu Nov 12, 21:04 PT',
       '+2104 ms  people interrupted 1',
@@ -187,9 +187,9 @@ describe('serializeForAsker: the fixtures', () => {
   });
 
   it('the line a member opted to show, as their own words at the offsets code found; never without the opt-in', () => {
-    const rules = 'Happy to talk to B2B founders selling to public hospitals in the US.';
-    const shown = serializeForAsker(base({}, [offer(1, 17, 'pending', GATED, null, { matched: { rules, cited: [{ text: 'b2b founders selling to public hospitals', found: true, start: 17, end: 57 }] } })]), NOW);
-    expect(shown.matched_line).toBe('B2B founders selling to public hospitals');
+    const rules = 'Happy to talk to B2B founders selling to enterprise customers in the US.';
+    const shown = serializeForAsker(base({}, [offer(1, 17, 'pending', GATED, null, { matched: { rules, cited: [{ text: 'b2b founders selling to enterprise customers', found: true, start: 17, end: 61 }] } })]), NOW);
+    expect(shown.matched_line).toBe('B2B founders selling to enterprise customers');
     const hidden = serializeForAsker(base(), NOW);
     expect(hidden.matched_line).toBeNull();
   });
@@ -232,11 +232,11 @@ describe('serializeForAsker: the fixtures', () => {
   it('intro made shows at once, with the name, the one line and the scheduling link', () => {
     const at = Date.parse('2026-11-10T11:16:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'ok', GATED, at)]);
-    snap.intro = { member_name: 'Priya Shah', member_line: 'Ran procurement for a public hospital network in Illinois.', scheduling_url: 'https://cal.com/priya-shah/20min', sent_at: iso(at + 900), created_at: iso(at), member_id: SECRET.id(17), email: SECRET.email(17) };
+    snap.intro = { member_name: 'Priya Shah', member_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: 'https://cal.com/priya-shah/20min', sent_at: iso(at + 900), created_at: iso(at), member_id: SECRET.id(17), email: SECRET.email(17) };
     const view = serializeForAsker(snap, new Date(at + 60_000));
     assertNoLeak(view);
     expect(view.outcome).toBe('intro');
-    expect(view.intro).toEqual({ member_name: 'Priya Shah', member_line: 'Ran procurement for a public hospital network in Illinois.', sent_at: iso(at + 900), scheduling_url: 'https://cal.com/priya-shah/20min' });
+    expect(view.intro).toEqual({ member_name: 'Priya Shah', member_line: 'Closed the first 20 enterprise customers at a healthcare software company.', sent_at: iso(at + 900), scheduling_url: 'https://cal.com/priya-shah/20min' });
     expect(view.cells.filter((c) => c === 'offered')).toEqual(['offered']);
     expect(view.cells.filter((c) => c === 'next')).toHaveLength(0);
   });
@@ -256,7 +256,7 @@ describe('serializeForAsker: the fixtures', () => {
   it('an OK whose intro email has not gone out yet reads as the offer still waiting: no intro, no name', () => {
     const okAt = Date.parse('2026-11-10T11:16:00-08:00');
     const snap = base({ status: 'intro' }, [offer(1, 17, 'ok', GATED, okAt)]);
-    snap.intro = { member_name: 'Priya Shah', member_line: 'Ran procurement for a public hospital network in Illinois.', scheduling_url: null, sent_at: null, created_at: iso(okAt) };
+    snap.intro = { member_name: 'Priya Shah', member_line: 'Closed the first 20 enterprise customers at a healthcare software company.', scheduling_url: null, sent_at: null, created_at: iso(okAt) };
     for (const at of [okAt + 1000, Date.parse('2026-11-10T21:00:01-08:00'), okAt + 80 * 3_600_000]) {
       const view = serializeForAsker(snap, new Date(at));
       assertNoLeak(view);
@@ -326,7 +326,7 @@ describe('serializeForAsker: the fixtures', () => {
     expect(view.cells[8]).toBe('question');
     expect(view.cells[25]).toBe('nothistime'); // not answered yet: indistinguishable from a decline or a skip
     expect(view.cells[5]).toBe('nothistime'); // skipped at cap
-    expect(view.trace).toEqual(['+0 ms     ask a_91xQ2k · compiled 5/5 · 17 words · REAL network · 40 members']);
+    expect(view.trace).toEqual(['+0 ms     ask a_91xQ2k · compiled 5/5 · 22 words · REAL network · 40 members']);
   });
 });
 

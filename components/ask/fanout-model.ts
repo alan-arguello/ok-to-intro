@@ -719,7 +719,7 @@ export function exampleRealView(): import('@/lib/types').AskerAskView {
   return {
     id: 'a_91x',
     network: 'real',
-    subject: a?.subject ?? 'Hospital procurement in the US, 20 min?',
+    subject: a?.subject ?? 'Enterprise deals stuck 5 months, 20 min?',
     compiled: { parts, subject: a?.subject ?? '', text, price: null, topic: a?.topic ?? null },
     sent_at: OFFER_SAMPLE.sent_iso,
     outcome: 'offered',

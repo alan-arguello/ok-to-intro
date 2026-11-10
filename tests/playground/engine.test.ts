@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { liveBlockCopy } from '@/components/playground/copy';
+import { liveBlockCopy, START_FAILED_NETWORK } from '@/components/playground/copy';
 import { displaysOf, isEdited, PlaygroundEngine, recordedRunFor, type EngineDeps } from '@/components/playground/engine';
 import { ASK_IDS, countDisplays, type Run } from '@/components/playground/model';
 import { applyQaState } from '@/components/playground/qa-fixtures';
@@ -88,18 +88,17 @@ describe('Run on an unedited preset', () => {
     expect(calls).toHaveLength(0);
     expect(s.phase).toBe('done');
     expect(s.run?.source).toBe('authored');
-    expect(s.view).toBe('read');
     const c = countDisplays(displaysOf(s).map);
     expect([c.reach, c.held, c.ask, c.declined]).toEqual([2, 1, 1, 8]);
     expect(s.order.slice(0, 4)).toEqual(['a01', 'a03', 'a06', 'a09']);
-    expect(announced.at(-1)).toBe('12 example verdicts: 2 reach you, 1 over your cap, 1 question first, 8 declined.');
+    expect(announced.at(-1)).toBe('12 example verdicts: 2 reach you, 1 over your limit, 1 question first, 8 filtered out.');
     const saved = storage.saved.at(-1) as PlaygroundStore;
     expect(saved).toMatchObject({ v: 1, preset: 'engineer', rules: ENGINEER, cap: 2, edited: false, mode: 'recorded', run_rules: ENGINEER, marks: [] });
     expect(saved.results).toHaveLength(12);
     expect(saved.results[0]).toEqual({
       ask_id: 'a01',
       display: 'reach',
-      cited: ['founders about Postgres, queues or LLM evals in production', 'a real workload: a table size, a p95 or an error rate'],
+      cited: ['founders about churn, activation or support load', 'real usage: a customer count, a churn rate or a ticket count'],
     });
     expect(storage.run).toBeNull();
   });
@@ -117,9 +116,6 @@ describe('live runs (POST /api/try)', () => {
     expect(s.run).toBeNull();
     expect(s.notes[0]?.text).toBe(liveBlockCopy('off', { date: '', time: '' }));
     expect(announced.at(-1)).toBe(s.notes[0]?.text);
-    engine.recordedRun();
-    expect(engine.runLive()).toBe(false);
-    expect(engine.applyAdd()).toBe(false);
     expect(engine.getState().rules).toBe(EDITED);
     expect(calls).toHaveLength(0);
   });
@@ -162,7 +158,6 @@ describe('live runs (POST /api/try)', () => {
     expect(s.run?.id).toBe('r_live1');
     expect(displaysOf(s).map.a02.display).toBe('decline');
     expect(displaysOf(s).map.a01.display).toBe('checking');
-    expect(s.flash.a02).toBe(1);
     expect(s.order).toEqual([...ASK_IDS]);
     ASK_IDS.filter((id) => id !== 'a02').forEach((id, i) => go(gate(id, i + 1)));
     go(done());
@@ -262,8 +257,8 @@ describe('live runs (POST /api/try)', () => {
     expect(c.failed).toBe(11);
     expect(c.reach).toBe(1);
     expect(s.env.health).toBe('budget');
-    expect(s.notes.find((x) => x.key === 'degraded')?.text).toBe('Live checks are paused until next month. Your rules stay in this tab.');
-    expect(engine.runLive()).toBe(false);
+    expect(s.notes.find((x) => x.key === 'degraded')?.text).toBe(liveBlockCopy('budget', { date: 'next month', time: '' }));
+    expect(engine.liveRun()).toBe(false);
   });
 
   it('429: the limited notice names the next live run; presets still run', async () => {
@@ -273,7 +268,7 @@ describe('live runs (POST /api/try)', () => {
     await flush();
     const s = engine.getState();
     expect(s.env.limitedUntil).toBe(Date.parse('2026-11-09T18:42:00Z'));
-    expect(s.notes[0]?.text).toMatch(/^You ran 20 live checks in 10 minutes\. The next live run is at \d\d:\d\d\. Presets are unlimited\.$/);
+    expect(s.notes[0]?.text).toMatch(/^Too many live checks\. Try again at \d\d:\d\d\./);
     expect(engine.run()).toBe('blocked');
     expect(calls).toHaveLength(1);
     engine.usePreset('engineer');
@@ -290,7 +285,7 @@ describe('live runs (POST /api/try)', () => {
     down.engine.setRules(EDITED);
     down.engine.run();
     await flush();
-    expect(down.engine.getState().notes[0]?.text).toBe('The live check couldn’t reach the server. Your rules stay in this tab.');
+    expect(down.engine.getState().notes[0]?.text).toBe(START_FAILED_NETWORK);
     expect(down.engine.getState().phase).toBe('idle');
   });
 
@@ -346,33 +341,23 @@ describe('live runs (POST /api/try)', () => {
 });
 
 describe('presets, rules, stale', () => {
-  it('editing unselects the preset; switching asks first; Keep mine keeps the text', () => {
+  it('editing unselects the example; picking an example replaces the rules and the limit', () => {
     const { engine } = setup();
     engine.setRules(`${ENGINEER} `);
     expect(isEdited(engine.getState())).toBe(true);
-    engine.selectPreset('health');
-    expect(engine.getState().pendingPreset).toBe('health');
-    engine.keepMine();
-    expect(engine.getState().pendingPreset).toBeNull();
-    expect(engine.getState().rules).toBe(`${ENGINEER} `);
-    engine.selectPreset('founder');
-    expect(engine.replace()).toBe('founder');
+    engine.usePreset('founder');
     expect(engine.getState().rules).toBe(presetById('founder').rules);
+    expect(engine.getState().cap).toBe(presetById('founder').cap);
     expect(isEdited(engine.getState())).toBe(false);
   });
 
-  it('editing after a run marks rows stale (never dimmed) and makes Run again the black pill', () => {
+  it('editing after a run marks it stale; putting the text back clears it', () => {
     const { engine } = setup();
     engine.run();
-    expect(engine.getState().ctaBlack).toBe(false);
     engine.setRules(EDITED);
-    let s = engine.getState();
-    expect(s.stale).toBe(true);
-    expect(s.ctaBlack).toBe(true);
-    expect(s.view).toBe('edit');
+    expect(engine.getState().stale).toBe(true);
     engine.setRules(ENGINEER);
-    s = engine.getState();
-    expect(s.stale).toBe(false);
+    expect(engine.getState().stale).toBe(false);
   });
 
   it('empty and too-long rules disable Run', () => {
@@ -384,77 +369,23 @@ describe('presets, rules, stale', () => {
   });
 });
 
-describe('Try a change', () => {
-  it('Cap 2 → 1 is recomputed here with no model call; Undo puts it back', () => {
-    const { engine, calls, announced } = setup();
-    engine.run();
-    expect(engine.applyCapEdit()).toBe(true);
-    let s = engine.getState();
-    expect(calls).toHaveLength(0);
-    expect(s.cap).toBe(1);
-    expect(s.capNote).toBe('Cap changed to 1. Applied in code, no model call.');
-    expect(s.diff).toBe('1 changed since your last run: Tallow AI.');
-    expect(s.changed).toEqual({ a03: 'reach' });
-    expect(announced.at(-1)).toBe('Cap changed to 1. Applied in code, no model call. 1 verdict changed.');
-    engine.undoApplied();
-    s = engine.getState();
-    expect(s.cap).toBe(2);
-    expect(s.applied).toBeNull();
-  });
-
-  it('Test the quote check: a labelled fake output through the real clause finder; Undo restores; never on a live run', async () => {
-    const { engine, storage } = setup(fullStream);
-    engine.run();
-    expect(engine.applyQuoteTest()).toBe(true);
-    let s = engine.getState();
-    const m = displaysOf(s).map;
-    expect(m.a11.display).toBe('code');
-    expect(m.a11.gate?.source).toBe('test');
-    expect(s.changed).toEqual({ a11: 'decline' });
-    engine.save();
-    expect((storage.saved.at(-1) as PlaygroundStore).results.find((r) => r.ask_id === 'a11')?.display).toBe('decline');
-    engine.undoApplied();
-    expect(displaysOf(engine.getState()).map.a11.display).toBe('decline');
-    engine.runLive();
-    await flush();
-    s = engine.getState();
-    expect(s.run?.source).toBe('live');
-    expect(engine.applyQuoteTest()).toBe(false);
-  });
-
-  it('+ No asks from health companies. reruns live with the line; a refusal undoes the edit', async () => {
+describe('the monthly limit and storage', () => {
+  it('a new limit is applied here with no model call', () => {
     const { engine, calls } = setup();
     engine.run();
-    expect(engine.applyAdd()).toBe(true);
-    expect(calls[0]).toEqual({ rules: `${ENGINEER}\nNo asks from health companies.` });
-    await flush();
+    engine.setCap(1);
     const s = engine.getState();
-    expect(s.rules).toBe(ENGINEER);
-    expect(s.applied).toBeNull();
-    expect(s.run?.source).toBe('authored');
-    expect(s.notes[0]?.key).toBe('degraded');
-  });
-});
-
-describe('marks and storage', () => {
-  it('Disagree marks persist with the run id and drop for rows that changed', () => {
-    const { engine, storage } = setup();
-    engine.run();
-    engine.toggleMark('a08');
-    let saved = storage.saved.at(-1) as PlaygroundStore;
-    expect(saved.marks).toEqual(['a08']);
-    expect(saved.run_id).toBe(engine.getState().run?.id);
-    engine.applyCapEdit();
-    engine.toggleMark('a08');
-    saved = storage.saved.at(-1) as PlaygroundStore;
-    expect(saved.marks).toEqual([]);
+    expect(calls).toHaveLength(0);
+    expect(s.cap).toBe(1);
+    const c = countDisplays(displaysOf(s).map);
+    expect([c.reach, c.held]).toEqual([1, 2]);
+    expect(s.order.slice(0, 1)).toEqual(['a01']);
   });
 
-  it('a refresh restores rules, cap, the recorded run and marks; edited rules restore as stale', () => {
+  it('a refresh restores rules, the limit and the recorded run; edited rules restore as stale', () => {
     const storage = memoryStorage();
     const first = setup(undefined, storage);
     first.engine.run();
-    first.engine.toggleMark('a12');
     first.engine.setRules(EDITED);
     first.engine.save();
     const second = setup(undefined, storage);
@@ -463,7 +394,6 @@ describe('marks and storage', () => {
     expect(s.rules).toBe(EDITED);
     expect(s.run?.rules).toBe(ENGINEER);
     expect(s.stale).toBe(true);
-    expect(s.marks).toEqual(['a12']);
   });
 
   it('a live run restores exactly from this tab, never by calling the model again', async () => {
@@ -499,7 +429,7 @@ describe('QA states (prototype names)', () => {
     engine.boot({ qaState: state, degraded: null, preset: null, offline: false });
     applyQaState(engine, state);
     const s = engine.getState();
-    return { s, c: countDisplays(displaysOf(s).map), map: displaysOf(s).map };
+    return { s, c: countDisplays(displaysOf(s).map) };
   };
 
   it('fixture runs are labelled and carry no timing', () => {
@@ -511,20 +441,14 @@ describe('QA states (prototype names)', () => {
   it('the states show what the spec says', () => {
     expect(at('running').s.phase).toBe('running');
     expect(at('running').c.checking).toBe(5);
-    expect(at('rerun-changed').s.diff).toBe('1 changed since your last run: Wrenby Health.');
-    expect(at('rerun-nochange').s.diff).toBe('No verdict changed. That line did not decide any of these 12 asks.');
     expect(at('stale').s.stale).toBe(true);
-    expect(at('cap-changed').s.capNote).toBe('Cap changed to 1. Applied in code, no model call.');
+    expect(at('cap-changed').s.cap).toBe(1);
     expect(at('partial-timeout').c).toMatchObject({ checked: 11, notChecked: 1 });
-    const cc = at('clause-check');
-    expect(cc.map.a11.display).toBe('code');
-    expect(cc.s.open).toBe('a11');
-    expect(at('marks').s.marks).toEqual(['a08']);
     expect(at('empty-rules').s.rules).toBe('');
     expect(at('too-long').s.rules.length).toBe(1040);
     expect(at('all-declined').c.declined).toBe(12);
     expect(at('all-accepted').c).toMatchObject({ reach: 2, held: 10 });
-    expect(at('rate-limited').s.notes[0]?.text).toBe('You ran 20 live checks in 10 minutes. The next live run is at 10:42. Presets are unlimited.');
+    expect(at('rate-limited').s.notes[0]?.text).toBe(liveBlockCopy('limited', { date: 'Dec 1', time: '10:42' }));
     expect(at('api-down').s.env.qa).toBe('down');
     expect(at('budget').s.env.qa).toBe('budget');
     expect(at('offline').s.env.qa).toBe('offline');

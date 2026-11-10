@@ -17,7 +17,7 @@ vi.mock('@/data/recorded/presets.json', () => import('../fixtures/recorded/autho
 vi.mock('@/data/recorded/sample-network.json', () => import('../fixtures/recorded/authored/sample-network.json'));
 
 const ENGINEER = PRESETS.find((p) => p.id === 'engineer')!.rules;
-const CUSTOM = ['Happy to talk to founders about Postgres at scale.', 'Only with real numbers.', 'No asks to review a deck.'].join('\n');
+const CUSTOM = ['Happy to talk to founders about churn.', 'Only with real numbers.', 'No asks to review a deck.'].join('\n');
 
 type Received = TryEvent & { id: string | null };
 
@@ -136,8 +136,8 @@ describe('POST /api/try live (fake API)', () => {
   /** a01 accepts, a06 asks, a05 is overloaded, a07 is refused, a09 doesn't parse, the rest decline. */
   const responder: Responder = (req) => {
     const id = askIdOf(req);
-    if (id === 'a01') return verdict({ verdict: 'accept', cited: ['founders about Postgres at scale', 'Only with real numbers.'], reason: 'Postgres at 40M rows with a 900 ms p95.' });
-    if (id === 'a06') return verdict({ verdict: 'ask_back', cited: ['founders about Postgres at scale'], reason_code: 'proof', question: { type: 'metric', text: 'How many jobs a day do you run?' } });
+    if (id === 'a01') return verdict({ verdict: 'accept', cited: ['founders about churn', 'Only with real numbers.'], reason: 'Churn after month 3, with 31 of 120 accounts lost.' });
+    if (id === 'a06') return verdict({ verdict: 'ask_back', cited: ['founders about churn'], reason_code: 'proof', question: { type: 'metric', text: 'How many jobs a day do you run?' } });
     if (id === 'a05') return apiError(529, 'overloaded_error', 'Overloaded.', { 'retry-after-ms': '5' });
     if (id === 'a07') return message('', { stop_reason: 'refusal' });
     if (id === 'a09') return message('not json at all');

@@ -34,7 +34,7 @@ function validRun(v: unknown): v is Run {
   const r = v as Partial<Run>;
   if (typeof r.id !== 'string' || typeof r.rules !== 'string' || (r.mode !== 'live' && r.mode !== 'recorded')) return false;
   if (r.source !== 'live' && r.source !== 'recorded' && r.source !== 'authored') return false;
-  if (!r.gates || typeof r.gates !== 'object' || !r.errors || typeof r.errors !== 'object' || !Array.isArray(r.events)) return false;
+  if (!r.gates || typeof r.gates !== 'object' || !r.errors || typeof r.errors !== 'object') return false;
   for (const key of Object.keys(r.gates)) {
     if (!isAskId(key)) return false;
     const g = (r.gates as Record<string, unknown>)[key] as { verdict?: unknown; cited?: unknown } | undefined;

@@ -62,7 +62,7 @@ export interface CarriedRules {
   rules: string;
   cap: number;
   preset: PresetId;
-  /** “Engineer”, “Health operator”, “Founder”, or “Custom” once the text differs from every preset. */
+  /** “Engineer”, “Sales operator”, “Founder”, or “Custom” once the text differs from every preset. */
   label: string;
 }
 

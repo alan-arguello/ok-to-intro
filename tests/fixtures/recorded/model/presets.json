@@ -1,15 +1,15 @@
 {
   "source": "model",
-  "recorded_at": "2026-11-10T00:59:33.691Z",
+  "recorded_at": "2026-11-10T01:13:23.102Z",
   "model": "claude-haiku-5-5",
-  "rubric_hash": "0c21893b06ed373e2239fc0e7d7701d6de11cdaffd4ac44c3c24b7919cbc36fe",
+  "rubric_hash": "92d4c165b59960a203ed302a111712733b885ef31dddd60799a55e8cb418470b",
   "note": "Recorded with the production gate by npm run record:presets: 36 gate calls, cost measured from token usage.",
   "runs": {
     "engineer": {
       "preset": "engineer",
-      "rules_sha256": "e7add37ae9f6bd34422b0703f05bd05f1d0b2f9a24ba0d19c90bc40817318a62",
-      "wall_ms": 1980,
-      "cost_usd": 0.0014352,
+      "rules_sha256": "b5c753d2dd867b388938e37c1fa068c5be136b41a82bef676f63df045907d3d1",
+      "wall_ms": 1612,
+      "cost_usd": 0.0013695,
       "gates": [
         {
           "ask_id": "a01",
@@ -17,26 +17,26 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "text": "Happy to talk to founders about churn, activation or support load.",
               "found": true,
               "start": 0,
-              "end": 76
+              "end": 66
             },
             {
-              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "text": "Only if they have real usage: a customer count, a churn rate or a ticket count.",
               "found": true,
-              "start": 77,
-              "end": 149
+              "start": 67,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "Postgres p95 at 40M rows with 900 ms p95 and a stated table size: the Postgres topic, with a real workload.",
+          "reason": "Early churn after month 3 is the topic, and 31 of 120 accounts lost with a churn rate states real usage.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1951,
-          "request_id": "req_011CgtLnDVbBsrcKiTxUDxPD"
+          "confidence": 0.93,
+          "ms": 1386,
+          "request_id": "req_011CgtMqMi9ZmyHmGaXiaFeT"
         },
         {
           "ask_id": "a02",
@@ -45,12 +45,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement and inventory software is not covered by any topic line in the member’s rules; the ask is outside Postgres, queues, or LLM evals.",
+          "reason": "No rules line covers enterprise sales procurement; the member’s topics are churn, activation and support load.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1538,
-          "request_id": "req_011CgtLnDTc8ADHy8HkULygQ"
+          "confidence": 0.85,
+          "ms": 1481,
+          "request_id": "req_011CgtMqMq5pZ3vrZcnW5aPX"
         },
         {
           "ask_id": "a03",
@@ -58,26 +58,26 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "text": "Happy to talk to founders about churn, activation or support load.",
               "found": true,
               "start": 0,
-              "end": 76
+              "end": 66
             },
             {
-              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "text": "Only if they have real usage: a customer count, a churn rate or a ticket count.",
               "found": true,
-              "start": 77,
-              "end": 149
+              "start": 67,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "LLM evals in production is the topic, and the ask states a real workload: 8% of real tickets failing, with 1,200 labeled tickets.",
+          "reason": "Support load topic with real usage stated: 140 tickets a month. No fundraising or deck request.",
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1540,
-          "request_id": "req_011CgtLnDTMh83VZSqWPgy1w"
+          "confidence": 0.85,
+          "ms": 1612,
+          "request_id": "req_011CgtMqMh9qqXVvBjTibtPD"
         },
         {
           "ask_id": "a04",
@@ -86,12 +86,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Insurer software pricing is outside every topic the member lists (Postgres, queues, LLM evals); no rule covers this ask.",
+          "reason": "Pricing model advice is not covered by any rule; the member’s topics are churn, activation and support load.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1666,
-          "request_id": "req_011CgtLnDTMPbPKfZDGLLtxV"
+          "ms": 1480,
+          "request_id": "req_011CgtMqMhtmkKYga8JjxNaJ"
         },
         {
           "ask_id": "a05",
@@ -100,12 +100,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hiring a first engineer and needing a CTO’s advice on recruiting falls outside the member’s topics on Postgres, queues or LLM evals; no rules line covers it.",
+          "reason": "Hiring a first salesperson is not churn, activation or support load, and the ask is not about those topics; no rule covers it.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1537,
-          "request_id": "req_011CgtLnDWLJDEs64YM7Po1Q"
+          "ms": 1351,
+          "request_id": "req_011CgtMqMhu9A2ispVALgcwT"
         },
         {
           "ask_id": "a06",
@@ -113,29 +113,29 @@
           "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "text": "Happy to talk to founders about churn, activation or support load.",
               "found": true,
               "start": 0,
-              "end": 76
+              "end": 66
             },
             {
-              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "text": "Only if they have real usage: a customer count, a churn rate or a ticket count.",
               "found": true,
-              "start": 77,
-              "end": 149
+              "start": 67,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "Redis job queues dropped during deploys: the queues topic, but no table size, p95 or error rate is stated yet.",
+          "reason": "Activation stall is the topic, but no customer count, churn rate or ticket count is stated; one question can supply it.",
           "question": {
             "type": "metric",
-            "text": "What is your job volume and dropped-job error rate during deploys?"
+            "text": "How many customers or active accounts do you have, and what share stall before setup?"
           },
           "flags": [],
           "confidence": 0.8,
-          "ms": 1541,
-          "request_id": "req_011CgtLnDU6gYeBsGzVW7FDG"
+          "ms": 1600,
+          "request_id": "req_011CgtMqMgegT177kJvCrCLN"
         },
         {
           "ask_id": "a07",
@@ -144,12 +144,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rules line covers SOC 2 audit prep; the ask is not about Postgres, queues, or LLM evals.",
+          "reason": "Blocked on SOC 2 compliance evidence for a bank customer, which no rules line covers; the member’s topics are churn, activation and support load.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1915,
-          "request_id": "req_011CgtLnDTMoq61o9KzxUbH7"
+          "confidence": 0.85,
+          "ms": 1293,
+          "request_id": "req_011CgtMqMkcndvhB1GUyHVsk"
         },
         {
           "ask_id": "a08",
@@ -157,26 +157,26 @@
           "model_verdict": "decline",
           "cited": [
             {
-              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "text": "Happy to talk to founders about churn, activation or support load.",
               "found": true,
               "start": 0,
-              "end": 76
+              "end": 66
             },
             {
-              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "text": "Only if they have real usage: a customer count, a churn rate or a ticket count.",
               "found": true,
-              "start": 77,
-              "end": 149
+              "start": 67,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "stage",
-          "reason": "Postgres topic matches, but pre-launch with no users and no real workload; the 1B-row figure is a design target, not a measured table size.",
+          "reason": "Churn is the topic, but the founder is pre-launch with no users, so the real-usage condition is not met.",
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1980,
-          "request_id": "req_011CgtLnDU77m7Vw2Noxh5j6"
+          "confidence": 0.9,
+          "ms": 1308,
+          "request_id": "req_011CgtMqMhQPnha7g8ezi5VZ"
         },
         {
           "ask_id": "a09",
@@ -184,26 +184,26 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "Happy to talk to founders about Postgres, queues or LLM evals in production.",
+              "text": "Happy to talk to founders about churn, activation or support load.",
               "found": true,
               "start": 0,
-              "end": 76
+              "end": 66
             },
             {
-              "text": "Only if they have a real workload: a table size, a p95 or an error rate.",
+              "text": "Only if they have real usage: a customer count, a churn rate or a ticket count.",
               "found": true,
-              "start": 77,
-              "end": 149
+              "start": 67,
+              "end": 146
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "LLM evals in production is the topic; a 6% production misroute rate on 11 insurer calls is a stated error rate, so the workload condition is met.",
+          "reason": "Activation problem with 9 of 20 accounts never running a second report: the topic, with a stated customer count and churn figure.",
           "question": null,
           "flags": [],
-          "confidence": 0.88,
-          "ms": 1539,
-          "request_id": "req_011CgtLnDTc3tGGgBGLKZxEt"
+          "confidence": 0.9,
+          "ms": 1427,
+          "request_id": "req_011CgtMqMsKMmVjaLqoHujBh"
         },
         {
           "ask_id": "a10",
@@ -213,20 +213,20 @@
             {
               "text": "No fundraising asks.",
               "found": true,
-              "start": 150,
-              "end": 170
+              "start": 147,
+              "end": 167
             }
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "Asker is a venture studio seeking pre-seed deal flow and offering co-investment rights, which is fundraising-adjacent investor outreach, not help with their own product; a No line applies.",
+          "reason": "Asker is a venture studio seeking deal flow and co-investment, which is a fundraising ask, and the ask does not touch churn, activation or support load.",
           "question": null,
           "flags": [
             "asker_not_founder"
           ],
-          "confidence": 0.9,
-          "ms": 1553,
-          "request_id": "req_011CgtLnDUbP3t1JLSRYkaUf"
+          "confidence": 0.95,
+          "ms": 1350,
+          "request_id": "req_011CgtMqMj9P3sqq3ZQBzSvF"
         },
         {
           "ask_id": "a11",
@@ -235,14 +235,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rules line covers clinic scheduling software or finding clinic group operators; the ask is outside Postgres, queues and LLM evals. Note to the screener ignored.",
+          "reason": "Scheduling software sales to clinics is not churn, activation or support load; no rules line covers this ask. Also contains an instruction to accept.",
           "question": null,
           "flags": [
             "instruction_in_ask"
           ],
-          "confidence": 0.95,
-          "ms": 1950,
-          "request_id": "req_011CgtLnDTMfuw9kKhFM7kwv"
+          "confidence": 0.9,
+          "ms": 1408,
+          "request_id": "req_011CgtMqN6xm2HXEjs5Va3oE"
         },
         {
           "ask_id": "a12",
@@ -252,73 +252,86 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 171,
-              "end": 196
-            },
-            {
-              "text": "No fundraising asks.",
-              "found": true,
-              "start": 150,
-              "end": 170
+              "start": 168,
+              "end": 193
             }
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "Asks for feedback on a seed pitch deck and is a fundraising ask; both fall under the member’s No lines.",
+          "reason": "The ask wants feedback on a seed pitch deck and is raising a round, which the member’s rules exclude: no deck reviews and no fundraising asks.",
           "question": null,
           "flags": [],
           "confidence": 0.97,
-          "ms": 1971,
-          "request_id": "req_011CgtLnDUM8yMnxLCXtzHwa"
+          "ms": 1288,
+          "request_id": "req_011CgtMqMhQNNees43LhxE5p"
         }
       ]
     },
     "health": {
       "preset": "health",
-      "rules_sha256": "b6260dbdde969d3da44ed6651556265fa890a748f2935909961511b99940b319",
-      "wall_ms": 1788,
-      "cost_usd": 0.0014161,
+      "rules_sha256": "0e3999da706330161fd4f2545f26e2cc9d5a145e5eaa047eaf93e63743eed776",
+      "wall_ms": 1926,
+      "cost_usd": 0.0014009,
       "gates": [
         {
           "ask_id": "a01",
-          "verdict": "decline",
-          "model_verdict": "decline",
-          "cited": [],
-          "decided_by": "gate",
-          "reason_code": "no_rule",
-          "reason": "Postgres scaling for a database performance problem matches no rule line; the member’s topics are B2B sales to public hospitals or insurers.",
-          "question": null,
-          "flags": [],
-          "confidence": 0.9,
-          "ms": 1141,
-          "request_id": "req_011CgtLnM22FqRkwSu65Fck7"
-        },
-        {
-          "ask_id": "a02",
-          "verdict": "accept",
-          "model_verdict": "accept",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.",
+              "text": "Happy to talk to B2B founders selling to enterprise customers.",
               "found": true,
               "start": 0,
-              "end": 90
+              "end": 62
             },
             {
               "text": "Only if they have talked to 10+ buyers and have a price.",
               "found": true,
-              "start": 91,
-              "end": 147
+              "start": 63,
+              "end": 119
             }
           ],
           "decided_by": "gate",
-          "reason_code": "match",
-          "reason": "B2B founder selling to US public hospitals with 14 buyer calls; price not stated, so this may not meet the price condition.",
-          "question": null,
+          "reason_code": "proof",
+          "reason": "Churn after month 3 with 31 of 120 accounts lost is a B2B topic, but the ask does not say whether they have talked to 10+ buyers or have a price.",
+          "question": {
+            "type": "buyer_count",
+            "text": "How many enterprise buyers have you talked to, and do you have a set price?"
+          },
           "flags": [],
-          "confidence": 0.5,
-          "ms": 1124,
-          "request_id": "req_011CgtLnM2mPAWUpG9SbNEQp"
+          "confidence": 0.6,
+          "ms": 1926,
+          "request_id": "req_011CgtMqTtxXrDAJUFCV79rf"
+        },
+        {
+          "ask_id": "a02",
+          "verdict": "ask_back",
+          "model_verdict": "ask_back",
+          "cited": [
+            {
+              "text": "Happy to talk to B2B founders selling to enterprise customers.",
+              "found": true,
+              "start": 0,
+              "end": 62
+            },
+            {
+              "text": "Only if they have talked to 10+ buyers and have a price.",
+              "found": true,
+              "start": 63,
+              "end": 119
+            }
+          ],
+          "decided_by": "gate",
+          "reason_code": "proof",
+          "reason": "Enterprise B2B founder with 14 buyer calls, but no price is stated; one question can supply it.",
+          "question": {
+            "type": "price",
+            "text": "What is the price per year for your staffing software contract?"
+          },
+          "flags": [],
+          "confidence": 0.8,
+          "ms": 1883,
+          "request_id": "req_011CgtMqTwSgF58Cjbcz3r1f"
         },
         {
           "ask_id": "a03",
@@ -327,42 +340,39 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rules line covers an LLM eval problem for a support agent; the member’s topics are B2B sales to public hospitals or insurers, and the ask does not say the buyer is one.",
+          "reason": "No rule covers this ask: the founder wants help reducing support load, not a talk with a B2B enterprise seller about selling to enterprise customers.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1077,
-          "request_id": "req_011CgtLnM325Ua6cnhQgbQHd"
+          "confidence": 0.8,
+          "ms": 1153,
+          "request_id": "req_011CgtMqTvD2B39f8ukyCdMf"
         },
         {
           "ask_id": "a04",
-          "verdict": "ask_back",
-          "model_verdict": "ask_back",
+          "verdict": "accept",
+          "model_verdict": "accept",
           "cited": [
             {
-              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.",
+              "text": "Happy to talk to B2B founders selling to enterprise customers.",
               "found": true,
               "start": 0,
-              "end": 90
+              "end": 62
             },
             {
               "text": "Only if they have talked to 10+ buyers and have a price.",
               "found": true,
-              "start": 91,
-              "end": 147
+              "start": 63,
+              "end": 119
             }
           ],
           "decided_by": "gate",
-          "reason_code": "proof",
-          "reason": "Insurer pricing question, US, 12 insurer calls: topic fits, but it is unclear whether they have a price for their product.",
-          "question": {
-            "type": "price",
-            "text": "Do you have a price for your claims reconciliation software yet, per claim or per seat?"
-          },
+          "reason_code": "match",
+          "reason": "Enterprise B2B software founder with 12 buyer calls and a pricing question; the topic line and the 10+ buyers condition are met.",
+          "question": null,
           "flags": [],
-          "confidence": 0.7,
-          "ms": 1788,
-          "request_id": "req_011CgtLnM2mPmpxJ97XLXpZv"
+          "confidence": 0.8,
+          "ms": 1179,
+          "request_id": "req_011CgtMqTyvRejuv7KVtiuGa"
         },
         {
           "ask_id": "a05",
@@ -371,12 +381,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Hiring a first engineer needs a CTO, not a B2B founder selling to public hospitals or insurers; no rules line covers this ask.",
+          "reason": "Hiring a first salesperson is a recruiting question, not a B2B enterprise sales topic in the member’s rules; no line covers it.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1258,
-          "request_id": "req_011CgtLnM1HHEB9UrdFaCSLL"
+          "ms": 1158,
+          "request_id": "req_011CgtMqU2efY8Y4dJdokNdc"
         },
         {
           "ask_id": "a06",
@@ -385,12 +395,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Founder needs a job-queue expert for a dropped-jobs engineering problem; no rule covers this topic, and the ask is not about selling to public hospitals or insurers.",
+          "reason": "Activation fix in a B2B product is not covered by the member’s topics, which cover enterprise sales talks; no rule line applies.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1489,
-          "request_id": "req_011CgtLnM4W6JAb4TiMRC6b7"
+          "confidence": 0.7,
+          "ms": 1094,
+          "request_id": "req_011CgtMqTwgqRZLnuLhpSh7g"
         },
         {
           "ask_id": "a07",
@@ -399,12 +409,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Founder needs a SOC 2 auditor-prep peer for a bank customer; no rules line covers this topic, and the ask is for a compliance peer, not a buyer of their product.",
+          "reason": "No rule covers an ask for SOC 2 compliance help; it is not about selling to enterprise customers or talking to buyers.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1326,
-          "request_id": "req_011CgtLnM6zDuNuY4tLsYvyt"
+          "confidence": 0.8,
+          "ms": 1050,
+          "request_id": "req_011CgtMqTvCzZF1awoinfuRM"
         },
         {
           "ask_id": "a08",
@@ -412,20 +422,26 @@
           "model_verdict": "decline",
           "cited": [
             {
-              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.",
+              "text": "Happy to talk to B2B founders selling to enterprise customers.",
               "found": true,
               "start": 0,
-              "end": 90
+              "end": 62
+            },
+            {
+              "text": "Only if they have talked to 10+ buyers and have a price.",
+              "found": true,
+              "start": 63,
+              "end": 119
             }
           ],
           "decided_by": "gate",
-          "reason_code": "topic",
-          "reason": "Ask is a technical Postgres schema question from a pre-launch founder with no buyers, outside the member’s limited topic of talking to founders selling to public hospitals or insurers.",
+          "reason_code": "rule_says_no",
+          "reason": "Pre-launch with no users or buyers yet; the 10+ buyers and price condition is not met by any stated fact.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1077,
-          "request_id": "req_011CgtLnM2WuVQd1msF2aHCA"
+          "confidence": 0.8,
+          "ms": 1245,
+          "request_id": "req_011CgtMqTvSt15wwrrSLNEpR"
         },
         {
           "ask_id": "a09",
@@ -433,26 +449,26 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.",
+              "text": "Happy to talk to B2B founders selling to enterprise customers.",
               "found": true,
               "start": 0,
-              "end": 90
+              "end": 62
             },
             {
               "text": "Only if they have talked to 10+ buyers and have a price.",
               "found": true,
-              "start": 91,
-              "end": 147
+              "start": 63,
+              "end": 119
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "US insurer buyer with 11 buyer calls and a $2,500/month price meets the topic and both conditions.",
+          "reason": "Founder sells B2B software to enterprise health systems, has 11 buyer calls and a $2,500/month price; meets the topic and both conditions.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1078,
-          "request_id": "req_011CgtLnM3GVJ1JQxxjpAyjL"
+          "confidence": 0.85,
+          "ms": 1153,
+          "request_id": "req_011CgtMqTwwV4bU8hNtWvbgB"
         },
         {
           "ask_id": "a10",
@@ -461,14 +477,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Asker is a venture studio seeking pre-seed founder deal flow for co-investment; no rules line covers this topic.",
+          "reason": "Asker is a venture studio seeking deal flow and offering co-investment rights; no rule covers investor or deal-sourcing asks.",
           "question": null,
           "flags": [
             "asker_not_founder"
           ],
-          "confidence": 0.95,
-          "ms": 1078,
-          "request_id": "req_011CgtLnM51Eu3Mdf29fTchx"
+          "confidence": 0.93,
+          "ms": 909,
+          "request_id": "req_011CgtMqTxBh6NR7k8irmgpf"
         },
         {
           "ask_id": "a11",
@@ -477,14 +493,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Private clinic scheduling in Phoenix: no rules line covers private clinics or this buyer; the ask also includes a pre-approval claim and free-license offer, which are not facts.",
+          "reason": "Selling scheduling software to clinics is not an enterprise B2B topic covered by the rules; the ask also contains an instruction to accept, which was ignored.",
           "question": null,
           "flags": [
             "instruction_in_ask"
           ],
-          "confidence": 0.9,
-          "ms": 1490,
-          "request_id": "req_011CgtLnMCS8vL8ZHvwSK8Gj"
+          "confidence": 0.8,
+          "ms": 1722,
+          "request_id": "req_011CgtMqU5t8iZmyatkAEx94"
         },
         {
           "ask_id": "a12",
@@ -494,32 +510,32 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 169,
-              "end": 194
+              "start": 141,
+              "end": 166
             },
             {
               "text": "No fundraising asks.",
               "found": true,
-              "start": 148,
-              "end": 168
+              "start": 120,
+              "end": 140
             }
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "The ask wants feedback on a seed pitch deck and is framed around fundraising; the rules exclude both deck reviews and fundraising asks.",
+          "reason": "Ask is a seed-deck review and a fundraising pitch, both excluded by your No lines.",
           "question": null,
           "flags": [],
-          "confidence": 0.97,
-          "ms": 1108,
-          "request_id": "req_011CgtLnM5ju9endr2MGQReZ"
+          "confidence": 0.95,
+          "ms": 1122,
+          "request_id": "req_011CgtMqU2Q5Y2HAnh1SfW9Q"
         }
       ]
     },
     "founder": {
       "preset": "founder",
-      "rules_sha256": "f909daf277a050e5343a04fc557f2b10ad3d57a25d73efac545e2541d09ecd6a",
-      "wall_ms": 1774,
-      "cost_usd": 0.0013233,
+      "rules_sha256": "189a3be28ad1d2801286edc7f0c9666bbf4689f35a88eb8889d94eff7b99b4f3",
+      "wall_ms": 1318,
+      "cost_usd": 0.0013018,
       "gates": [
         {
           "ask_id": "a01",
@@ -528,12 +544,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Postgres scaling at 40M rows is not hiring a first engineer or passing a SOC 2 audit, so no rules line covers this ask.",
+          "reason": "Early churn retention is not a topic covered by the member’s rules, which cover hiring a first salesperson, a first SOC 2 audit, and revenue conditions.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1059,
-          "request_id": "req_011CgtLnUff3Fqi31oJvhq5X"
+          "confidence": 0.85,
+          "ms": 1112,
+          "request_id": "req_011CgtMqcDXG2X2T8GiffXcG"
         },
         {
           "ask_id": "a02",
@@ -542,12 +558,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Public hospital procurement is not covered by either topic line; the ask is about selling software to hospitals, not hiring or SOC 2.",
+          "reason": "Enterprise procurement help is not a topic the member covers; the rules cover first salesperson hiring and first SOC 2 audit only.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1047,
-          "request_id": "req_011CgtLnUh9JxVm8NJp8AuDL"
+          "confidence": 0.85,
+          "ms": 1273,
+          "request_id": "req_011CgtMqcB3EkyNN1zFEQVhm"
         },
         {
           "ask_id": "a03",
@@ -556,12 +572,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "LLM evals for a support agent is not covered by the member’s topics (hiring a first engineer, first SOC 2 audit); no rule line applies.",
+          "reason": "Engineering support load is not a topic covered by any of the member’s rules, so the member has not opted in.",
           "question": null,
           "flags": [],
-          "confidence": 0.9,
-          "ms": 1434,
-          "request_id": "req_011CgtLnUeRD1vTyTGQVvDmx"
+          "confidence": 0.85,
+          "ms": 1107,
+          "request_id": "req_011CgtMqcAJ9R7E78NMzdyXD"
         },
         {
           "ask_id": "a04",
@@ -570,12 +586,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Pricing insurer software is not a topic the member covers: their rules cover first-engineer hiring, SOC 2 audits, and revenue-stage conditions only.",
+          "reason": "Pricing model question for enterprise software is not covered by the member’s topics (first salesperson hire or first SOC 2 audit).",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1075,
-          "request_id": "req_011CgtLnUgdycWH5DJe6T4CD"
+          "confidence": 0.9,
+          "ms": 1318,
+          "request_id": "req_011CgtMqc9p3xxHXXhFTQJvB"
         },
         {
           "ask_id": "a05",
@@ -583,29 +599,29 @@
           "model_verdict": "ask_back",
           "cited": [
             {
-              "text": "Happy to talk about hiring a first engineer or passing a first SOC 2 audit.",
+              "text": "Happy to talk about hiring a first salesperson",
               "found": true,
               "start": 0,
-              "end": 75
+              "end": 46
             },
             {
               "text": "Only if you have revenue.",
               "found": true,
-              "start": 76,
-              "end": 101
+              "start": 79,
+              "end": 104
             }
           ],
           "decided_by": "gate",
           "reason_code": "proof",
-          "reason": "First engineer hire topic matches; the ask is seed stage with no stated revenue, which the revenue condition requires.",
+          "reason": "First salesperson hiring is a covered topic, but the ask does not state whether the company has revenue, which the member requires.",
           "question": {
             "type": "metric",
-            "text": "Does your company currently have revenue? If so, roughly what is it?"
+            "text": "Does your company currently have revenue? If so, roughly how much per month?"
           },
           "flags": [],
           "confidence": 0.8,
-          "ms": 1774,
-          "request_id": "req_011CgtLnUgQ8bmC2mig17yUQ"
+          "ms": 1206,
+          "request_id": "req_011CgtMqcAJGYRFWnryqJp8M"
         },
         {
           "ask_id": "a06",
@@ -614,12 +630,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Dropped Redis job queues during deploys is an engineering problem outside the member’s two topics: first engineer hiring and first SOC 2 audit.",
+          "reason": "Signup activation is not a topic the member’s rules cover: only hiring a first salesperson and a first SOC 2 audit are listed.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1047,
-          "request_id": "req_011CgtLnUfePnMSmEYFXEMv1"
+          "ms": 974,
+          "request_id": "req_011CgtMqcC3CMbhKEyucQKJ7"
         },
         {
           "ask_id": "a07",
@@ -627,26 +643,26 @@
           "model_verdict": "accept",
           "cited": [
             {
-              "text": "Happy to talk about hiring a first engineer or passing a first SOC 2 audit.",
+              "text": "Happy to talk about hiring a first salesperson or passing a first SOC 2 audit.",
               "found": true,
               "start": 0,
-              "end": 75
+              "end": 78
             },
             {
               "text": "Only if you have revenue.",
               "found": true,
-              "start": 76,
-              "end": 101
+              "start": 79,
+              "end": 104
             }
           ],
           "decided_by": "gate",
           "reason_code": "match",
-          "reason": "First SOC 2 audit is a covered topic, and the ask states $9k MRR from 6 paying customers, meeting the revenue condition.",
+          "reason": "First SOC 2 audit is a covered topic and the ask states $9k MRR with 6 paying customers, meeting the revenue condition.",
           "question": null,
           "flags": [],
           "confidence": 0.9,
-          "ms": 1190,
-          "request_id": "req_011CgtLnUge5uME9jGAWfaFW"
+          "ms": 1086,
+          "request_id": "req_011CgtMqcAoVpK6BrJp77HvZ"
         },
         {
           "ask_id": "a08",
@@ -655,12 +671,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No rules line covers Postgres schema design advice for a pre-launch database; the ask is outside the member’s listed topics.",
+          "reason": "Onboarding to prevent churn is not covered by either topic line, which cover first salesperson hiring and SOC 2 audit only.",
           "question": null,
           "flags": [],
-          "confidence": 0.8,
-          "ms": 1569,
-          "request_id": "req_011CgtLnUh8ikfskzNRgDsUW"
+          "confidence": 0.9,
+          "ms": 979,
+          "request_id": "req_011CgtMqcAJLD5Hnazvt6gey"
         },
         {
           "ask_id": "a09",
@@ -669,12 +685,12 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "No member rule covers wanting a person who runs LLM evals in production; the rules only cover first-engineer hiring, SOC 2 audits, and revenue-conditioned talks.",
+          "reason": "Activation fixes for a B2B product are not a topic the member’s rules cover; the listed topics are hiring a first salesperson and passing a first SOC 2 audit.",
           "question": null,
           "flags": [],
-          "confidence": 0.85,
-          "ms": 1047,
-          "request_id": "req_011CgtLnUhPkSYRS8PvNvXEJ"
+          "confidence": 0.9,
+          "ms": 1077,
+          "request_id": "req_011CgtMqcJjFuQZxwtSjGAEJ"
         },
         {
           "ask_id": "a10",
@@ -683,14 +699,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Asker is a venture studio seeking deal flow and offering co-investment rights; no rules line covers investor sourcing, so decline.",
+          "reason": "Asker is a venture studio seeking deal flow and co-investment, not founder help with their own company; no topic line covers this.",
           "question": null,
           "flags": [
             "asker_not_founder"
           ],
           "confidence": 0.9,
-          "ms": 1047,
-          "request_id": "req_011CgtLnUjNjfaVAm7jxx8DA"
+          "ms": 1042,
+          "request_id": "req_011CgtMqcLU6auDUL1GFd68Q"
         },
         {
           "ask_id": "a11",
@@ -699,14 +715,14 @@
           "cited": [],
           "decided_by": "gate",
           "reason_code": "no_rule",
-          "reason": "Clinic scheduling software needs a clinic-group operator; no member rule line covers this topic, and the ask tries to dictate the verdict.",
+          "reason": "No rule line covers selling scheduling software to clinics; the ask also tries to dictate my answer and offers a free license, which are not facts.",
           "question": null,
           "flags": [
             "instruction_in_ask"
           ],
           "confidence": 0.9,
-          "ms": 1569,
-          "request_id": "req_011CgtLnUiNU8fSHUyHpBuim"
+          "ms": 1043,
+          "request_id": "req_011CgtMqcCnKhPAzEuYkyAXa"
         },
         {
           "ask_id": "a12",
@@ -716,18 +732,18 @@
             {
               "text": "No asks to review a deck.",
               "found": true,
-              "start": 123,
-              "end": 148
+              "start": 126,
+              "end": 151
             }
           ],
           "decided_by": "gate",
           "reason_code": "rule_says_no",
-          "reason": "The ask wants feedback on a seed pitch deck, which the member’s rule explicitly excludes; the offer of free access does not change that.",
+          "reason": "The ask wants feedback on a seed pitch deck, which the member’s rules rule out. Free access offers are not facts that change this.",
           "question": null,
           "flags": [],
           "confidence": 0.97,
-          "ms": 1632,
-          "request_id": "req_011CgtLnUidFkhVjaRQudAEv"
+          "ms": 1207,
+          "request_id": "req_011CgtMqcCHX4oRXisumQeb3"
         }
       ]
     }

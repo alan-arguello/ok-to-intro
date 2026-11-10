@@ -37,12 +37,12 @@ function record(over: Partial<OfferView> = {}): OfferView {
     offer_id: 'o_3Fp9kL',
     state: 'pending',
     sample: false,
-    title: 'Hospital procurement in the US',
-    subject: 'Hospital procurement in the US, 20 min?',
+    title: 'Enterprise deals stuck 5 months',
+    subject: 'Enterprise deals stuck 5 months, 20 min?',
     asker: { name: 'Maya Bennett', first: 'Maya', company: 'Oakline Health', stage: 'Seed', city: 'Chicago' },
-    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to public hospitals or insurers in the US or Canada.' },
+    matched: { text: OFFER_SAMPLE.matched, start: 22, end: 98, line: 'Happy to talk to B2B founders selling to enterprise customers.' },
     rules_version: 3,
-    topic: 'Hospital procurement, US',
+    topic: 'Enterprise sales, US',
     scheduling_url: 'https://cal.com/priya-shah/20min',
     facts: [...OFFER_SAMPLE.facts],
     cap: 2,
@@ -181,10 +181,10 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
     const loop = loopForAsk('sa_eng', NONE, NOW);
     expect(loop).not.toBeNull();
     const card = cardFromLoop(loop!);
-    expect(card.title).toBe('Postgres p95 at 40M rows');
+    expect(card.title).toBe('Churn after month 3');
     expect(card.from).toBe('Sample founder · Tidewell Data · Seed · San Francisco');
     expect(card.facts[0]?.[0]).toBe('Problem');
-    expect(card.facts.find(([k]) => k === 'Needs')?.[1]).toBe('20 minutes with someone who has run Postgres past 100M rows');
+    expect(card.facts.find(([k]) => k === 'Needs')?.[1]).toBe('20 minutes with someone who has cut early churn in a B2B product');
     const rules = PRESETS.find((p) => p.id === 'engineer')!.rules;
     expect(findClause(rules, card.matched!)).not.toBeNull();
     expect(card.who).toBe('the founder');
@@ -201,12 +201,12 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
       answered: null,
       sent_at: NOW - 3 * 3_600_000,
       offered_at: NOW - 2 * 3_600_000,
-      compiled: { parts: { challenge: 'Writes block at 40M rows', tried: 'Partitions', needs: 'Someone who ran Postgres past 100M rows', by: 'Nov 21', offers: 'Our harness' }, subject: 'Postgres writes block, 20 min?', text: 'x', price: null, topic: 'Postgres' },
+      compiled: { parts: { challenge: 'Accounts leave after month 3', tried: 'A check-in call', needs: 'Someone who cut early churn', by: 'Nov 21', offers: 'Our notes' }, subject: 'Accounts leave at month 3, 20 min?', text: 'x', price: null, topic: 'Churn' },
       you_cited: [],
     };
     const live = clientSampleCard({ kind: 'ask', id: 'sa_eng' }, { ...NONE, sampleAsk: st }, NOW);
-    expect(live?.card.title).toBe('Postgres writes block');
-    expect(live?.card.matched).toBe('Happy to talk about Postgres or Kafka at scale');
+    expect(live?.card.title).toBe('Accounts leave at month 3');
+    expect(live?.card.matched).toBe('Happy to talk about churn and retention in B2B software');
     expect(live?.card).toMatchObject({ cap: 2, nth: 2 });
     expect(live?.hours).toBe(70);
     expect(live?.loop.member.name).toBe('Hannah Kim');
@@ -230,7 +230,7 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
       run_rules: PRESETS[0]!.rules,
       results: [
         { ask_id: 'a02', display: 'decline', cited: [] },
-        { ask_id: 'a03', display: 'reach', cited: ['founders about Postgres, queues or LLM evals in production'] },
+        { ask_id: 'a03', display: 'reach', cited: ['founders about churn, activation or support load'] },
       ],
       marks: [],
     };
@@ -238,7 +238,7 @@ describe('the SAMPLE loop (/o/sample?ask=…, ?from=playground)', () => {
     expect(loop?.askId).toBe('a03');
     const card = cardFromLoop(loop!);
     expect(card.from).toBe('Tallow AI · Seed · Austin');
-    expect(card.matched).toBe('founders about Postgres, queues or LLM evals in production');
+    expect(card.matched).toBe('founders about churn, activation or support load');
     expect(loopForPlayground(NONE, NOW)).toBeNull();
   });
 });
@@ -273,8 +273,8 @@ describe('the templated rule edit after a No, tested on the 12 sample asks', () 
   });
 
   it('only the reasons that map to a rule suggest a line', () => {
-    const ctx = { rules: PRESETS[1]!.rules, matchedLine: null, topic: 'Hospital procurement, US', askText: 'x', companies: ['Oakline Health'] };
-    expect(suggestRuleEdit('not_my_area', ctx)?.add).toBe('No asks about hospital procurement.');
+    const ctx = { rules: PRESETS[1]!.rules, matchedLine: null, topic: 'Enterprise sales, US', askText: 'x', companies: ['Oakline Health'] };
+    expect(suggestRuleEdit('not_my_area', ctx)?.add).toBe('No asks about enterprise sales.');
     expect(suggestRuleEdit('wrong_stage', ctx)?.add).toBe('Only after a first paying customer.');
     for (const r of ['not_specific', 'no_time', 'other'] as const) expect(suggestRuleEdit(r, ctx)).toBeNull();
     expect(WHY_OPTIONS.map(([k]) => WHY_TO_REASON[k])).toEqual(['not_my_area', 'wrong_stage', 'not_specific', 'no_time', 'other']);
